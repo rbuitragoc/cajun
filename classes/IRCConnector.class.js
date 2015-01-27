@@ -8,22 +8,22 @@ function IRCConnector(config){
 }
 
 IRCConnector.prototype = {
-	init: function(slashbot){
+	init: function(bot){
 		var that = this;
 		this.client = new irc.Client(this.config.server, this.config.botName, {
 			channels: [this.config.channel], password: this.config.password
 		});
 		this.client.addListener("join", function(channel, who) {
-			slashbot.channelJoined(channel, who);
+			bot.channelJoined(channel, who);
 		});
 		this.client.addListener("message", function(from, to, text, message) {
-			slashbot.message(from, text);
+			bot.message(from, text);
 		});
 		this.client.addListener("names", function (channel, nicks) {
 			console.log("Channel: " + channel);
-			if(channel == slashbot.config.channel){
+			if(channel == bot.config.channel){
 				console.log('CHANNEL FOUND. Registering players...');
-				slashbot.registerPlayers(Object.keys(nicks));				
+				bot.registerPlayers(Object.keys(nicks));				
 			}
 		});
 		this.client.addListener('error', function(message) {

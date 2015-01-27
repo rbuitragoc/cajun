@@ -8,15 +8,15 @@ function SlackConnector(config){
 	this.config = config;
     this.slack = null;
     this.activeUsersArray = [];
-    this.slashbot = null;
+    this.bot = null;
     this.slackChannel = null;
 
 }
 
 SlackConnector.prototype = {
-	init: function(slashbot){
+	init: function(bot){
 		var that = this;
-		this.slashbot = slashbot;
+		this.bot = bot;
 		console.log("Initializing with SlackConnector...");
 		var slack = new Slack(this.token, this.autoReconnect, this.autoMark);
 		slack.on('open', function() {
@@ -59,11 +59,11 @@ SlackConnector.prototype = {
 				console.log("Error: user ["+message.user+"] not found.")
 				return;
 			}
-			slashbot.message(user.name, text);
+			bot.message(user.name, text);
 			if(that.activeUsersArray.indexOf(user.name) == -1){
 				that.activeUsersArray.push(user.name);
 			}
-			that.slashbot.registerPlayers(that.activeUsersArray);
+			that.bot.registerPlayers(that.activeUsersArray);
 		});
 
 		slack.on('error', function(error) {
@@ -89,7 +89,7 @@ SlackConnector.prototype = {
 				this.activeUsersArray.push(this.slack.getUserByID(channel.members[i]).name);							
 			}
 		}
-		this.slashbot.registerPlayers(this.activeUsersArray);
+		this.bot.registerPlayers(this.activeUsersArray);
 	}
 }
 
