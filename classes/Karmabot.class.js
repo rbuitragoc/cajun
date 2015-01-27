@@ -19,8 +19,8 @@ Karmabot.prototype = {
 		if (!text)
 			return;
 		if (text.indexOf("bot") == 0){
-			if (text.indexOf("introduce yourself") > -1){
-				this._introduce(from);
+			if (text.indexOf("give") > -1){
+				this._give(from, text);
 			} else if (text.indexOf("about") > -1){
 				this._about(from);
 			} else if (text.indexOf("help") > -1){
@@ -34,8 +34,19 @@ Karmabot.prototype = {
 			}	
 		}
 	},
-	_introduce: function (){
-		this.share("I am the karmabot. Have fun!");
+	_give: function (from, text){
+		var command = /give (\d+) points to (\w+)$/.exec(text);
+		if (!command || !command.length || !command.length == 3){
+			this.share("Sorry, I didn't understand that..");
+			return;
+		}
+		var points = command[1];
+		var target = command[2];
+		if (!points || !target){
+			this.share("Sorry, I didn't understand that..");
+			return;
+		}
+		this.share("@"+target+", you have been given "+points+" points by @"+from);
 	},
 	_about: function (){
 		this.share("I am Karmabot version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
@@ -50,6 +61,7 @@ Karmabot.prototype = {
 		this.share("Perhaps you need to rephrase... ");
 	},
 	_help: function (who){
+		this.say(who, "[bot give] Gives a player X points. Example: 'bot give 5 points to slash'.");
 		this.say(who, "[bot about] Gets some information about the karmabot.");
 	},
 	say: function(who, text){
