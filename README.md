@@ -1,6 +1,6 @@
-slashbot
-========
-A fun IRC bot for role playing and stuff.
+karmabot
+=======
+A fun slack bot to incentive collaboration between developers
 
 Running it
 ==========
