@@ -1,13 +1,13 @@
-function Karmabot(config){
+function Collabot(config){
 	this.version = "0.1";
 	this.config = config;
 	this.connector = new config.connector(config);
 	this.persistence = new config.persistence(config);
 }
 
-module.exports = Karmabot;
+module.exports = Collabot;
 
-Karmabot.prototype = {
+Collabot.prototype = {
 	start: function(){
 		this.persistence.init();
 		this.connector.init(this);
@@ -49,7 +49,7 @@ Karmabot.prototype = {
 		this.share("@"+target+", you have been given "+points+" points by @"+from);
 	},
 	_about: function (){
-		this.share("I am Karmabot version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
+		this.share("I am Collabot version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
 	},
 	_joke: function(){
 		this.share("This is no time for jokes, my friend.");
