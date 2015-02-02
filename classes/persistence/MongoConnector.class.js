@@ -9,26 +9,47 @@ MongoConnector.prototype = {
 	init: function(){},
 	updatePlayerScore: function(updateScoreRequest, callback){
 		this.db.collection('players').update(
-			{name: updateScoreRequest.playerName}, 
+			{ name: updateScoreRequest.toPlayerName}, 
 			{
-				$add: { totalCollabPts: updateScoreRequest.collabPoints},
+				$inc: { totalCollabPts: updateScoreRequest.collabPoints},
 				$setOnInsert: {
-					name: updateScoreRequest.playerName,
-					availableCollabPts: 10,
-					totalCollabPts: updateScoreRequest.collabPoints
+					name: updateScoreRequest.toPlayerName,
+					availableCollabPts: 10
 				}
 			},
 			{ upsert: true },
 			function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
 		);
-	}
+	},
+	reducePlayerAvailablePoints: function(updateScoreRequest, callback){
+		this.db.collection('players').update(
+			{ name: updateScoreRequest.fromPlayerName}, 
+			{
+				$inc: { availableCollabPts: -updateScoreRequest.collabPoints}
+			},
+			{},
+			function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
+		);
+	},
+	getPlayerByName: function(playerName, callback){
+		this.db.collection('players').find({name: playerName}).toArray(
+			function (err, result) {
+				if (err) {
+					console.log(err);
+			    } else {
+			    	var player = result[0];
+			    	callback(player);
+			    }
+		    }
+	    );
+	},
 }
 
 MongoConnector.defaultHandler = function (err, result, callback) {
 	if (err) {
 		console.log(err);
     } else {
-    	callback(result, err);
+    	callback(result);
     }
 };
 

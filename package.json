@@ -10,7 +10,8 @@
     "require": "*",
     "rc": "*",
     "mongoskin": "*",
-    "slack-client": "*"
+    "slack-client": "*",
+    "async": "*"
   },
   "repository": {
     "type": "git",
