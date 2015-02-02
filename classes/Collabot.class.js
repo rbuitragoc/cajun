@@ -46,7 +46,18 @@ Collabot.prototype = {
 			this.share("Sorry, I didn't understand that..");
 			return;
 		}
-		this.share("@"+target+", you have been given "+points+" points by @"+from);
+		var updateScoreRequest = {
+			playerName: target,
+			collabPoints: points
+		}
+		var bot = this;
+		this.connector.updatePlayerScore(updateScoreRequest, function(player, err){
+			if (err){
+				bot.share("I couldn't give the points: "+err);
+			} else {
+				bot.share("@"+target+", you have been given "+points+" points by @"+from);
+			}
+		})
 	},
 	_about: function (){
 		this.share("I am Collabot version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
