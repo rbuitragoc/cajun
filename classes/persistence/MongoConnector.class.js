@@ -7,62 +7,29 @@ function MongoConnector(config){
 
 MongoConnector.prototype = {
 	init: function(){},
-	createStory: function (storyName, callback){
-		var PIN = Math.round(Math.random()*20000);
-		var connector = this;
-		this.getStory(PIN, function(story){
-			if (story){
-				var newPIN = Math.round(Math.random()*20000);
-				connector.getStory(newPIN, this);
-			} else {
-				var newStory = {
-					name: storyName,
-					pin: PIN,
-					fragments: []
+	updatePlayerScore: function(updateScoreRequest, callback){
+		this.db.collection('players').update(
+			{name: updateScoreRequest.playerName}, 
+			{
+				$add: { totalCollabPts: updateScoreRequest.collabPoints},
+				$setOnInsert: {
+					name: updateScoreRequest.playerName,
+					availableCollabPts: 10,
+					totalCollabPts: updateScoreRequest.collabPoints
 				}
-				connector.db.collection('stories').insert(newStory, 
-					function(err, result){
-						if (err) {
-							console.log(err);
-					    } else {
-					    	console.log(result);
-					    	callback(result[0]);
-					    }
-					}
-				);
-			}
-		})
-	},
-	getStory: function (storyPIN, callback){
-		storyPIN = parseInt(storyPIN);
-	    this.db.collection('stories').find({pin: storyPIN}).toArray(
-	    	function (err, result) {
-	    		if (err) {
-					console.log(err);
-			    } else {
-			    	callback(result[0]);
-			    }
-		    }
-	    );
-	},
-	getStoriesList: function(callback){
-		this.db.collection('stories').find({},{name: 1, pin: 1}).toArray(
-	    	function (err, result) {
-	    		if (err) {
-					console.log(err);
-			    } else {
-			    	callback(result);
-			    }
-		    }
-	    ); 
-	},
-	saveStory: function(story){
-		this.db.collection('stories').update({_id: story._id}, {$set:{fragments:story.fragments}}, function(err, result) {
-			if (err) {
-				console.log(err);
-		    }
-		});
+			},
+			{ upsert: true },
+			function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
+		);
 	}
 }
+
+MongoConnector.defaultHandler = function (err, result, callback) {
+	if (err) {
+		console.log(err);
+    } else {
+    	callback(result, err);
+    }
+};
 
 module.exports = MongoConnector;
