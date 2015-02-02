@@ -7,11 +7,24 @@ CollaborationManager.prototype =  {
 	givePoints: function(updateScoreRequest, bot){
 		async.waterfall([
 			function(next){
-				bot.persistence.getPlayerAvailablePoints(updateScoreRequest.fromPlayerName, function(availablePoints, err){
+				bot.persistence.getPlayerByName(updateScoreRequest.fromPlayerName, function(player, err){
 					if (err){
 						bot.share("I couldn't give the points: "+err);
-					} else if (availablePoints < updateScoreRequest.collabPoints) {
+					} else if (!player){
+						bot.share("Who are you??");
+					} else if (player.availableCollabPts < updateScoreRequest.collabPoints) {
 						bot.share("You don't have enough points!");
+					} else {
+						next();
+					}
+				});
+			},
+			function(next){
+				bot.persistence.getPlayerByName(updateScoreRequest.toPlayerName, function(player, err){
+					if (err){
+						bot.share("I couldn't give the points: "+err);
+					} else if (!player){
+						bot.share("Who's that?");
 					} else {
 						next();
 					}
