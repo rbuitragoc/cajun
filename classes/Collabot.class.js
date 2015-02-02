@@ -7,31 +7,39 @@ function Collabot(config){
 
 module.exports = Collabot;
 
+var CollaborationManager = require('./CollaborationManager.class');
+
 Collabot.prototype = {
 	start: function(){
 		this.persistence.init();
 		this.connector.init(this);
+		this.collaborationManager = new CollaborationManager();
 	},
 	channelJoined: function(channel, who){
 		
 	},
 	message: function(from, text){
-		if (!text)
-			return;
-		if (text.indexOf("bot") == 0){
-			if (text.indexOf("give") > -1){
-				this._give(from, text);
-			} else if (text.indexOf("about") > -1){
-				this._about(from);
-			} else if (text.indexOf("help") > -1){
-				this._help(from);
-			} else if (text.indexOf("joke") > -1){
-				this._joke();
-			} else	if (text.indexOf("creator") > -1){
-				this._creator();
-			}else {
-				this._wtf(from);
-			}	
+		try {
+			if (!text)
+				return;
+			if (text.indexOf("bot") == 0){
+				if (text.indexOf("give") > -1){
+					this._give(from, text);
+				} else if (text.indexOf("about") > -1){
+					this._about(from);
+				} else if (text.indexOf("help") > -1){
+					this._help(from);
+				} else if (text.indexOf("joke") > -1){
+					this._joke();
+				} else	if (text.indexOf("creator") > -1){
+					this._creator();
+				}else {
+					this._wtf(from);
+				}	
+			}
+		} catch (err){
+			this.share('Whoopsie! '+err);
+			console.log(err.stack);
 		}
 	},
 	_give: function (from, text){
@@ -47,17 +55,13 @@ Collabot.prototype = {
 			return;
 		}
 		var updateScoreRequest = {
-			playerName: target,
-			collabPoints: points
+			fromPlayerName: from,
+			toPlayerName: target,
+			collabPoints: parseInt(points)
 		}
-		var bot = this;
-		this.connector.updatePlayerScore(updateScoreRequest, function(player, err){
-			if (err){
-				bot.share("I couldn't give the points: "+err);
-			} else {
-				bot.share("@"+target+", you have been given "+points+" points by @"+from);
-			}
-		})
+		console.log("updateScoreRequest:");
+		console.log(updateScoreRequest)
+		this.collaborationManager.givePoints(updateScoreRequest, this);
 	},
 	_about: function (){
 		this.share("I am Collabot version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
