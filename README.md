@@ -1,4 +1,4 @@
-karmabot
+collabot
 =======
 A fun slack bot to incentive collaboration between developers
 
