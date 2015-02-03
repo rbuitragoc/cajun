@@ -11,7 +11,7 @@ CollaborationManager.prototype =  {
 					if (err){
 						bot.share("I couldn't give the points: "+err);
 					} else if (!player){
-						bot.persistence.insertNewPlayer(updateScoreRequest, function(player, err){
+						bot.persistence.insertNewPlayer(updateScoreRequest.fromPlayerName, function(player, err){
 							if(!player || err){
 								bot.share("I couldn't give the points: "+err);
 								console.log(err.stack);

@@ -86,6 +86,29 @@ Collabot.prototype = {
 		this.connector.share(text);
 	},
 	registerPlayers: function(players){
-		
+		console.log("Saving to DB: ");
+		console.log(players);
+		var that = this;
+		for(var i = 0; i < players.length; i ++){
+			this.persistence.getPlayerByName(players[i], function(player, err){
+				if(err){
+					console.error(err);
+				} else {
+					if(!player){
+						console.log("New Player: ");
+						that.persistence.insertNewPlayer(players[i], function(player, err){
+							if(!player || err){
+								console.log(err.stack);
+							} else {
+								console.log("Player inserted: " + player);
+							}
+						});
+					} else {
+						console.log("Player exists, not inserting it again.");
+					}
+					
+				}
+			});
+		}
 	}
 }

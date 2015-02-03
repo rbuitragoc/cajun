@@ -42,7 +42,7 @@ SlackConnector.prototype = {
 				return;
 			}
 			that.slackChannel = slackChannel;
-			that._registerAllChannelMembers(slackChannel);
+			that._registerAllMembers(slack.users);
 			console.log('Welcome to Slack. You are @%s of %s', slack.self.name, slack.team.name);
 			console.log('You are in: %s', channelName);
 			
@@ -83,13 +83,13 @@ SlackConnector.prototype = {
 		console.log("Sharing: " + text);
 		this.slackChannel.send(text);
 	},
-	_registerAllChannelMembers: function (channel){
-		for(var i = 0; i < channel.members.length; i++){
-			if(this.slack.getUserByID(channel.members[i]).presence == 'active'){
-				this.activeUsersArray.push(this.slack.getUserByID(channel.members[i]).name);							
-			}
-		}
-		this.bot.registerPlayers(this.activeUsersArray);
+	_registerAllMembers: function (users){
+		var userNamesArray = [];
+		Object.keys(users).forEach(function(key){
+			var value = users[key];
+			userNamesArray.push(value.name);
+		});			
+		this.bot.registerPlayers(userNamesArray);
 	}
 }
 

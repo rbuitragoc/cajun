@@ -7,10 +7,10 @@ function MongoConnector(config){
 
 MongoConnector.prototype = {
 	init: function(){},
-	insertNewPlayer: function(updateScoreRequest, callback){
+	insertNewPlayer: function(playerName, callback){
 		this.db.collection('players').insert(
 			{
-				name: updateScoreRequest.fromPlayerName,
+				name: playerName,
 				availableCollabPts: 10,
 				totalCollabPts: 0
 			},
