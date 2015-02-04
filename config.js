@@ -5,15 +5,14 @@ var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
 // Slack API config karmabot for tests
 module.exports = {
-	environment: "slashieMachine",
+	environment: "rick's lap",
 	channel: "karma",
-	botName: "collabot",
-	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
+	botName: "karmabot",
+	token: 'xoxb-3534020363-hXwUqB5krA8fMZbxR7VmHsxB',
 	autoReconnect: true,
 	autoMark: true,
 	connector: SlackConnector,
-	persistence: MongoConnector,
-	dbURL: 'mongodb://localhost:27017/collabot'
+	persistence: JSONConnector
 };
 
 // Slack API config prod
