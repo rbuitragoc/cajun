@@ -11,13 +11,25 @@ CollaborationManager.prototype =  {
 					if (err){
 						bot.share("I couldn't give the points: "+err);
 					} else if (!player){
-						bot.share("Who are you??");
-					} else if (player.availableCollabPts < updateScoreRequest.collabPoints) {
-						bot.share("You don't have enough points!");
+						bot.persistence.insertNewPlayer(updateScoreRequest.fromPlayerName, function(player, err){
+							if(!player || err){
+								bot.share("I couldn't give the points: "+err);
+								console.log(err.stack);
+							} else {
+								next(false, player);
+							}
+						});
 					} else {
-						next();
+						next(false, player);
 					}
 				});
+			},
+			function(player, next){
+				if (player.availableCollabPts < updateScoreRequest.collabPoints) {
+					bot.share("You don't have enough points!");
+				} else {
+					next();
+				}
 			},
 			function(next){
 				bot.persistence.getPlayerByName(updateScoreRequest.toPlayerName, function(player, err){
@@ -54,7 +66,11 @@ CollaborationManager.prototype =  {
 		],
         function (error){
 			if (error) {
+				console.log("General error.");
+				console.log(error);
+				console.log(error.stack);
 				bot.share("I couldn't give the points: "+error);
+
 			}
 		});
 	}

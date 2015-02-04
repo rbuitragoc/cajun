@@ -8,6 +8,7 @@ function Collabot(config){
 module.exports = Collabot;
 
 var CollaborationManager = require('./CollaborationManager.class');
+var async = require('async');
 
 Collabot.prototype = {
 	start: function(){
@@ -86,6 +87,32 @@ Collabot.prototype = {
 		this.connector.share(text);
 	},
 	registerPlayers: function(players){
-		
+		console.log("registering players...");
+		console.log(players);
+		var that = this;	
+
+		async.each(players, 
+
+			function (player){
+				that.persistence.getPlayerByName(player, function(user, err){
+					if(err){
+						console.log("error getting player");
+						console.error(err);
+					} else if(!user){
+						console.log("new Player: ");
+						console.log(player);
+						that.persistence.insertNewPlayer(player, function(inserted, err){
+							if(err){
+								console.log(err.stack);
+							} else {
+								console.log("player inserted: ");
+								console.log(inserted);
+							}
+						});
+					}
+				});
+			},
+
+			function(err){console.error(err);});		
 	}
 }

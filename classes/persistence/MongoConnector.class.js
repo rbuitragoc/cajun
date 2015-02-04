@@ -7,6 +7,16 @@ function MongoConnector(config){
 
 MongoConnector.prototype = {
 	init: function(){},
+	insertNewPlayer: function(playerName, callback){
+		this.db.collection('players').insert(
+			{
+				name: playerName,
+				availableCollabPts: 10,
+				totalCollabPts: 0
+			},
+			function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
+		);
+	},
 	updatePlayerScore: function(updateScoreRequest, callback){
 		this.db.collection('players').update(
 			{ name: updateScoreRequest.toPlayerName}, 
@@ -48,9 +58,9 @@ MongoConnector.prototype = {
 MongoConnector.defaultHandler = function (err, result, callback) {
 	if (err) {
 		console.log(err);
-    } else {
-    	callback(result);
+		console.log("Mongo DB error.");
     }
+    callback(result, err);
 };
 
 module.exports = MongoConnector;
