@@ -4,29 +4,30 @@ var JSONConnector = require("./classes/persistence/JSONConnector.class");
 var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
 // Slack API config karmabot for tests
-/*module.exports = {
-	environment: "rick's lap",
+module.exports = {
+	environment: "Gustavo's machine",
 	channel: "karma",
 	botName: "karmabot",
 	token: 'xoxb-3534020363-hXwUqB5krA8fMZbxR7VmHsxB',
 	autoReconnect: true,
 	autoMark: true,
 	connector: SlackConnector,
-	persistence: JSONConnector
-};*/
-
-// Slack API config prod
-module.exports = {
-	environment: "rick's Lap",
-	channel: "karma",
-	botName: "collabot",
-	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
-	autoReconnect: true,
-	autoMark: true,
-	connector: SlackConnector,
 	persistence: MongoConnector,
 	dbURL: 'mongodb://localhost:27017/collabot'
 };
+
+// Slack API config prod
+// module.exports = {
+// 	environment: "platanoMachine",
+// 	channel: "karma",
+// 	botName: "collabot",
+// 	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
+// 	autoReconnect: true,
+// 	autoMark: true,
+// 	connector: SlackConnector,
+// 	persistence: MongoConnector,
+//	dbURL: 'mongodb://localhost:27017/slashbot'
+// };
 
 // Sample Slack-thru-IRC config
 // module.exports = {
