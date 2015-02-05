@@ -38,7 +38,7 @@ MongoConnector.prototype = {
 			day = currentTime.getDay() + 1;
 		var now = year + '-' + month + '-' + day;
 		
-			this.db.collection('dailyScores').update(
+		this.db.collection('dailyScores').update(
 			{ 
 				time: now, 
 				channel: updateScoreRequest.channel,
@@ -60,6 +60,23 @@ MongoConnector.prototype = {
 			function(err, result) { MongoConnector.defaultHandler(err, result, callback); }
       	)
     },
+	updateChannelScore: function(updateScoreRequest, callback) {
+		this.db.collection('channelScores').update(
+			{ 
+				channel: updateScoreRequest.channel,
+				player: updateScoreRequest.toPlayerName
+			},
+			{
+				$inc: { collabPts: updateScoreRequest.collabPoints },
+				$setOnInsert: {
+					player: updateScoreRequest.toPlayerName,
+					channel: updateScoreRequest.channel
+				}
+			},
+			{ upsert: true },
+			function(err, result) { MongoConnector.defaultHandler(err, result, callback); }
+		)
+	},
 	reducePlayerAvailablePoints: function(updateScoreRequest, callback){
 		this.db.collection('players').update(
 			{ name: updateScoreRequest.fromPlayerName}, 
