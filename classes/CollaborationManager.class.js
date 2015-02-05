@@ -51,6 +51,15 @@ CollaborationManager.prototype =  {
 					}
          		});
              },
+             function(next) {
+				bot.persistence.updateDailyScore(updateScoreRequest, function(player, err) {
+					if (err) {
+						bot.share("Unable to grant the points: " + err)
+					} else {
+						next()
+					}
+				})
+             }, 
              function(next){
  				bot.persistence.saveHistoricalGrant(updateScoreRequest, function(player, err){
  					if (err){
