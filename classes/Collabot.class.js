@@ -34,7 +34,9 @@ Collabot.prototype = {
 					this._joke();
 				} else	if (text.indexOf("creator") > -1){
 					this._creator();
-				}else {
+				} else	if (text.indexOf("top") > -1){
+					this._top();
+				} else {
 					this._wtf(from);
 				}	
 			}
@@ -64,6 +66,9 @@ Collabot.prototype = {
 		console.log(updateScoreRequest)
 		this.collaborationManager.givePoints(updateScoreRequest, this);
 	},
+	_top: function(){
+		this.collaborationManager.topTen(this);
+	},
 	_about: function (){
 		this.share("I am Collabot version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
 	},
@@ -90,9 +95,7 @@ Collabot.prototype = {
 		console.log("registering players...");
 		console.log(players);
 		var that = this;	
-
 		async.each(players, 
-
 			function (player){
 				that.persistence.getPlayerByName(player, function(user, err){
 					if(err){
@@ -112,7 +115,6 @@ Collabot.prototype = {
 					}
 				});
 			},
-
 			function(err){console.error(err);});		
 	}
 }
