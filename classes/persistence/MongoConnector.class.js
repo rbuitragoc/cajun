@@ -1,4 +1,5 @@
 var MongoSkin = require('mongoskin');
+var DateUtils = require('../util/DateUtils.class');
 
 function MongoConnector(config){
 	this.name = 'MongoConnector';
@@ -122,6 +123,39 @@ MongoConnector.prototype = {
 		    }
 	    );
 	},
+	getDailyGrantedPoints: function(playerName, callback){
+		this.db.collection('dailyGrantedPoints').find({player: playerName, time:  new Date().formatMMDDYYYY()}).toArray(
+			function (err, result) {
+				if (err) {
+					console.log(err);
+			    } else {
+			    	var dailyGrantedPoints = result[0];
+			    	callback(dailyGrantedPoints);
+			    }
+		    }
+	    );
+	},
+	updateDailyGrantedPoints: function(updateScoreRequest, dailyGrantedPoints, callback){
+  		 if (!dailyGrantedPoints){
+  			this.db.collection('dailyGrantedPoints').insert(
+				{
+					player: updateScoreRequest.fromPlayerName,
+					collabPtsCount: updateScoreRequest.collabPoints,
+					time: new Date().formatMMDDYYYY()
+				},
+				function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
+			);
+  		 } else {
+  			this.db.collection('dailyGrantedPoints').update(
+				{ player: updateScoreRequest.fromPlayerName, time: new Date().formatMMDDYYYY()}, 
+				{
+					$inc: { collabPtsCount: updateScoreRequest.collabPoints},
+				},
+				{},
+				function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
+			);
+  		 }
+	}
 }
 
 MongoConnector.defaultHandler = function (err, result, callback) {
