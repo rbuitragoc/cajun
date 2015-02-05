@@ -31,6 +31,52 @@ MongoConnector.prototype = {
 			function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
 		);
 	},
+    updateDailyScore: function(updateScoreRequest, callback) {
+		var currentTime = new Date(),
+			year = currentTime.getFullYear(),
+			month = currentTime.getMonth(),
+			day = currentTime.getDay() + 1;
+		var now = year + '-' + month + '-' + day;
+		
+		this.db.collection('dailyScores').update(
+			{ 
+				time: now, 
+				channel: updateScoreRequest.channel,
+				player: updateScoreRequest.toPlayerName
+			},
+			{
+				$inc: { collabPts: updateScoreRequest.collabPoints },
+				$setOnInsert: {
+					player: updateScoreRequest.toPlayerName,
+					channel: updateScoreRequest.channel,
+					day: day,
+					//week, TODO!
+					month: month,
+					year: year,
+					time: now
+				}
+			},
+			{ upsert: true },
+			function(err, result) { MongoConnector.defaultHandler(err, result, callback); }
+      	)
+    },
+	updateChannelScore: function(updateScoreRequest, callback) {
+		this.db.collection('channelScores').update(
+			{ 
+				channel: updateScoreRequest.channel,
+				player: updateScoreRequest.toPlayerName
+			},
+			{
+				$inc: { collabPts: updateScoreRequest.collabPoints },
+				$setOnInsert: {
+					player: updateScoreRequest.toPlayerName,
+					channel: updateScoreRequest.channel
+				}
+			},
+			{ upsert: true },
+			function(err, result) { MongoConnector.defaultHandler(err, result, callback); }
+		)
+	},
 	reducePlayerAvailablePoints: function(updateScoreRequest, callback){
 		this.db.collection('players').update(
 			{ name: updateScoreRequest.fromPlayerName}, 
