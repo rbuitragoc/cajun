@@ -12,7 +12,6 @@ MongoConnector.prototype = {
 		this.db.collection('players').insert(
 			{
 				name: playerName,
-				availableCollabPts: 10,
 				totalCollabPts: 0
 			},
 			function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
@@ -24,8 +23,7 @@ MongoConnector.prototype = {
 			{
 				$inc: { totalCollabPts: updateScoreRequest.collabPoints},
 				$setOnInsert: {
-					name: updateScoreRequest.toPlayerName,
-					availableCollabPts: 10
+					name: updateScoreRequest.toPlayerName
 				}
 			},
 			{ upsert: true },
@@ -77,16 +75,6 @@ MongoConnector.prototype = {
 			{ upsert: true },
 			function(err, result) { MongoConnector.defaultHandler(err, result, callback); }
 		)
-	},
-	reducePlayerAvailablePoints: function(updateScoreRequest, callback){
-		this.db.collection('players').update(
-			{ name: updateScoreRequest.fromPlayerName}, 
-			{
-				$inc: { availableCollabPts: -updateScoreRequest.collabPoints}
-			},
-			{},
-			function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
-		);
 	},
 	saveHistoricalGrant: function(updateScoreRequest, callback){
 		var now = new Date().toISOString();
