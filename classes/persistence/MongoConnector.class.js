@@ -66,7 +66,7 @@ MongoConnector.prototype = {
 	    );
 	},
 	getTopPlayersByPoints: function(numberOfPlayers, callback){
-		this.db.collection('players').find().sort({'totalCollabPts': -1}).skip(0).limit(numberOfPlayers).toArray(
+		this.db.collection('players').find().sort({'totalCollabPts': -1}).limit(numberOfPlayers).toArray(
 			function (err, result) {
 				if (err) {
 					console.log(err);

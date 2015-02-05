@@ -85,11 +85,16 @@ CollaborationManager.prototype =  {
 	},
 	topTen: function(bot){
 		bot.share("calculating top 10...");
+		
 		bot.persistence.getTopPlayersByPoints(10, function(result){
+			var top = "";
 			for(var i = 0; i < result.length; i++){
-				bot.share("#" + (i+1) + " - " + result[i].totalCollabPts + " CP - " + result[i].name);
+				var string = "#" + (i+1) + " - " + result[i].totalCollabPts + " CP - " + result[i].name + "\n";
+				top += string;
 			}
+			bot.share(top);
 		});
+		
 	}
 };
 
