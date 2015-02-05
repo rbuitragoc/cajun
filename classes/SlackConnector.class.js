@@ -53,7 +53,6 @@ SlackConnector.prototype = {
 				console.log("Ignoring non-message message ["+message.text+"]");				
 				return;
 			}
-			console.log(message.subtype);
 			if (message.subtype === 'channel_join'){
 				var user = slack.getUserByID(message.user);
 				bot.registerPlayer(user.name);	
