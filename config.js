@@ -13,7 +13,8 @@ module.exports = {
 	autoMark: true,
 	connector: SlackConnector,
 	persistence: MongoConnector,
-	dbURL: 'mongodb://localhost:27017/collabot'
+	dbURL: 'mongodb://localhost:27017/collabot',
+	maxCollabPoints : 10
 };
 
 // Slack API config prod

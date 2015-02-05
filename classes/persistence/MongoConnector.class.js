@@ -124,7 +124,7 @@ MongoConnector.prototype = {
 	    );
 	},
 	getDailyGrantedPoints: function(playerName, callback){
-		this.db.collection('dailyGrantedPoints').find({player: playerName, time:  new Date().formatMMDDYYYY()}).toArray(
+		this.db.collection('dailyGrantedPoints').find({player: playerName, time:  new Date().formatYYYYMMDD()}).toArray(
 			function (err, result) {
 				if (err) {
 					console.log(err);
@@ -141,13 +141,13 @@ MongoConnector.prototype = {
 				{
 					player: updateScoreRequest.fromPlayerName,
 					collabPtsCount: updateScoreRequest.collabPoints,
-					time: new Date().formatMMDDYYYY()
+					time: new Date().formatYYYYMMDD()
 				},
 				function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
 			);
   		 } else {
   			this.db.collection('dailyGrantedPoints').update(
-				{ player: updateScoreRequest.fromPlayerName, time: new Date().formatMMDDYYYY()}, 
+				{ player: updateScoreRequest.fromPlayerName, time: new Date().formatYYYYMMDD()}, 
 				{
 					$inc: { collabPtsCount: updateScoreRequest.collabPoints},
 				},
