@@ -73,6 +73,14 @@ CollaborationManager.prototype =  {
 
 			}
 		});
+	},
+	topTen: function(bot){
+		bot.share("calculating top 10...");
+		bot.persistence.getTopPlayersByPoints(10, function(result){
+			for(var i = 0; i < result.length; i++){
+				bot.share("#" + (i+1) + " - " + result[i].totalCollabPts + " CP - " + result[i].name);
+			}
+		});
 	}
 };
 
