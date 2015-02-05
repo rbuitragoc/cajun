@@ -97,25 +97,33 @@ Collabot.prototype = {
 		console.log(players);
 		var that = this;	
 		async.each(players, 
-			function (player){
-				that.persistence.getPlayerByName(player, function(user, err){
+			function(player){that.registerPlayer(player);},
+			function(err){
+				console.error(err);
+			});		
+	},
+	registerPlayer: function(player){
+		console.log("registering player...");
+		console.log(player);
+		var that = this;
+		that.persistence.getPlayerByName(player, function(user, err){
+			if(err){
+				console.log("error getting player");
+				console.error(err);
+			} else if(!user){
+				console.log("new Player: ");
+				console.log(player);
+				that.persistence.insertNewPlayer(player, function(inserted, err){
 					if(err){
-						console.log("error getting player");
-						console.error(err);
-					} else if(!user){
-						console.log("new Player: ");
-						console.log(player);
-						that.persistence.insertNewPlayer(player, function(inserted, err){
-							if(err){
-								console.log(err.stack);
-							} else {
-								console.log("player inserted: ");
-								console.log(inserted);
-							}
-						});
+						console.log(err.stack);
+					} else {
+						console.log("player inserted: ");
+						console.log(inserted);
 					}
 				});
-			},
-			function(err){console.error(err);});		
+			} else {
+				console.log(user + " already exists.");
+			}
+		});		
 	}
 }

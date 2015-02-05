@@ -50,16 +50,25 @@ SlackConnector.prototype = {
 
 		slack.on('message', function(message){
 			if (message.type != 'message'){
-				console.log("Ignoring non-message message ["+message.text+"]")
+				console.log("Ignoring non-message message ["+message.text+"]");				
 				return;
-			} 
+			}
+			console.log(message.subtype);
+			if (message.subtype === 'channel_join'){
+				var user = slack.getUserByID(message.user);
+				bot.registerPlayer(user.name);	
+			}
 		    var user = slack.getUserByID(message.user);
 		    var text = message.text;
 			if (!user){
 				console.log("Error: user ["+message.user+"] not found.")
 				return;
 			}
-			bot.message(user.name, text);			
+			bot.message(user.name, text);
+		});
+
+		slack.on('team_join', function(data){
+			console.log(data);
 		});
 
 		slack.on('error', function(error) {
