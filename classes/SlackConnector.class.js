@@ -59,7 +59,7 @@ SlackConnector.prototype = {
 				console.log("Error: user ["+message.user+"] not found.")
 				return;
 			}
-			
+			bot.message(user.name, text);			
 		});
 
 		slack.on('error', function(error) {

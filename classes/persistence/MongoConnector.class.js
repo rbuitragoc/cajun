@@ -41,6 +41,18 @@ MongoConnector.prototype = {
 			function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
 		);
 	},
+	saveHistoricalGrant: function(updateScoreRequest, callback){
+		var now = new Date().toISOString();
+		this.db.collection('historicalGrants').insert(
+				{ 
+					from: updateScoreRequest.fromPlayerName,
+					to: updateScoreRequest.toPlayerName,
+					timestamp: now,
+					collabPts: updateScoreRequest.collabPoints
+				},
+				function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
+			);
+		},
 	getPlayerByName: function(playerName, callback){
 		this.db.collection('players').find({name: playerName}).toArray(
 			function (err, result) {
