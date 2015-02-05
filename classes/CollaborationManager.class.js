@@ -52,6 +52,15 @@ CollaborationManager.prototype =  {
          		});
              },
              function(next){
+ 				bot.persistence.saveHistoricalGrant(updateScoreRequest, function(player, err){
+ 					if (err){
+ 						bot.share("Error Saving Historical Grant: "+err);
+ 					} else {
+ 						next();
+ 					}
+          		});
+              },
+             function(next){
             	 bot.persistence.reducePlayerAvailablePoints(updateScoreRequest, function(player, err){
             		 if (err){
             			 bot.share("I couldn't give the points: "+err);
