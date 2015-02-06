@@ -103,16 +103,14 @@ Collabot.prototype = {
 			});		
 	},
 	registerPlayer: function(player){
-		console.log("registering player...");
-		console.log(player);
+		console.log("attempting to register player: " + player);		
 		var that = this;
 		that.persistence.getPlayerByName(player, function(user, err){
 			if(err){
 				console.log("error getting player");
 				console.error(err);
 			} else if(!user){
-				console.log("new Player: ");
-				console.log(player);
+				console.log("new Player: " + player);				
 				that.persistence.insertNewPlayer(player, function(inserted, err){
 					if(err){
 						console.log(err.stack);
