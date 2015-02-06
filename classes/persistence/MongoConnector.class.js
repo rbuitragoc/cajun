@@ -1,4 +1,5 @@
 var MongoSkin = require('mongoskin');
+var DateUtils = require('../util/DateUtils.class');
 
 function MongoConnector(config){
 	this.name = 'MongoConnector';
@@ -11,7 +12,6 @@ MongoConnector.prototype = {
 		this.db.collection('players').insert(
 			{
 				name: playerName,
-				availableCollabPts: 10,
 				totalCollabPts: 0
 			},
 			function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
@@ -23,8 +23,7 @@ MongoConnector.prototype = {
 			{
 				$inc: { totalCollabPts: updateScoreRequest.collabPoints},
 				$setOnInsert: {
-					name: updateScoreRequest.toPlayerName,
-					availableCollabPts: 10
+					name: updateScoreRequest.toPlayerName
 				}
 			},
 			{ upsert: true },
@@ -77,16 +76,6 @@ MongoConnector.prototype = {
 			function(err, result) { MongoConnector.defaultHandler(err, result, callback); }
 		)
 	},
-	reducePlayerAvailablePoints: function(updateScoreRequest, callback){
-		this.db.collection('players').update(
-			{ name: updateScoreRequest.fromPlayerName}, 
-			{
-				$inc: { availableCollabPts: -updateScoreRequest.collabPoints}
-			},
-			{},
-			function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
-		);
-	},
 	saveHistoricalGrant: function(updateScoreRequest, callback){
 		var now = new Date().toISOString();
 		this.db.collection('historicalGrants').insert(
@@ -122,6 +111,39 @@ MongoConnector.prototype = {
 		    }
 	    );
 	},
+	getDailyGrantedPoints: function(playerName, callback){
+		this.db.collection('dailyGrantedPoints').find({player: playerName, time:  new Date().formatYYYYMMDD()}).toArray(
+			function (err, result) {
+				if (err) {
+					console.log(err);
+			    } else {
+			    	var dailyGrantedPoints = result[0];
+			    	callback(dailyGrantedPoints);
+			    }
+		    }
+	    );
+	},
+	updateDailyGrantedPoints: function(updateScoreRequest, dailyGrantedPoints, callback){
+  		 if (!dailyGrantedPoints){
+  			this.db.collection('dailyGrantedPoints').insert(
+				{
+					player: updateScoreRequest.fromPlayerName,
+					collabPtsCount: updateScoreRequest.collabPoints,
+					time: new Date().formatYYYYMMDD()
+				},
+				function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
+			);
+  		 } else {
+  			this.db.collection('dailyGrantedPoints').update(
+				{ player: updateScoreRequest.fromPlayerName, time: new Date().formatYYYYMMDD()}, 
+				{
+					$inc: { collabPtsCount: updateScoreRequest.collabPoints},
+				},
+				{},
+				function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
+			);
+  		 }
+	}
 }
 
 MongoConnector.defaultHandler = function (err, result, callback) {

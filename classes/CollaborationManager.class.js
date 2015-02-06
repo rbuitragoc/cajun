@@ -25,11 +25,26 @@ CollaborationManager.prototype =  {
 				});
 			},
 			function(player, next){
-				if (player.availableCollabPts < updateScoreRequest.collabPoints) {
-					bot.share("You don't have enough points!");
-				} else {
-					next();
-				}
+				bot.persistence.getDailyGrantedPoints(updateScoreRequest.fromPlayerName, function(dailyGrantedPoints, err){
+					if (err){
+						bot.share("I couldn't get Daily granted points: "+err);
+					}
+					else if (dailyGrantedPoints && updateScoreRequest.maxCollabPoints < (dailyGrantedPoints.collabPtsCount + updateScoreRequest.collabPoints)) {
+						bot.share("You don't have enough points!");
+					} 
+					else {
+						next(false, dailyGrantedPoints);
+					}
+				});
+			},
+            function(dailyGrantedPoints, next){
+				bot.persistence.updateDailyGrantedPoints(updateScoreRequest, dailyGrantedPoints, function(player, err){
+					if (err){
+						bot.share("I couldn't set daily granted points: "+err);
+					} else {
+						next();
+					}
+				});
 			},
 			function(next){
 				bot.persistence.getPlayerByName(updateScoreRequest.toPlayerName, function(player, err){
@@ -78,15 +93,6 @@ CollaborationManager.prototype =  {
  					}
           		});
               },
-             function(next){
-            	 bot.persistence.reducePlayerAvailablePoints(updateScoreRequest, function(player, err){
-            		 if (err){
-            			 bot.share("I couldn't give the points: "+err);
-            		 } else {
-            			 next();
-            		 }
-            	 });
-			},
 			function(next){
 				bot.share("@"+updateScoreRequest.toPlayerName+", you have been given "+updateScoreRequest.collabPoints+" points by @"+updateScoreRequest.fromPlayerName);
 			}

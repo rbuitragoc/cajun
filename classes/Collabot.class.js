@@ -61,7 +61,8 @@ Collabot.prototype = {
 			fromPlayerName: from,
 			toPlayerName: target,
 			collabPoints: parseInt(points),
-			channel: this.connector.slackChannel.name
+			channel: this.connector.slackChannel.name,
+			maxCollabPoints : this.config.maxCollabPoints
 		}
 		console.log("updateScoreRequest:");
 		console.log(updateScoreRequest)
