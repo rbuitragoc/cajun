@@ -1,6 +1,6 @@
 Date.prototype.formatYYYYMMDD = function() {
-	var month = this.getMonth() + 1;
-	var day = this.getDay() + 1;
+	var month = this.getUTCMonth() + 1;
+	var day = this.getUTCDay() + 1;
 	if (month < 10) {
 		month = "0" + month;
 	}
