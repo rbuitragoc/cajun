@@ -36,6 +36,8 @@ Collabot.prototype = {
 					this._creator();
 				} else	if (text.indexOf("top") > -1){
 					this._top();
+				} else if (text.toLowerCase().indexOf("how am i") > -1){
+					this._howAmIDoing(from);
 				} else {
 					this._wtf(from);
 				}	
@@ -71,6 +73,9 @@ Collabot.prototype = {
 	_top: function(){
 		this.collaborationManager.topTen(this);
 	},
+	_howAmIDoing: function (from){
+		this.collaborationManager.tellStatusTo(from, this);
+	},
 	_about: function (){
 		this.share("I am Collabot version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
 	},
@@ -85,7 +90,8 @@ Collabot.prototype = {
 	},
 	_help: function (who){
 		this.say(who, "[bot give] Gives a player X points. Example: 'bot give 5 points to slash'.");
-		this.say(who, "[bot about] Gets some information about the karmabot.");
+		this.say(who, "[bot about] Gets some information about the collabot.");
+		this.say(who, "[bot how am i] Tells you your overall, daily, weekly and last week scores.");
 	},
 	say: function(who, text){
 		this.connector.say(who, text);
