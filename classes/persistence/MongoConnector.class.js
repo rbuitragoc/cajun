@@ -32,10 +32,10 @@ MongoConnector.prototype = {
 	},
     updateDailyScore: function(updateScoreRequest, callback) {
 		var currentTime = new Date(),
-			year = currentTime.getFullYear(),
-			month = currentTime.getMonth(),
+			year = currentTime.getUTCFullYear(),
+			month = currentTime.getUTCMonth(),
 			week = currentTime.getWeek(),
-			day = currentTime.getDay() + 1;
+			day = currentTime.getUTCDay() + 1;
 		var now =  new Date().formatYYYYMMDD();
 		
 		this.db.collection('dailyScores').update(
