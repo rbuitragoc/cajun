@@ -34,8 +34,9 @@ MongoConnector.prototype = {
 		var currentTime = new Date(),
 			year = currentTime.getUTCFullYear(),
 			month = currentTime.getUTCMonth(),
+			week = currentTime.getWeek(),
 			day = currentTime.getUTCDay() + 1;
-		var now = year + '-' + month + '-' + day;
+		var now =  new Date().formatYYYYMMDD();
 		
 		this.db.collection('dailyScores').update(
 			{ 
@@ -49,7 +50,7 @@ MongoConnector.prototype = {
 					player: updateScoreRequest.toPlayerName,
 					channel: updateScoreRequest.channel,
 					day: day,
-					//week, TODO!
+					week: week,
 					month: month,
 					year: year,
 					time: now
@@ -143,7 +144,47 @@ MongoConnector.prototype = {
 				function(err, result) {MongoConnector.defaultHandler(err,result,callback);}
 			);
   		 }
-	}
+	},
+	getPlayerDailyScore: function(playerName, callback){
+		this.db.collection('dailyScores').find({player: playerName, time: new Date().formatYYYYMMDD()}).toArray(
+			function (err, result) {
+				if (err) {
+					console.log(err);
+			    } else {
+			    	var dailyScore = result[0];
+			    	callback(dailyScore);
+			    }
+		    }
+	    );
+	},
+	getPlayerWeeklyScore: function(playerName, week, year, callback){
+		var operators = [
+		                 {
+		     				$match : {
+		     					player : playerName,
+		     					week : week,
+		     					year: year
+		     				}
+		                 },
+		     			{
+		                 	$group : {
+		     					_id : "$week",
+		     					total : {
+		     						$sum : "$collabPts"
+		     					}
+		                 	}
+		                 }
+		     		 ];
+		this.db.collection('dailyScores').aggregate(operators, function(err, score) {
+			if (err) {
+				console.log(err);
+			} if (score.length == 0){
+				callback(0);
+			}else {
+				callback(score[0].total);
+			}
+		});
+	},
 }
 
 MongoConnector.defaultHandler = function (err, result, callback) {

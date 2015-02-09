@@ -38,8 +38,8 @@ SlackConnector.prototype = {
 				console.log("Error: Channel ["+channelName+"] not found or inaccessible");
 				return;
 			} else if (!slackChannel.is_member) {
-				console.log("Error: Bot is not member of channel ["+channelName+"]");
-				return;
+				console.log("Bot is not member of channel ["+channelName+"], joining");
+				slack.joinChannel(channelName); // @slash 090215 - This does nothing.
 			}
 			that.slackChannel = slackChannel;
 			that._registerAllMembers(slack.users);
@@ -80,8 +80,22 @@ SlackConnector.prototype = {
 	say: function(who, text){
 		console.log(typeof who);
 		console.log("Saying: " + text + " to " + who);
-		var dm = this.slack.getChannelGroupOrDMByName(who);
+		var dm = this.slack.getDMByName(who);
+		if (!dm){
+			console.log('Slack can\'t find DMByName ['+who+']');
+			/* @slash 090215 - Obscure bug, hard to reproduce this situation happening,
+			 * seems to happen when the bot and the person have never talked.
+			 * The following may work but would need to import a module from
+			 * node-slack; which I doubt is doable...
+			 * We'd rather submit a patch or fork it
+			 * 
+			 * this.slack.dms[who] = new DM(this.slack, this.users[who]);
+			 * dm = this.slack.dms[who];
+			 */
+			return;
+		}
 		dm.send(text);
+		
 	},
 	share: function(text){
 		console.log("Sharing: " + text);

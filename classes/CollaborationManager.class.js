@@ -2,6 +2,7 @@ var CollaborationManager = function(){
 };
 
 var async = require('async');
+var DateUtils = require('./util/DateUtils.class');
 
 CollaborationManager.prototype =  {
 	givePoints: function(updateScoreRequest, bot){
@@ -119,6 +120,88 @@ CollaborationManager.prototype =  {
 			bot.share(top);
 		});
 		
+	},
+	tellStatusTo: function(playerName, bot){
+		var status = {};
+		var today = DateUtils.getCurrentDate();
+		async.waterfall([
+ 			function(next){
+ 				bot.persistence.getPlayerByName(playerName, function(player, err){
+ 					if (err){
+ 						bot.say(player, "Something happened when I tried to find out... "+err);
+ 						next(err);
+ 					} else if (!player){
+ 						bot.say(player, "I don't know you, how would I know?");
+ 						next(err);
+ 					} else {
+ 						status.totalCollabPts = player.totalCollabPts;
+ 						next(false);
+ 					}
+ 				});
+ 			},
+ 			function(next){
+ 				bot.persistence.getPlayerDailyScore(playerName, function(player, err){
+ 					console.log("daily");
+ 					console.log(player);
+ 					if (err){
+ 						bot.say(player, "Something happened when I tried to find out... "+err);
+ 						next(err);
+ 					} else if (!player){
+ 						
+ 						status.dailyScore = 0;
+ 						next(false);
+ 					} else {
+ 						status.dailyScore = player.collabPts;
+ 						next(false);
+ 					}
+ 				});
+ 			},
+ 			function(next){
+ 				console.log("getting info for week "+today.week);
+ 				bot.persistence.getPlayerWeeklyScore(playerName, today.week, today.year, function(weeklyScore, err){
+ 					console.log("weeklyScore");
+ 					console.log(weeklyScore);
+ 					if (err){
+ 						bot.say(player, "Something happened when I tried to find out... "+err);
+ 						next(err);
+ 					} else {
+ 						status.weeklyScore = weeklyScore;
+ 						next(false);
+ 					}
+ 				});
+ 			},
+ 			function(next){
+ 				var lastWeek = today.week - 1;
+ 				var lastYear = today.year;
+ 				if (lastWeek == 0){
+ 					lastWeek = DateUtils.getLastWeekOf(lastYear-1);
+ 					lastYear --;
+ 				}
+ 				console.log("getting info for week "+lastWeek);
+ 				bot.persistence.getPlayerWeeklyScore(playerName, lastWeek, lastYear, function(weeklyScore, err){
+ 					if (err){
+ 						bot.say(player, "Something happened when I tried to find out... "+err);
+ 						next(err);
+ 					} else {
+ 						status.lastWeekScore = weeklyScore;
+ 						next(false);
+ 					}
+ 				});
+ 			},
+ 			function(next) {
+ 				bot.say(playerName, "You have been given "+status.totalCollabPts+" CollabPoints so far.");
+ 				bot.say(playerName, "Today, you have won "+status.dailyScore+" CollabPoints.");
+ 				bot.say(playerName, "This week you have been given a total of "+status.weeklyScore+" CollabPoints.");
+ 				bot.say(playerName, "Last week you were given a total of "+status.lastWeekScore+" CollabPoints.");
+ 			}
+ 		],
+        function (error){
+			console.log("General error.");
+			console.log(error);
+			console.log(error.stack);
+ 			bot.share("I couldn't give the points: "+error);
+		}
+ 		);
 	}
 };
 
