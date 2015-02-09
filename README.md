@@ -1,12 +1,15 @@
 [ ![Codeship Status for vpgambit/collabot](https://codeship.com/projects/88c1e940-92aa-0132-f0ed-6a8221c3ead3/status?branch=master)](https://codeship.com/projects/61945)
 
 [ ![Codeship Status for vpgambit/collabot](https://codeship.com/projects/88c1e940-92aa-0132-f0ed-6a8221c3ead3/status?branch=dev)](https://codeship.com/projects/61945)
+
 collabot
 ========
 A fun slack bot to incentive collaboration between developers
 
 Running it
 ==========
+Set the mongoDB variables located at config.js in your ~/.bashrc file.
+
 Type `npm install` and then `npm start`
 
 If you are going to use the MongoConnector, make sure you have a mongod instance 
