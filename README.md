@@ -1,3 +1,5 @@
+https://codeship.com/projects/88c1e940-92aa-0132-f0ed-6a8221c3ead3/status?branch=master
+
 collabot
 ========
 A fun slack bot to incentive collaboration between developers
