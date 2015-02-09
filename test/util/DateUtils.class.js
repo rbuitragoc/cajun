@@ -11,4 +11,6 @@ function testFormatYYYYMMDD() {
 	assert.equal(date.formatYYYYMMDD(), anyGivenDateString, 'Failed assertion! Never equal!');
 }
 
-testFormatYYYYMMDD();
+module.exports = {
+	testFormat: testFormatYYYYMMDD
+}

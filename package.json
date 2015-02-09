@@ -4,7 +4,8 @@
   "description": "A collaboration-enabled interactive modular bot system",
   "main": "collabot.js",
   "scripts": {
-    "start": "node collabot.js"
+    "start": "node collabot.js",
+	"test": "node test/all.js"
   },
   "dependencies": {
     "require": "*",
