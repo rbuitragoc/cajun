@@ -8,7 +8,7 @@ Running it
 ==========
 Set the mongoDB variables located at config.js in your ~/.bashrc file.
 
-Type `npm install` and then `npm start`
+Type `npm install` and then `npm test` to finally issue `npm start`
 
 If you are going to use the MongoConnector, make sure you have a mongod instance 
 responding to the url on config.js.
