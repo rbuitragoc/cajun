@@ -1,7 +1,7 @@
 {
   "name": "collabot",
   "version": "0.1.0",
-  "description": "A collaboration-enabled .",
+  "description": "A collaboration-enabled interactive modular bot system",
   "main": "collabot.js",
   "scripts": {
     "start": "node collabot.js"
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/vpkarmabot/collabot"
+    "url": "https://bitbucket.org/vpgambit/collabot"
   },
   "author": "Velocity Partners",
   "contributors": [
