@@ -9,3 +9,25 @@ Date.prototype.formatYYYYMMDD = function() {
 	}
 	return this.getUTCFullYear() + "-" + month + "-" + day;
 }
+
+Date.prototype.getWeek = function() {
+	var onejan = new Date(this.getFullYear(),0,1);
+	return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
+}
+
+module.exports = {
+	getCurrentDate: function(){
+		var date = new Date();
+		return {
+			day: date.getDay() + 1,
+			month: date.getMonth() + 1,
+			year: date.getFullYear(),
+			week: date.getWeek()
+		}
+	},
+	getLastWeekOf: function(year){
+		var date = new Date(year+1, 0, 1, 1, 0, 0, 0);
+		date.setDate(0);
+		return date.getWeek();
+	}
+}
