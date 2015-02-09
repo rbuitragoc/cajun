@@ -7,8 +7,8 @@ var MongoConnector = require("./classes/persistence/MongoConnector.class");
 module.exports = {
 	environment: "HEROKU",
 	channel: "karma",
-	botName: "karmabot",
-	token: 'xoxb-3534020363-hXwUqB5krA8fMZbxR7VmHsxB',
+	botName: "collabot",
+	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
 	autoReconnect: true,
 	autoMark: true,
 	connector: SlackConnector,
@@ -21,8 +21,8 @@ module.exports = {
 // module.exports = {
 // 	environment: "platanoMachine",
 // 	channel: "karma",
-// 	botName: "collabot",
-// 	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
+// 	botName: "karmabot",
+// 	token: 'xoxb-3534020363-hXwUqB5krA8fMZbxR7VmHsxB',
 // 	autoReconnect: true,
 // 	autoMark: true,
 // 	connector: SlackConnector,
