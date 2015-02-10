@@ -2,7 +2,7 @@
 
 collabot 
 ======== 
-A fun slack bot to incentive collaboration between developers
+A fun slack bot to incentive collaboration between developers  
 
 Running it
 ==========
