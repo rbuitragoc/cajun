@@ -5,14 +5,15 @@
   "main": "collabot.js",
   "scripts": {
     "start": "node collabot.js",
-	"test": "node test/all.js"
+    "test": "node test/all.js"
   },
   "dependencies": {
     "require": "*",
     "irc": "*",
     "mongoskin": "*",
     "slack-client": "*",
-    "async": "*"
+    "async": "*",
+    "express": "~4.11.2"
   },
   "repository": {
     "type": "git",
