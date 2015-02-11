@@ -3,6 +3,14 @@ function Collabot(config){
 	this.config = config;
 	this.connector = new config.connector(config);
 	this.persistence = new config.persistence(config);
+	this.running = null;
+}
+
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
 module.exports = Collabot;
@@ -11,15 +19,22 @@ var CollaborationManager = require('./CollaborationManager.class');
 var async = require('async');
 
 Collabot.prototype = {
-	start: function(){
-		this.persistence.init();
-		this.connector.init(this);
-		this.collaborationManager = new CollaborationManager();
+	start: function(callback){
+		if(this.running){
+			callback("Running already.");
+		} else {
+			this.persistence.init();
+			this.connector.init(this);
+			this.collaborationManager = new CollaborationManager();
+			this.running = guid();
+		}
+		
 	},
 	channelJoined: function(channel, who){
 		
 	},
 	message: function(from, text){
+		console.log("received: " + text);
 		try {
 			if (!text)
 				return;
