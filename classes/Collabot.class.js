@@ -3,7 +3,7 @@ function Collabot(config){
 	this.config = config;
 	this.connector = new config.connector(config);
 	this.persistence = new config.persistence(config);
-	this.running = null;
+	this.guid = null;
 }
 
 function guid() {
@@ -20,15 +20,26 @@ var async = require('async');
 
 Collabot.prototype = {
 	start: function(callback){
-		if(this.running){
-			callback("Running already.");
+		if(this.guid){
+			callback("running");
 		} else {
 			this.persistence.init();
 			this.connector.init(this);
 			this.collaborationManager = new CollaborationManager();
-			this.running = guid();
-		}
-		
+			this.guid = guid();
+			callback("started");
+		}		
+	},
+	stop: function(callback){
+		if(this.guid){
+			this.connector.logout();
+			this.guid = null;
+			this.persistence = null;
+			this.collaborationManager = null;
+			callback("stopped");
+		} else {
+			callback("nothing to stop")
+		}		
 	},
 	channelJoined: function(channel, who){
 		
@@ -92,7 +103,7 @@ Collabot.prototype = {
 		this.collaborationManager.tellStatusTo(from, this);
 	},
 	_about: function (){
-		this.share("I am Collabot version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
+		this.share("My ID is: "+ this.guid +" - I am Collabot version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
 	},
 	_joke: function(){
 		this.share("This is no time for jokes, my friend.");
