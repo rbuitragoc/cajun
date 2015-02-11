@@ -185,6 +185,39 @@ MongoConnector.prototype = {
 			}
 		});
 	},
+	insertConversation: function(conversation, callback){
+		this.db.collection('conversations').insert(conversation, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
+	},
+	updateConversation: function(topic, withPlayer, updateObject, callback){
+		this.db.collection('conversations').update({topic: topic, withPlayer: withPlayer}, updateObject, {}, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
+	},
+	getConversations: function(person, callback){
+		this.db.collection('conversations').find({withPlayer: person}).toArray(
+			function (err, results) {
+				if (err) {
+					console.log(err);
+			    } else {
+			    	callback(err, results);
+			    }
+		    }
+	    );
+	},
+	getConversation: function(topic, person, callback){
+		this.db.collection('conversations').find({topic: topic, withPlayer: person}).toArray(
+			function (err, results) {
+				if (err) {
+					console.log(err);
+			    } else if (results.length > 0){
+			    	callback(err, results[0]);
+			    } else {
+			    	callback(err, false);
+			    }
+		    }
+	    );
+	},
+	deleteConversation: function(topic, withPlayer, callback){
+		this.db.collection('conversations').remove({topic: topic, withPlayer: withPlayer}, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
+	}
 }
 
 MongoConnector.defaultHandler = function (err, result, callback) {

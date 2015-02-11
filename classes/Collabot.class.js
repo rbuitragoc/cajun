@@ -10,6 +10,7 @@ module.exports = Collabot;
 var CollaborationManager = require('./CollaborationManager.class');
 var ConversationManager = require('./managers/ConversationManager.class');
 var DefaultConversationHandler = require('./conversationHandlers/DefaultConversationHandler.class')
+var GreetingConversationHandler = require('./conversationHandlers/GreetingConversationHandler.class')
 var async = require('async');
 
 Collabot.prototype = {
@@ -17,8 +18,11 @@ Collabot.prototype = {
 		this.persistence.init();
 		this.connector.init(this);
 		this.collaborationManager = new CollaborationManager();
-		this.conversationManager = new ConversationManager();
+		this.conversationManager = new ConversationManager(this);
 		this.defaultConversationHandler = new DefaultConversationHandler(this);
+		this.handlers = {
+			greeting: new GreetingConversationHandler(this)
+		}
 	},
 	channelJoined: function(channel, who){
 		
@@ -26,13 +30,17 @@ Collabot.prototype = {
 	message: function(from, text){
 		if (!text)
 			return;
+		var bot = this;
 		this.conversationManager.getCurrentConversations(from, function(error, conversations){
 			if (error){
 				console.log("Error obtaining current conversations: "+error)
 				return;
 			}
 			for (var i = 0; i < conversations.length; i++){
-				conversations[i].handle(from, text);
+				var handler = bot.handlers[conversations[i].topic];
+				if (handler){
+					handler.handle(from, text, conversations[i]);
+				}
 			}
 		});
 		this.defaultConversationHandler.handle(from, text);

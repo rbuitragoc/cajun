@@ -22,7 +22,17 @@ DefaultConversationHandler.prototype = {
 					this._howAmIDoing(from);
 				} else {
 					this._wtf(from);
-				}	
+				}
+			} else {
+				if (text.indexOf("hello bot") > -1){
+					var handler = this;
+					this.bot.conversationManager.startConversation(from, "greeting", "waitingForMood", function(){
+						handler.bot.share("Hey hello "+from+", how are you doing today?");	
+					},
+					function(conversation){
+						// TODO: Add support to resume conversations
+					});
+				}
 			}
 		} catch (err){
 			this.bot.share('Whoopsie! '+err);
