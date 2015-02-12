@@ -1,5 +1,5 @@
 function Collabot(config){
-	this.version = "0.1";
+	this.version = "1.0";
 	this.config = config;
 	this.connector = new config.connector(config);
 	this.persistence = new config.persistence(config);
