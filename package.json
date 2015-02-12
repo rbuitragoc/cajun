@@ -1,24 +1,33 @@
 {
-  "name": "slashbot",
+  "name": "collabot",
   "version": "0.1.0",
-  "description": "A fun bot for role playing and stuff.",
-  "main": "slashbot.js",
+  "description": "A collaboration-enabled interactive modular bot system",
+  "main": "app.js",
   "scripts": {
-    "start": "node karmabot.js"
+    "start": "node app.js",
+    "test": "node test/all.js"
   },
   "dependencies": {
     "require": "*",
-    "node-irc": "*",
+    "irc": "*",
     "mongoskin": "*",
-    "slack-client": "*"
+    "slack-client": "*",
+    "async": "*",
+    "express": "~4.11.2",
+    "xtend": "~4.0.0",
+    "forms": "~1.1.1",
+    "csurf": "~1.6.6",
+    "jade": "~1.9.2"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/slashman/slashbot"
+    "url": "https://bitbucket.org/vpgambit/collabot"
   },
-  "author": "Santiago Zapata",
+  "author": "Velocity Partners",
   "contributors": [
     "Gustavo Guevara",
-    "Rick Buitrago"
+    "Rick Buitrago",
+    "Santiago Zapata",
+    "Ronald Manrique"
   ]
 }

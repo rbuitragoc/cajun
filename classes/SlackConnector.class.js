@@ -38,11 +38,11 @@ SlackConnector.prototype = {
 				console.log("Error: Channel ["+channelName+"] not found or inaccessible");
 				return;
 			} else if (!slackChannel.is_member) {
-				console.log("Error: Bot is not member of channel ["+channelName+"]");
-				return;
+				console.log("Bot is not member of channel ["+channelName+"], joining");
+				slack.joinChannel(channelName); // @slash 090215 - This does nothing.
 			}
 			that.slackChannel = slackChannel;
-			that._registerAllChannelMembers(slackChannel);
+			that._registerAllMembers(slack.users);
 			console.log('Welcome to Slack. You are @%s of %s', slack.self.name, slack.team.name);
 			console.log('You are in: %s', channelName);
 			
@@ -50,9 +50,13 @@ SlackConnector.prototype = {
 
 		slack.on('message', function(message){
 			if (message.type != 'message'){
-				console.log("Ignoring non-message message ["+message.text+"]")
+				console.log("Ignoring non-message message ["+message.text+"]");				
 				return;
-			} 
+			}
+			if (message.subtype === 'channel_join'){
+				var user = slack.getUserByID(message.user);
+				bot.registerPlayer(user.name);	
+			}
 		    var user = slack.getUserByID(message.user);
 		    var text = message.text;
 			if (!user){
@@ -60,10 +64,10 @@ SlackConnector.prototype = {
 				return;
 			}
 			bot.message(user.name, text);
-			if(that.activeUsersArray.indexOf(user.name) == -1){
-				that.activeUsersArray.push(user.name);
-			}
-			that.bot.registerPlayers(that.activeUsersArray);
+		});
+
+		slack.on('team_join', function(data){
+			console.log(data);
 		});
 
 		slack.on('error', function(error) {
@@ -76,20 +80,34 @@ SlackConnector.prototype = {
 	say: function(who, text){
 		console.log(typeof who);
 		console.log("Saying: " + text + " to " + who);
-		var dm = this.slack.getChannelGroupOrDMByName(who);
+		var dm = this.slack.getDMByName(who);
+		if (!dm){
+			console.log('Slack can\'t find DMByName ['+who+']');
+			/* @slash 090215 - Obscure bug, hard to reproduce this situation happening,
+			 * seems to happen when the bot and the person have never talked.
+			 * The following may work but would need to import a module from
+			 * node-slack; which I doubt is doable...
+			 * We'd rather submit a patch or fork it
+			 * 
+			 * this.slack.dms[who] = new DM(this.slack, this.users[who]);
+			 * dm = this.slack.dms[who];
+			 */
+			return;
+		}
 		dm.send(text);
+		
 	},
 	share: function(text){
 		console.log("Sharing: " + text);
 		this.slackChannel.send(text);
 	},
-	_registerAllChannelMembers: function (channel){
-		for(var i = 0; i < channel.members.length; i++){
-			if(this.slack.getUserByID(channel.members[i]).presence == 'active'){
-				this.activeUsersArray.push(this.slack.getUserByID(channel.members[i]).name);							
-			}
-		}
-		this.bot.registerPlayers(this.activeUsersArray);
+	_registerAllMembers: function (users){
+		var userNamesArray = [];
+		Object.keys(users).forEach(function(key){
+			var value = users[key];
+			userNamesArray.push(value.name);
+		});			
+		this.bot.registerPlayers(userNamesArray);
 	}
 }
 
