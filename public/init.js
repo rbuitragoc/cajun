@@ -1,3 +1,11 @@
+function manageBot(input) {
+	if (input.checked) {
+		startBot();
+	} else {
+		stopBot();
+	}
+}
+
 function startBot(){
 	$.ajax({
 		type: "POST",
