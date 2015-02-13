@@ -50,7 +50,7 @@ Collabot.prototype = {
 		}
 	},
 	_give: function (from, text){
-		var command = /give (\d+) points to (\w+)$/.exec(text);
+		var command = /give (\d+) points to (.+)$/.exec(text);
 		if (!command || !command.length || !command.length == 3){
 			this.share("Sorry, I didn't understand that..");
 			return;
