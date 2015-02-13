@@ -108,13 +108,19 @@ CollaborationManager.prototype =  {
 			}
 		});
 	},
-	topTen: function(bot){
-		bot.share("calculating top 10...");
-		
-		bot.persistence.getTopPlayersByPoints(10, function(result){
-			var top = "";
+	topTen: function(period, channel, bot){
+		var shareStr = "Calculating top 10..." + new Date();
+		shareStr += period ? ". Period: " + period: "";
+		shareStr += channel ? ". Channel: " + channel: "";
+		bot.share(shareStr);
+
+		console.log("period:" + period);
+		console.log("channel:" + channel);
+		bot.persistence.getTopPlayersByPoints(10, period, channel, function(result){
+			console.log(result);
+			var top = (!result || result.length == 0) ? "No data found" : "";
 			for(var i = 0; i < result.length; i++){
-				var string = "#" + (i+1) + " - " + result[i].totalCollabPts + " CP - " + result[i].name + "\n";
+				var string = "#" + (i+1) + " - " + result[i].totalCollabPoints + " CP - " + result[i]._id + "\n";
 				top += string;
 			}
 			bot.share(top);
