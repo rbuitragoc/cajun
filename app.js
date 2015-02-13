@@ -1,6 +1,6 @@
 var Collabot = require("./classes/Collabot.class");
 var config = require("./config");
-var collabot = new Collabot(config);
+var collabot = null;
 
 var express = require('express');
 
@@ -16,16 +16,26 @@ app.get('/', function(req, res) {
 });
 
 app.post('/start', function (req, res) {
-	collabot = new Collabot(config);
-	collabot.start(function(status){
-		res.send(status);
-	});
+	if(collabot == null) {
+		console.log("Starting Collabot...");
+		collabot = new Collabot(config);		
+		collabot.start(function(status){
+			res.send(status);
+		});
+	} else {
+		res.send("already started");
+	}
 });
 app.post('/stop', function (req, res) {
-	collabot.stop(function(status){
-		res.send(status);
-	}); 
-  	
+	if(collabot){
+		console.log("Stopping Collabot...");
+		collabot.stop(function(status){
+			res.send(status);
+		});		
+		collabot = null;
+	} else {		
+		res.send("already stopped");
+	}
 });
 app.use(express.static(__dirname + '/public'));
 app.listen(process.env.PORT || 3000);
