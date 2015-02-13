@@ -15,9 +15,17 @@ app.get('/', function(req, res) {
   });
 });
 
-app.post('/', function (req, res) {
-	collabot.start(); 
-  	res.send('Bot starting...');
+app.post('/start', function (req, res) {
+	collabot = new Collabot(config);
+	collabot.start(function(status){
+		res.send(status);
+	});
+});
+app.post('/stop', function (req, res) {
+	collabot.stop(function(status){
+		res.send(status);
+	}); 
+  	
 });
 app.use(express.static(__dirname + '/public'));
 app.listen(process.env.PORT || 3000);

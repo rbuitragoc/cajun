@@ -3,27 +3,54 @@ function Collabot(config){
 	this.config = config;
 	this.connector = new config.connector(config);
 	this.persistence = new config.persistence(config);
+	this.guid = null;
+}
+
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
 module.exports = Collabot;
 
 var CollaborationManager = require('./CollaborationManager.class');
 var async = require('async');
+var mentionCheck = require('./util/ChatUtils.class');
 
 Collabot.prototype = {
-	start: function(){
-		this.persistence.init();
-		this.connector.init(this);
-		this.collaborationManager = new CollaborationManager();
+	start: function(callback){
+		if(this.guid){
+			callback("running");
+		} else {
+			this.persistence.init();
+			this.connector.init(this);
+			this.collaborationManager = new CollaborationManager();
+			this.guid = guid();
+			callback("started");
+		}		
+	},
+	stop: function(callback){
+		if(this.guid){
+			this.connector.logout();
+			this.guid = null;
+			this.persistence = null;
+			this.collaborationManager = null;
+			callback("stopped");
+		} else {
+			callback("nothing to stop")
+		}		
 	},
 	channelJoined: function(channel, who){
 		
 	},
 	message: function(from, text){
+		var wasMentioned = mentionCheck(this.config.botName, text)
 		try {
 			if (!text)
 				return;
-			if (text.indexOf("bot") == 0){
+			if (wasMentioned){
 				if (text.indexOf("give") > -1){
 					this._give(from, text);
 				} else if (text.indexOf("about") > -1){
@@ -48,7 +75,7 @@ Collabot.prototype = {
 		}
 	},
 	_give: function (from, text){
-		var command = /give (\d+) points to (\w+)$/.exec(text);
+		var command = /give (\d+) points to (.+)$/.exec(text);
 		if (!command || !command.length || !command.length == 3){
 			this.share("Sorry, I didn't understand that..");
 			return;
@@ -77,21 +104,21 @@ Collabot.prototype = {
 		this.collaborationManager.tellStatusTo(from, this);
 	},
 	_about: function (){
-		this.share("I am Collabot version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
+		this.share("ID ["+this.guid+"] - I am "+this.config.botName+" version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
 	},
 	_joke: function(){
 		this.share("This is no time for jokes, my friend.");
 	},
 	_creator: function(){
-		this.share("I am being created by VP karmabot dev team.");
+		this.share("I am being created by VP Gambit dev team.");
 	},
 	_wtf: function(who){
 		this.share("Perhaps you need to rephrase... ");
 	},
 	_help: function (who){
-		this.say(who, "[bot give] Gives a player X points. Example: 'bot give 5 points to slash'.");
-		this.say(who, "[bot about] Gets some information about the collabot.");
-		this.say(who, "[bot how am i] Tells you your overall, daily, weekly and last week scores.");
+		this.say(who, "["+this.config.botName+" give] Gives a player X points. Example: 'bot give 5 points to slash'.");
+		this.say(who, "["+this.config.botName+" about] Gets some information about the collabot.");
+		this.say(who, "["+this.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
 	},
 	say: function(who, text){
 		this.connector.say(who, text);
