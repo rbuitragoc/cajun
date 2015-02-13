@@ -3,6 +3,14 @@ function Collabot(config){
 	this.config = config;
 	this.connector = new config.connector(config);
 	this.persistence = new config.persistence(config);
+	this.guid = null;
+}
+
+function guid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+  }
+  return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
 module.exports = Collabot;
@@ -12,10 +20,27 @@ var async = require('async');
 var mentionCheck = require('./util/ChatUtils.class');
 
 Collabot.prototype = {
-	start: function(){
-		this.persistence.init();
-		this.connector.init(this);
-		this.collaborationManager = new CollaborationManager();
+	start: function(callback){
+		if(this.guid){
+			callback("running");
+		} else {
+			this.persistence.init();
+			this.connector.init(this);
+			this.collaborationManager = new CollaborationManager();
+			this.guid = guid();
+			callback("started");
+		}		
+	},
+	stop: function(callback){
+		if(this.guid){
+			this.connector.logout();
+			this.guid = null;
+			this.persistence = null;
+			this.collaborationManager = null;
+			callback("stopped");
+		} else {
+			callback("nothing to stop")
+		}		
 	},
 	channelJoined: function(channel, who){
 		
@@ -79,7 +104,7 @@ Collabot.prototype = {
 		this.collaborationManager.tellStatusTo(from, this);
 	},
 	_about: function (){
-		this.share("I am " + this.config.botName + " version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
+		this.share("ID ["+this.guid+"] - I am "+this.config.botName+" version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector.");
 	},
 	_joke: function(){
 		this.share("This is no time for jokes, my friend.");

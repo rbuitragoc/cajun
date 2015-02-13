@@ -77,6 +77,11 @@ SlackConnector.prototype = {
 		slack.login();
 		this.slack = slack;
 	},
+	logout: function(){
+		console.log("Logging out as "+this.config.botName+" ID ["+this.bot.guid+"]");
+		this.slack.disconnect();
+		console.log(this.config.botName+" ID ["+this.bot.guid+"] successfully logged out.")
+	},
 	say: function(who, text){
 		console.log(typeof who);
 		console.log("Saying: " + text + " to " + who);
