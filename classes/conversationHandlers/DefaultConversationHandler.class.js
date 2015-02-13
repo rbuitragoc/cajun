@@ -4,7 +4,7 @@ var DefaultConversationHandler = function(bot){
 
 DefaultConversationHandler.prototype = {
 	handle: function (from, text){
-		if (text.indexOf("hello bot") > -1){
+		if (text.indexOf("hello "+this.bot.config.botName) > -1){
 			var handler = this;
 			this.bot.conversationManager.startConversation(from, "greeting", "waitingForMood", function(){
 				handler.bot.share("Hey hello "+from+", how are you doing today?");	
