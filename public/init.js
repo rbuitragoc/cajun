@@ -9,8 +9,8 @@ function manageBot(input) {
 function startBot(){
 	$.ajax({
 		type: "POST",
-		//url: 'https://salty-inlet-8617.herokuapp.com',
-		url: 'http://localhost:3000/start',
+		url: 'https://salty-inlet-8617.herokuapp.com/start',
+		//url: 'http://localhost:3000/start',
 		data: '',
 		success: function( data, textStatus, jqXHR){
 			console.log(data);
@@ -21,8 +21,8 @@ function startBot(){
 function stopBot(){
 	$.ajax({
 		type: "POST",
-		//url: 'https://salty-inlet-8617.herokuapp.com/logout',
-		url: 'http://localhost:3000/stop',
+		url: 'https://salty-inlet-8617.herokuapp.com/stop',
+		//url: 'http://localhost:3000/stop',
 		data: '',
 		success: function( data, textStatus, jqXHR){
 			console.log(data);
