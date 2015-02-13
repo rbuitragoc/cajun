@@ -5,16 +5,16 @@ var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
 // Slack API config karmabot for tests
 module.exports = {
-	environment: "slash",
+	environment: "DEVELOPMENT",
 	channel: "karma",
-	botName: "saxobot",
+	botName: "collabot",
 	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
 	autoReconnect: true,
 	autoMark: true,
 	connector: SlackConnector,
 	persistence: MongoConnector,
-	dbURL: 'mongodb://localhost:27017/collabot',
-	//dbURL: 'mongodb://'+process.env.MDBUSERNAME+':'+process.env.MDBPWD+'@'+process.env.MDBHOST+':'+process.env.MDBPORT+'/collabot',
+	//dbURL: 'mongodb://localhost:27017/collabot',
+	dbURL: 'mongodb://'+process.env.MDBUSERNAME+':'+process.env.MDBPWD+'@'+process.env.MDBHOST+':'+process.env.MDBPORT+'/collabot',
 	maxCollabPoints : 10
 };
 
