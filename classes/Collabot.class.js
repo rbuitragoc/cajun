@@ -17,9 +17,10 @@ module.exports = Collabot;
 
 var CollaborationManager = require('./CollaborationManager.class');
 var ConversationManager = require('./managers/ConversationManager.class');
-var DefaultConversationHandler = require('./conversationHandlers/DefaultConversationHandler.class')
-var CommandConversationHandler = require('./conversationHandlers/CommandConversationHandler.class')
-var GreetingConversationHandler = require('./conversationHandlers/GreetingConversationHandler.class')
+var DefaultConversationHandler = require('./conversationHandlers/DefaultConversationHandler.class');
+var CommandConversationHandler = require('./conversationHandlers/CommandConversationHandler.class');
+var GreetingConversationHandler = require('./conversationHandlers/GreetingConversationHandler.class');
+var CreateTrainingSessionConversationHandler = require('./conversationHandlers/CreateTrainingSessionConversationHandler.class');
 var async = require('async');
 var mentionCheck = require('./util/ChatUtils.class');
 
@@ -35,7 +36,8 @@ Collabot.prototype = {
 			this.commandConversationHandler = new CommandConversationHandler(this);
 			this.defaultConversationHandler = new DefaultConversationHandler(this);
 			this.handlers = {
-				greeting: new GreetingConversationHandler(this)
+				greeting: new GreetingConversationHandler(this),
+				createTrainingSession: new CreateTrainingSessionConversationHandler(this)
 			}
 			this.guid = guid();
 			callback("started");
@@ -71,6 +73,7 @@ Collabot.prototype = {
 					return;
 				}
 				try {
+					console.log(conversations);
 					for (var i = 0; i < conversations.length; i++){
 						var handler = bot.handlers[conversations[i].topic];
 						if (handler){

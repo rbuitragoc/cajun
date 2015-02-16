@@ -18,7 +18,9 @@ CommandConversationHandler.prototype = {
 			this._top();
 		} else if (text.toLowerCase().indexOf("how am i") > -1){
 			this._howAmIDoing(from);
-		} else {
+		} else if(text.indexOf("create training") > -1){
+			this._createTraining(from);
+		}else {
 			this._wtf(from);
 		}
 	},
@@ -67,6 +69,17 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "["+this.bot.config.botName+" give] Gives a player X points. Example: 'bot give 5 points to slash'.");
 		this.bot.say(who, "["+this.bot.config.botName+" about] Gets some information about the collabot.");
 		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
+	},
+	_createTraining: function(from){
+		var handler = this;
+		this.bot.conversationManager.startConversation(from, "createTrainingSession", "presenters", function(){
+			handler.bot.share("Hey "+from+", Sure!");
+			handler.bot.share("First we need the slack username of the presenter. Just type \"me\" if it's you.");
+		},
+		function(conversation){
+			// TODO: Add support to resume conversations
+		});
+	
 	}
 }
 
