@@ -256,6 +256,22 @@ MongoConnector.prototype = {
 	},
 	deleteConversation: function(topic, withPlayer, callback){
 		this.db.collection('conversations').remove({topic: topic, withPlayer: withPlayer}, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
+	},
+	insertAuthorizedPresenter: function(presenter, callback){
+		this.db.collection('authorizedPresenters').insert({presenter: presenter}, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
+	},
+	getAuthorizedPresenter: function(person, callback){
+		this.db.collection('authorizedPresenters').find({presenter: person}).toArray(
+			function (err, results) {
+				if (err) {
+					console.log(err);
+			    } else if (results.length > 0){
+			    	callback(results[0], err);
+			    } else {
+			    	callback(false, err);
+			    }
+		    }
+	    );
 	}
 }
 

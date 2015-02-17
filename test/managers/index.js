@@ -1,0 +1,1 @@
+exports.trainingSessionManager = require('./TrainingSessionManager.class');
