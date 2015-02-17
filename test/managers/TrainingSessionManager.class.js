@@ -56,7 +56,22 @@ function testNonManagerCannotAuthPresenters() {
 	}, 1000);
 }
 
+function testPreexistingPresenters() {
+	// Initialize and inject mocks
+	var mocks = setupMocks();
+	var mockBot = mocks.bot;
+	// Initialize object of class under test (real class, not mock)
+	var manager = new TrainingSessionManager(mockBot);
+	// Execute operation under test
+	manager.requestAuthorizationAsPresenter('slizarazo', 'mrthomas');
+	// Assert results
+	setTimeout(function(){
+		assert(mockBot.said("mrthomas is already an authorized presenter.", "slizarazo"), "Message not sent to admin");
+	}, 1000);
+}
+
 module.exports = { 
 	testManagerCanAuthPresenters: testManagerCanAuthPresenters,
-	testNonManagerCannotAuthPresenters: testNonManagerCannotAuthPresenters
+	testNonManagerCannotAuthPresenters: testNonManagerCannotAuthPresenters,
+	testPreexistingPresenters: testPreexistingPresenters
 }
