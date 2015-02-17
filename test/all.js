@@ -9,3 +9,4 @@ util.chatUtils.testMentions();
 
 managers.trainingSessionManager.testManagerCanAuthPresenters();
 managers.trainingSessionManager.testNonManagerCannotAuthPresenters();
+managers.trainingSessionManager.testPreexistingPresenters();
