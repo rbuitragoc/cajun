@@ -19,7 +19,7 @@ module.exports = {
 	getCurrentDate: function(){
 		var date = new Date();
 		return {
-			day: date.getUTCDay() + 1,
+			day: date.getUTCDate() + 1,
 			month: date.getUTCMonth() + 1,
 			year: date.getUTCFullYear(),
 			week: date.getWeek()
