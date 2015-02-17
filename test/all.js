@@ -8,3 +8,4 @@ util.dateUtils.testFormat();
 util.chatUtils.testMentions();
 
 managers.trainingSessionManager.testManagerCanAuthPresenters();
+managers.trainingSessionManager.testNonManagerCannotAuthPresenters();
