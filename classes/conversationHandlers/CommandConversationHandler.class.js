@@ -46,7 +46,7 @@ CommandConversationHandler.prototype = {
 		this.bot.collaborationManager.givePoints(updateScoreRequest, this.bot);
 	},
 	_top: function(text){
-		var filters = /top( day| week| month| year)*( \w*)$/.exec(text);
+		var filters = /top( day| week| month| year)*(.+)*$/.exec(text);
 		var period = null;
 		var channel = null;
 		if(filters){
