@@ -70,8 +70,23 @@ function testPreexistingPresenters() {
 	}, 1000);
 }
 
+function testUnexistingPresenters() {
+	// Initialize and inject mocks
+	var mocks = setupMocks();
+	var mockBot = mocks.bot;
+	// Initialize object of class under test (real class, not mock)
+	var manager = new TrainingSessionManager(mockBot);
+	// Execute operation under test
+	manager.requestAuthorizationAsPresenter('slizarazo', 'ancisar');
+	// Assert results
+	setTimeout(function(){
+		assert(mockBot.said("I don't know who is ancisar, may be you mistyped it?", "slizarazo"), "Message not sent to admin");
+	}, 1000);
+}
+
 module.exports = { 
 	testManagerCanAuthPresenters: testManagerCanAuthPresenters,
 	testNonManagerCannotAuthPresenters: testNonManagerCannotAuthPresenters,
-	testPreexistingPresenters: testPreexistingPresenters
+	testPreexistingPresenters: testPreexistingPresenters,
+	testUnexistingPresenters: testUnexistingPresenters
 }
