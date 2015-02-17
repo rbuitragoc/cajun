@@ -75,14 +75,20 @@ CreateTrainingSessionConversationHandler.prototype = {
 		if (conversation.state == 'time'){
 			this.bot.share(text + " sounds good to me.");
 			this.bot.conversationManager.setConversationData(conversation, 'time', text, function(){});
-			this.bot.share(conversation.data);
 			this.bot.share("This is the training session we just created. What do you think, should we go ahead and notify people? (YES/NO)");
-			this._nextState(conversation, "save", "Looks like we're all set. I'll go ahead and save this and notify the right people.");
+			this._nextState(conversation, "save", "Looks like we're all set.");
 		}
 		if (conversation.state == 'save'){
 			if(text.indexOf("YES")>-1){
 				this.bot.share("Cool. We're doing this.");
-				//TODO: PERSISTENCE
+				this.bot.persistence.insertTrainingSession(conversation.data, function(session, err){
+					if (err){
+						this.bot.share("I couldn't save the session: "+err);
+					} else {
+						this.bot.share("The training session: \""+session.title+"\" was created.");
+						console.log(session);
+					}
+         		});
 				this.bot.conversationManager.endConversation(conversation);
 			} else {
 				this.bot.share("Ok... Let me know when you decide to go for it.");

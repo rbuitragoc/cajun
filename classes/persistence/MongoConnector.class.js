@@ -217,6 +217,9 @@ MongoConnector.prototype = {
 	},
 	deleteConversation: function(topic, withPlayer, callback){
 		this.db.collection('conversations').remove({topic: topic, withPlayer: withPlayer}, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
+	},
+	insertTrainingSession: function(trainingData, callback){
+		this.db.collection('trainings').insert(trainingData, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
 	}
 }
 
