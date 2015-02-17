@@ -30,10 +30,21 @@ CreateTrainingSessionConversationHandler.prototype = {
 			this.bot.say(from, "Your session's title will be: "+text);
 			this.bot.say(from, "It sounds really interesting, let's keep talking about it!");
 			this.bot.conversationManager.setConversationData(conversation, 'title', text, function(){});
-			this.bot.conversationManager.changeConversationState(conversation, "description", function(){
-				that.bot.say(from, "How about giving me a brief description of your session? Maybe some context will help people understand what this is about.");
+			this.bot.conversationManager.changeConversationState(conversation, "sessionType", function(){
+				that.bot.say(from, "Is this a Breakfast&Learn or an Internal Training? What type of training session are we creating?");
 			});			
 		}
+
+		if (conversation.state == 'sessionType'){
+			this.bot.say(from, "So, it's a "+text+ "!");
+			this.bot.say(from, "Those are always cool.");
+			this.bot.conversationManager.setConversationData(conversation, 'sessionType', text, function(){});
+			this.bot.conversationManager.changeConversationState(conversation, "description", function(){
+				that.bot.say(from, "How about giving me a brief description of your "+ text +"? Maybe some context will help people understand what the training is about.");
+			});			
+		}
+
+
 		if (conversation.state == 'description'){
 			this.bot.say(from, "Your session's description will be: "+text);
 			this.bot.conversationManager.setConversationData(conversation, 'description', text, function(){});
@@ -104,8 +115,11 @@ CreateTrainingSessionConversationHandler.prototype = {
 					if (err){
 						that.bot.say(from, "I couldn't save the session: "+err);
 					} else {
-						that.bot.say(from, "The training session: \""+session[0].title+"\" was created.");
-						console.log(session);
+						that.bot.say(from, "@channel The training session: \""+session[0].title+"\" was created.");
+						that.bot.share("The training session: \"" + session[0].title + "\" has been created.");
+						that.bot.share("It will take place at the " + session[0].location + " office.");
+						that.bot.share("@" + session[0].presenter + " will be giving it on " + session[0].desiredDate + " at " + session[0].time + "." );
+						that.bot.share("You can register by producing a Corporeal Patronus and naming all the planets that Captain Jean Luc Picard visited during his tenure on the Enterprise.");
 					}
          		});
 				this.bot.conversationManager.endConversation(conversation);
