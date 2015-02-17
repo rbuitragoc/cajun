@@ -33,9 +33,9 @@ MongoConnector.prototype = {
     updateDailyScore: function(updateScoreRequest, callback) {
 		var currentTime = new Date(),
 			year = currentTime.getUTCFullYear(),
-			month = currentTime.getUTCMonth(),
+			month = currentTime.getUTCMonth() + 1,
 			week = currentTime.getWeek(),
-			day = currentTime.getUTCDay() + 1;
+			day = currentTime.getUTCDate();
 		var now =  new Date().formatYYYYMMDD();
 		
 		this.db.collection('dailyScores').update(

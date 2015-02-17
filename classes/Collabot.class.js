@@ -1,5 +1,5 @@
 function Collabot(config){
-	this.version = "1.0";
+	this.version = config.version;
 	this.config = config;
 	this.connector = new config.connector(config);
 	this.persistence = new config.persistence(config);
@@ -121,7 +121,7 @@ Collabot.prototype = {
 					}
 				});
 			} else {
-				console.log(user + " already exists.");
+				console.log(user.name + " already exists!");
 			}
 		});		
 	}
