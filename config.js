@@ -5,8 +5,8 @@ var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
 // Slack API config karmabot for tests
 module.exports = {
-	version: "1.1",
-	environment: "DEVELOPMENT",
+	version: "1.5",
+	environment: "PROD",
 	channel: "gambit-test",
 	botName: "collabot",
 	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
@@ -15,7 +15,7 @@ module.exports = {
 	autoMark: true,
 	connector: SlackConnector,
 	persistence: MongoConnector,
-	dbURL: 'mongodb://'+process.env.MDBUSERNAME+':'+process.env.MDBPWD+'@'+process.env.MDBHOST+':'+process.env.MDBPORT+'/collabot',
+	dbURL: 'mongodb://'+process.env.MDBUSERNAME+':'+process.env.MDBPWD+'@'+process.env.MDBHOST+':'+process.env.MDBPORT+'/'+process.env.MDBDB,
 	// dbURL: 'mongodb://localhost:27017/collabot',
 	appUrls: {
 		start: process.env.APPSTART, 
