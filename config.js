@@ -18,12 +18,12 @@ module.exports = {
 	dbURL: 'mongodb://'+process.env.MDBUSERNAME+':'+process.env.MDBPWD+'@'+process.env.MDBHOST+':'+process.env.MDBPORT+'/collabot',
 	// dbURL: 'mongodb://localhost:27017/collabot',
 	appUrls: {
-		start: process.env.APPSTART, 
-			// url: 'http://salty-inlet-8617.herokuapp.com/start',
-			// url: 'http://localhost:3000/start',
-		stop: process.env.APPSTOP
-			// url: 'http://salty-inlet-8617.herokuapp.com/stop',
-			// url: 'http://localhost:3000/stop',
+		start: // process.env.APPSTART, 
+			'http://salty-inlet-8617.herokuapp.com/start',
+			// 'http://localhost:3000/start',
+		stop: // process.env.APPSTOP
+			'http://salty-inlet-8617.herokuapp.com/stop'
+			// 'http://localhost:3000/stop'
 	},
 	maxCollabPoints : 10
 };
