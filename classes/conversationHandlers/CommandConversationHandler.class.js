@@ -18,6 +18,8 @@ CommandConversationHandler.prototype = {
 			this._top();
 		} else if (text.toLowerCase().indexOf("how am i") > -1){
 			this._howAmIDoing(from);
+		} else if (/authorize (.+) as presenter$/.exec(text)){
+			this._autorizeAsPresenter(from, text);
 		} else {
 			this._wtf(from);
 		}
@@ -62,6 +64,19 @@ CommandConversationHandler.prototype = {
 	},
 	_wtf: function(who){
 		this.bot.share("Perhaps you need to rephrase... ");
+	},
+	_autorizeAsPresenter: function (from, text){
+		var command = /authorize (.+) as presenter$/.exec(text);
+		if (!command || !command.length || !command.length == 2){
+			this.bot.share("Sorry, I didn't understand that..");
+			return;
+		}
+		var presenter = command[1];
+		if (!presenter){
+			this.bot.share("Sorry, I didn't understand that..");
+			return;
+		}
+		this.bot.trainingSessionManager.requestAuthorizationAsPresenter(from, presenter);
 	},
 	_help: function (who){
 		this.bot.say(who, "["+this.bot.config.botName+" give] Gives a player X points. Example: 'bot give 5 points to slash'.");
