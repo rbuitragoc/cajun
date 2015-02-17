@@ -35,7 +35,7 @@ MongoConnector.prototype = {
 			year = currentTime.getUTCFullYear(),
 			month = currentTime.getUTCMonth(),
 			week = currentTime.getWeek(),
-			day = currentTime.getUTCDay() + 1;
+			day = currentTime.getUTCDate() + 1;
 		var now =  new Date().formatYYYYMMDD();
 		
 		this.db.collection('dailyScores').update(
