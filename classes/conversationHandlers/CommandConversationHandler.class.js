@@ -88,7 +88,7 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "["+this.bot.config.botName+" give] Gives a player X points. Example: 'bot give 5 points to slash'.");
 		this.bot.say(who, "["+this.bot.config.botName+" about] Gets some information about the collabot.");
 		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
-		this.bot.say(who, "["+this.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
+		this.bot.say(who, "["+this.bot.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
 	}
 }
 
