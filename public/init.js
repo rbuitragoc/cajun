@@ -1,16 +1,16 @@
-function manageBot(input) {
+
+function manageBot(input, appUrls) {
 	if (input.checked) {
-		startBot();
+		startBot(appUrls.start);
 	} else {
-		stopBot();
+		stopBot(appUrls.stop);
 	}
 }
 
-function startBot(){
+function startBot(startUrl){
 	$.ajax({
 		type: "POST",
-		url: 'http://salty-inlet-8617.herokuapp.com/start',
-		//url: 'http://localhost:3000/start',
+		url: startUrl,
 		data: '',
 		success: function( data, textStatus, jqXHR){
 			console.log(data);
@@ -18,11 +18,10 @@ function startBot(){
 	});
 }
 
-function stopBot(){
+function stopBot(stopUrl){
 	$.ajax({
 		type: "POST",
-		url: 'http://salty-inlet-8617.herokuapp.com/stop',
-		//url: 'http://localhost:3000/stop',
+		url: stopUrl,
 		data: '',
 		success: function( data, textStatus, jqXHR){
 			console.log(data);
