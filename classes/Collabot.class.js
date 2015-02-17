@@ -124,7 +124,7 @@ Collabot.prototype = {
 					}
 				});
 			} else {
-				console.log(user + " already exists.");
+				console.log(user.name + " already exists!");
 			}
 		});		
 	}

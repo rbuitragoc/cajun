@@ -7,7 +7,7 @@ var MongoConnector = require("./classes/persistence/MongoConnector.class");
 module.exports = {
 	version: "1.1",
 	environment: "DEVELOPMENT",
-	channel: "karma",
+	channel: "gambit-test",
 	botName: "collabot",
 	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
 	autoReconnect: true,
