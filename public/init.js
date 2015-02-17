@@ -1,5 +1,5 @@
 
-function manageBot(input, appUrls) {
+function manageBot(input) {
 	if (input.checked) {
 		startBot(appUrls.start);
 	} else {
