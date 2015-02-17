@@ -8,22 +8,22 @@ module.exports = {
 	version: "1.1",
 	environment: "DEVELOPMENT",
 	channel: "gambit-test",
-	botName: "tal-bot",
+	botName: "collabot",
 	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
 	// token: 'xoxb-3749826050-mKrPHbMYqRDa0mb47lhf3sfr', // Rick's tal-bot 
 	autoReconnect: true,
 	autoMark: true,
 	connector: SlackConnector,
 	persistence: MongoConnector,
-	//dbURL: 'mongodb://localhost:27017/collabot',
 	dbURL: 'mongodb://'+process.env.MDBUSERNAME+':'+process.env.MDBPWD+'@'+process.env.MDBHOST+':'+process.env.MDBPORT+'/collabot',
+	// dbURL: 'mongodb://localhost:27017/collabot',
 	appUrls: {
 		start: process.env.APPSTART, 
-			//url: 'http://salty-inlet-8617.herokuapp.com/start',
-			//url: 'http://localhost:3000/start',
+			// url: 'http://salty-inlet-8617.herokuapp.com/start',
+			// url: 'http://localhost:3000/start',
 		stop: process.env.APPSTOP
-			//url: 'http://salty-inlet-8617.herokuapp.com/stop',
-			//url: 'http://localhost:3000/stop',
+			// url: 'http://salty-inlet-8617.herokuapp.com/stop',
+			// url: 'http://localhost:3000/stop',
 	},
 	maxCollabPoints : 10
 };
