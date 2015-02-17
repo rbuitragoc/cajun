@@ -7,10 +7,16 @@ function setupMocks(){
 	mockBot.config.trainingSessionManager = 'slizarazo';
 	mockBot.persistence = {
 		getPlayerByName: function(presenter, callback){
-			callback({});
+			if (presenter === 'ancisar')
+				callback(false);
+			else
+				callback({});
 		},
 		getAuthorizedPresenter: function(presenter, callback){
-			callback(false);
+			if (presenter === 'mrthomas')
+				callback({});
+			else
+				callback(false);
 		},
 		insertAuthorizedPresenter: function(presenter, callback){
 			callback({});
@@ -36,6 +42,21 @@ function testManagerCanAuthPresenters() {
 	}, 1000);
 }
 
+function testNonManagerCannotAuthPresenters() {
+	// Initialize and inject mocks
+	var mocks = setupMocks();
+	var mockBot = mocks.bot;
+	// Initialize object of class under test (real class, not mock)
+	var manager = new TrainingSessionManager(mockBot);
+	// Execute operation under test
+	manager.requestAuthorizationAsPresenter('rbuitrago', 'slash');
+	// Assert results
+	setTimeout(function(){
+		assert(mockBot.said("Sorry, only slizarazo can authorize people as presenters", "rbuitrago"), "Message not sent to requester");
+	}, 1000);
+}
+
 module.exports = { 
-	testManagerCanAuthPresenters: testManagerCanAuthPresenters
+	testManagerCanAuthPresenters: testManagerCanAuthPresenters,
+	testNonManagerCannotAuthPresenters: testNonManagerCannotAuthPresenters
 }
