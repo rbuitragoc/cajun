@@ -25,7 +25,8 @@ module.exports = {
 			// 'http://salty-inlet-8617.herokuapp.com/stop'
 			// 'http://localhost:3000/stop'
 	},
-	maxCollabPoints : 10
+	maxCollabPoints : 10,
+	trainingSessionManager: 'slizarazo'
 };
 
 // Slack API config prod
