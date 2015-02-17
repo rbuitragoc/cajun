@@ -16,7 +16,8 @@ module.exports = {
 	persistence: MongoConnector,
 	//dbURL: 'mongodb://localhost:27017/collabot',
 	dbURL: 'mongodb://'+process.env.MDBUSERNAME+':'+process.env.MDBPWD+'@'+process.env.MDBHOST+':'+process.env.MDBPORT+'/collabot',
-	maxCollabPoints : 10
+	maxCollabPoints : 10,
+	trainingSessionManager: 'slash'
 };
 
 // Slack API config prod
