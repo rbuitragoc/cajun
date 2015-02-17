@@ -15,7 +15,7 @@ CommandConversationHandler.prototype = {
 		} else	if (text.indexOf("creator") > -1){
 			this._creator();
 		} else	if (text.indexOf("top") > -1){
-			this._top();
+			this._top(text);
 		} else if (text.toLowerCase().indexOf("how am i") > -1){
 			this._howAmIDoing(from);
 		} else {
@@ -45,8 +45,29 @@ CommandConversationHandler.prototype = {
 		console.log(updateScoreRequest)
 		this.bot.collaborationManager.givePoints(updateScoreRequest, this.bot);
 	},
-	_top: function(){
-		this.bot.collaborationManager.topTen(this.bot);
+	_top: function(text){
+		var filters = /top( day| week| month| year)*(.+)*$/.exec(text);
+		var period = null;
+		var channel = null;
+		if(filters){
+			var filter1 = filters[1]? filters[1].trim() : null;
+			var filter2 = filters[2]? filters[2].trim() : null;
+			var period = filter1;
+			if(!filter1 && filter2){
+				if(filter2 == "day" || filter2 == "week" || filter2 == "month" || filter2 == "year" ){
+					period = filter2;
+				}
+				else{
+					channel = filter2;
+				}
+			}
+			else{
+				channel = filter2;
+			}
+		}
+		
+			
+		this.bot.collaborationManager.topTen(period, channel, this.bot);
 	},
 	_howAmIDoing: function (from){
 		this.bot.collaborationManager.tellStatusTo(from, this.bot);
@@ -67,6 +88,7 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "["+this.bot.config.botName+" give] Gives a player X points. Example: 'bot give 5 points to slash'.");
 		this.bot.say(who, "["+this.bot.config.botName+" about] Gets some information about the collabot.");
 		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
+		this.bot.say(who, "["+this.bot.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
 	}
 }
 

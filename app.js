@@ -15,6 +15,12 @@ app.get('/', function(req, res) {
   });
 });
 
+app.get('/config.js', function(req, res) {
+    res.setHeader('content-type', 'text/javascript');
+    res.write("var appUrls = {start: '"+config.appUrls.start+"', stop: '"+config.appUrls.stop+"'};");
+    res.end();
+});
+
 app.post('/start', function (req, res) {
 	if(collabot == null) {
 		console.log("Starting Collabot...");

@@ -6,8 +6,7 @@ function testFormatYYYYMMDD() {
 		month = 1,
 		day = 15;
 	var anyGivenDateString = year + '-0' + month + '-' + day;
-	var date = new Date(year, month-1, day-1);
-
+	var date = new Date(year, month-1, day);
 	assert.equal(date.formatYYYYMMDD(), anyGivenDateString, 'Failed assertion! Never equal!');
 }
 
