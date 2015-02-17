@@ -10,6 +10,7 @@ module.exports = {
 	channel: "gambit-test",
 	botName: "collabot",
 	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
+	// token: 'xoxb-3749826050-mKrPHbMYqRDa0mb47lhf3sfr', // Rick's tal-bot 
 	autoReconnect: true,
 	autoMark: true,
 	connector: SlackConnector,
