@@ -4,98 +4,130 @@ var CreateTrainingSessionConversationHandler = function(bot){
 
 CreateTrainingSessionConversationHandler.prototype = {
 	handle: function(from, text, conversation){
-		var handler = this;
+		var that = this;
 		console.log('Handling {'+conversation.topic+'} with {'+from+'}, he said "'+text+'". State is {'+conversation.state+'}');
 		if (conversation.state == 'presenters'){
 			if (text.indexOf("me") != -1){
-				this.bot.share("Cool! I thought so. You're a very good presenter.");
-				this.bot.conversationManager.setConversationData(conversation, 'presenter', text, function(){});
+				this.bot.say(from, "Cool! I thought so. You're a very good presenter.");
+				this.bot.conversationManager.setConversationData(conversation, 'presenter', from, function(){});
 				this.bot.conversationManager.changeConversationState(conversation, 'sessionTitle', function(){
-					handler.bot.share("Now, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
+					that.bot.say(from, "Now, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
 				});
 			} else if (text){
 				var presenter = this.bot.persistence.getPlayerByName(text);
 				if(!presenter){
-					this.bot.share("Sorry, I don't know who "+text+ " is. Can you double-check?");
+					this.bot.say(from, "Sorry, I don't know who "+text+ " is. Can you double-check?");
 				} else {
-					this.bot.share("Great! I'm sure " + presenter + " will do a great job.")
+					this.bot.say(from, "Great! I'm sure " + presenter + " will do a great job.")
 					this.bot.conversationManager.changeConversationState(conversation, 'sessionTitle', function(){
-						handler.bot.share("Now, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
+						that.bot.say(from, "Now, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
 					});
 				}
 				
 			}
 		}
 		if (conversation.state == 'sessionTitle'){
-			this.bot.share("Your session's title will be: "+text);
-			this.bot.share("It sounds really interesting, let's keep talking about it!");
+			this.bot.say(from, "Your session's title will be: "+text);
+			this.bot.say(from, "It sounds really interesting, let's keep talking about it!");
 			this.bot.conversationManager.setConversationData(conversation, 'title', text, function(){});
-			this._nextState(conversation, "description", "How about giving me a brief description of your session? Maybe some context will help people understand what this is about.");
+			this.bot.conversationManager.changeConversationState(conversation, "sessionType", function(){
+				that.bot.say(from, "Is this a Breakfast&Learn or an Internal Training? What type of training session are we creating?");
+			});			
 		}
+
+		if (conversation.state == 'sessionType'){
+			this.bot.say(from, "So, it's a "+text+ "!");
+			this.bot.say(from, "Those are always cool.");
+			this.bot.conversationManager.setConversationData(conversation, 'sessionType', text, function(){});
+			this.bot.conversationManager.changeConversationState(conversation, "description", function(){
+				that.bot.say(from, "How about giving me a brief description of your "+ text +"? Maybe some context will help people understand what the training is about.");
+			});			
+		}
+
+
 		if (conversation.state == 'description'){
-			this.bot.share("Your session's description will be: "+text);
+			this.bot.say(from, "Your session's description will be: "+text);
 			this.bot.conversationManager.setConversationData(conversation, 'description', text, function(){});
-			this._nextState(conversation, "contents", "What will you be sharing with other VP'ers? Provide your audience with a breakdown of the topics you'll discuss.");
+			this.bot.conversationManager.changeConversationState(conversation, "contents", function(){
+				that.bot.say(from, "What will you be sharing with other VP'ers? Provide your audience with a breakdown of the topics you'll discuss.");
+			});
 		}
 		if (conversation.state == 'contents'){
-			this.bot.share("Here's what you'll be presenting: "+text);
+			this.bot.say(from, "Here's what you'll be presenting: "+text);
 			this.bot.conversationManager.setConversationData(conversation, 'contents', text, function(){});
-			this._nextState(conversation, "requirements", "What previous knowledge does your audience need to have? Java, Javascript, Objective-C? Nothing?");
+			this.bot.conversationManager.changeConversationState(conversation, "requirements", function(){
+				that.bot.say(from, "What previous knowledge does your audience need to have? Java, Javascript, Objective-C? Nothing?");
+			});
 		}
 		if (conversation.state == 'requirements'){
-			this.bot.share("Here's what people need to know for your presentation: "+text);
+			this.bot.say(from, "Here's what people need to know for your presentation: "+text);
 			this.bot.conversationManager.setConversationData(conversation, 'requirements', text, function(){});
-			this._nextState(conversation, "targetAudience", "Who are you trying to reach with this session? Developers? QAs? Managers? Everybody?");
+			this.bot.conversationManager.changeConversationState(conversation, "targetAudience", function(){
+				that.bot.say(from, "Who are you trying to reach with this session? Developers? QAs? Managers? Everybody?");
+			});
 		}
 		if (conversation.state == 'targetAudience'){
-			this.bot.share("You're trying to reach this audience: "+text);
+			this.bot.say(from, "You're trying to reach this audience: "+text);
 			this.bot.conversationManager.setConversationData(conversation, 'targetAudience', text, function(){});
-			this._nextState(conversation, "duration", "How long do you need to give the talk about " + conversation.data.title + "?");
+			this.bot.conversationManager.changeConversationState(conversation, "duration", function(){
+				that.bot.say(from, "How long do you need to give the talk about " + conversation.data.title + "?");
+			});			
 		}
 		if (conversation.state == 'duration'){
-			this.bot.share("You'll need a good way to keep people interested!");
+			this.bot.say(from, "You'll need a good way to keep people interested!");
 			this.bot.conversationManager.setConversationData(conversation, 'duration', text, function(){});
-			this._nextState(conversation, "slides", "How many slides do you have?");
+			this.bot.conversationManager.changeConversationState(conversation, "slides", function(){
+				that.bot.say(from, "How many slides do you have?");
+			});			
 		}
 		if (conversation.state == 'slides'){
-			this.bot.share("Remember to make them very clear and concise. Add value with your slides!");
+			this.bot.say(from, "Remember to make them very clear and concise. Add value with your slides!");
 			this.bot.conversationManager.setConversationData(conversation, 'slides', text, function(){});
-			this._nextState(conversation, "location", "Where will you be giving this talk? We have offices in Medellín - Colombia, Rosario - Argentina, Buenos Aires - Argentina, Paraná - Argentina and Montevideo - Uruguay. We're everywhere!");
+			this.bot.conversationManager.changeConversationState(conversation, "location", function(){
+				that.bot.say(from, "Where will you be giving this talk? We have offices in Medellín - Colombia, Rosario - Argentina, Buenos Aires - Argentina, Paraná - Argentina and Montevideo - Uruguay. We're everywhere!");
+			});
 		}
 		if (conversation.state == 'location'){
-			this.bot.share(text + " is a pretty cool place.");
+			this.bot.say(from, text + " is a pretty cool place.");
 			this.bot.conversationManager.setConversationData(conversation, 'location', text, function(){});
-			this._nextState(conversation, "desiredDate", "When do you want to give the talk? (YYYY/MM/DD)");
+			this.bot.conversationManager.changeConversationState(conversation, "desiredDate", function(){
+				that.bot.say(from, "When do you want to give the talk? (YYYY/MM/DD)");
+			});			
 		}
 		if (conversation.state == 'desiredDate'){
-			this.bot.share(text + " sounds good to me.");
+			this.bot.say(from, text + " sounds good to me.");
 			this.bot.conversationManager.setConversationData(conversation, 'desiredDate', text, function(){});
-			this._nextState(conversation, "time", "At what time will you be giving the talk?");
+			this.bot.conversationManager.changeConversationState(conversation, "time", function(){
+				that.bot.say(from, "At what time will you be giving the talk?");
+			});
 		}
 		if (conversation.state == 'time'){
-			this.bot.share(text + " sounds good to me.");
+			this.bot.say(from, text + " sounds good to me.");
 			this.bot.conversationManager.setConversationData(conversation, 'time', text, function(){});
-			this.bot.share(conversation.data);
-			this.bot.share("This is the training session we just created. What do you think, should we go ahead and notify people? (YES/NO)");
-			this._nextState(conversation, "save", "Looks like we're all set. I'll go ahead and save this and notify the right people.");
+			this.bot.conversationManager.changeConversationState(conversation, "save", function(){
+				that.bot.say(from, "What do you think, should we go ahead and notify people? (YES/NO)");
+			});
 		}
 		if (conversation.state == 'save'){
 			if(text.indexOf("YES")>-1){
-				this.bot.share("Cool. We're doing this.");
-				//TODO: PERSISTENCE
+				this.bot.say(from, "Cool. We're doing this.");
+				this.bot.persistence.insertTrainingSession(conversation.data, function(session, err){
+					if (err){
+						that.bot.say(from, "I couldn't save the session: "+err);
+					} else {
+						that.bot.say(from, "@channel The training session: \""+session[0].title+"\" was created.");
+						that.bot.share("The training session: \"" + session[0].title + "\" has been created.");
+						that.bot.share("It will take place at the " + session[0].location + " office.");
+						that.bot.share("@" + session[0].presenter + " will be giving it on " + session[0].desiredDate + " at " + session[0].time + "." );
+						that.bot.share("You can register by producing a Corporeal Patronus and naming all the planets that Captain Jean Luc Picard visited during his tenure on the Enterprise.");
+					}
+         		});
 				this.bot.conversationManager.endConversation(conversation);
 			} else {
-				this.bot.share("Ok... Let me know when you decide to go for it.");
+				this.bot.say(from, "Ok... Let me know when you decide to go for it.");
 			}
 		}
-
-	},
-	_nextState: function (conversation, nextState, userQuery){
-		var that = this;
-		this.bot.conversationManager.changeConversationState(conversation, nextState, function(){
-			that.bot.share(userQuery);
-		});
-	}
+	}	
 }	
 
 module.exports = CreateTrainingSessionConversationHandler;
