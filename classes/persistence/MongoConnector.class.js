@@ -272,6 +272,18 @@ MongoConnector.prototype = {
 			    }
 		    }
 	    );
+	},
+	getTrainingSessions: function(callback){
+		this.db.collection('trainings').find().sort({'desiredDate': -1}).toArray(
+			function (err, result) {
+				console.log("getTrainingSessions: "+result);
+				if (err) {
+					console.log(err);
+			    } else {
+			    	callback(result);
+			    }
+		    }
+	    );
 	}
 }
 

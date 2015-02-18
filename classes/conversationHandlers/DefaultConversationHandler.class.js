@@ -13,6 +13,15 @@ DefaultConversationHandler.prototype = {
 				// TODO: Add support to resume conversations
 			});
 		}
+		if (text.indexOf("show me upcoming sessions " + this.bot.config.botName ) > -1){
+			var handler = this;
+			this.bot.conversationManager.startConversation(from, "registerToSession", "waitingForRegistration", function(){
+				
+			},
+			function(conversation){
+				// TODO: Add support to resume conversations
+			});
+		}
 	}
 }
 
