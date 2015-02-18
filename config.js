@@ -3,9 +3,10 @@ var SlackConnector = require("./classes/SlackConnector.class");
 var JSONConnector = require("./classes/persistence/JSONConnector.class");
 var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
+
 // Slack API config karmabot for tests
 module.exports = {
-	version: "1.5",
+	version: "0.2.0",
 	environment: "PROD",
 	channel: "gambit-test",
 	botName: "collabot",
@@ -25,7 +26,8 @@ module.exports = {
 			// 'http://salty-inlet-8617.herokuapp.com/stop'
 			// 'http://localhost:3000/stop'
 	},
-	maxCollabPoints : 10
+	maxCollabPoints : 10,
+	trainingSessionManager: 'slizarazo'
 };
 
 // Slack API config prod
