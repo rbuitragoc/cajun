@@ -272,6 +272,15 @@ MongoConnector.prototype = {
 			    }
 		    }
 	    );
+	},
+	getTrainings: function(callback){
+		this.db.collection('trainings').find().toArray(function(err, result){MongoConnector.defaultHandler(err,result,callback);});
+	},
+	getTrainingSessionById: function(id, callback){
+		this.db.collection('trainings').findById(id).toArray(function(err, result) { MongoConnector.singleResultHandler(err,result,callback);});
+	},
+	getAttendants: function(trainingSessionId, callback){
+		this.db.collection('registeredUsers').find({sessionId: trainingSessionId}).toArray(function(err, result) { MongoConnector.defaultHandler(err,result,callback);});
 	}
 }
 
@@ -281,6 +290,18 @@ MongoConnector.defaultHandler = function (err, result, callback) {
 		console.log("Mongo DB error.");
     }
     callback(result, err);
+};
+
+MongoConnector.singleResultHandler = function (err, result, callback) {
+	if (err) {
+		console.log(err);
+		console.log("Mongo DB error.");
+    }
+	if (result && result.length){
+		callback(result[0], err);
+	} else {
+		callback(result, err);
+	}
 };
 
 module.exports = MongoConnector;
