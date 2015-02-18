@@ -1,6 +1,6 @@
 Date.prototype.formatYYYYMMDD = function() {
 	var month = this.getUTCMonth() + 1;
-	var day = this.getUTCDate() + 1;
+	var day = this.getUTCDate();
 	if (month < 10) {
 		month = "0" + month;
 	}
@@ -19,7 +19,7 @@ module.exports = {
 	getCurrentDate: function(){
 		var date = new Date();
 		return {
-			day: date.getUTCDay() + 1,
+			day: date.getUTCDate(),
 			month: date.getUTCMonth() + 1,
 			year: date.getUTCFullYear(),
 			week: date.getWeek()

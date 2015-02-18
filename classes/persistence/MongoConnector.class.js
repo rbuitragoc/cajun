@@ -33,9 +33,9 @@ MongoConnector.prototype = {
     updateDailyScore: function(updateScoreRequest, callback) {
 		var currentTime = new Date(),
 			year = currentTime.getUTCFullYear(),
-			month = currentTime.getUTCMonth(),
+			month = currentTime.getUTCMonth() + 1,
 			week = currentTime.getWeek(),
-			day = currentTime.getUTCDay() + 1;
+			day = currentTime.getUTCDate();
 		var now =  new Date().formatYYYYMMDD();
 		
 		this.db.collection('dailyScores').update(
@@ -101,8 +101,47 @@ MongoConnector.prototype = {
 		    }
 	    );
 	},
-	getTopPlayersByPoints: function(numberOfPlayers, callback){
-		this.db.collection('players').find().sort({'totalCollabPts': -1}).limit(numberOfPlayers).toArray(
+	getTopPlayersByPoints : function(numberOfPlayers, period, channel, callback) {
+		var currentTime = new Date();
+		var match = {
+			year : currentTime.getFullYear()
+		};
+		if(channel){
+			match.channel = channel;
+		}
+		if(period){
+			var currentTime = new Date();
+
+			switch(period) {
+			    case "week":
+					match.week = currentTime.getWeek();
+			        break;
+			    case  "day":
+					match.day = currentTime.getDate();
+			    case  "month":
+					match.month = currentTime.getMonth() + 1;
+			        break;
+			    default:
+			}
+		}
+		
+		var operators = [ {
+			$match : match
+		}, {
+			$group : {
+				_id : "$player",
+				totalCollabPoints : {
+					$sum : "$collabPts"
+				}
+			}
+		}, {
+			"$sort" : {
+				totalCollabPoints : -1
+			}
+		}, {
+			"$limit" : numberOfPlayers
+		} ];
+		this.db.collection('dailyScores').aggregate(operators,
 			function (err, result) {
 				if (err) {
 					console.log(err);
@@ -110,7 +149,7 @@ MongoConnector.prototype = {
 			    	callback(result);
 			    }
 		    }
-	    );
+		);
 	},
 	getDailyGrantedPoints: function(playerName, callback){
 		this.db.collection('dailyGrantedPoints').find({player: playerName, time:  new Date().formatYYYYMMDD()}).toArray(
@@ -217,6 +256,22 @@ MongoConnector.prototype = {
 	},
 	deleteConversation: function(topic, withPlayer, callback){
 		this.db.collection('conversations').remove({topic: topic, withPlayer: withPlayer}, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
+	},
+	insertAuthorizedPresenter: function(presenter, callback){
+		this.db.collection('authorizedPresenters').insert({presenter: presenter}, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
+	},
+	getAuthorizedPresenter: function(person, callback){
+		this.db.collection('authorizedPresenters').find({presenter: person}).toArray(
+			function (err, results) {
+				if (err) {
+					console.log(err);
+			    } else if (results.length > 0){
+			    	callback(results[0], err);
+			    } else {
+			    	callback(false, err);
+			    }
+		    }
+	    );
 	}
 }
 
