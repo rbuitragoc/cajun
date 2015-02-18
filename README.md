@@ -1,18 +1,17 @@
 ![Codeship Status for vpgambit/collabot](https://codeship.com/projects/87838d20-936b-0132-849a-5668b62cd35b/status?branch=dev)
 
-Collabot v. 1.5
-===============
+Collabot v. 0.2.0
+=================
 A fun slack bot to incentive collaboration between developers.
 
 
 Running it
 ==========
-Set the mongoDB variables located at config.js in your ~/.bashrc file.
 
-Type `npm install` and then `npm test` to finally issue `npm start`
+# Set the mongoDB variables located at config.js in your ~/.bashrc file.
+# Type `npm install` and then `npm test` to finally issue `npm start`. 
+# Then do a GET to the URL specified in the APPSTART environment variable - that will log the bot into Slack. 
 
-If you are going to use the MongoConnector, make sure you have a mongod instance 
-responding to the url on config.js.
 
 Other tasks
 ===========
