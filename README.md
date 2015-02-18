@@ -8,9 +8,9 @@ A fun slack bot to incentive collaboration between developers.
 Running it
 ==========
 
-# Set the mongoDB variables located at config.js in your ~/.bashrc file.
-# Type `npm install` and then `npm test` to finally issue `npm start`. 
-# Then do a GET to the URL specified in the APPSTART environment variable - that will log the bot into Slack. 
+- Set the mongoDB variables located at config.js in your ~/.bashrc file.
+- Type `npm install` and then `npm test` to finally issue `npm start`. 
+- Then do a GET to the URL specified in the APPSTART environment variable - that will log the bot into Slack. 
 
 
 Other tasks
