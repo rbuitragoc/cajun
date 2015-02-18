@@ -128,7 +128,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 		if (conversation.state == 'save'){
 			if(text.indexOf("YES")>-1){
 				this.bot.say(from, "Cool. We're doing this.");
-				this.bot.trainingSessionManager.createTrainingSession(conversation.data, function(res, err){
+				this.bot.trainingSessionManager.createTrainingSession(from, conversation.data, function(res, err){
 					if (err){
 						that.bot.say(from, "I couldn't save the session: "+err);
 					} else {
