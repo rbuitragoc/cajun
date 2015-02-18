@@ -3,6 +3,7 @@ var SlackConnector = require("./classes/SlackConnector.class");
 var JSONConnector = require("./classes/persistence/JSONConnector.class");
 var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
+
 // Slack API config karmabot for tests
 module.exports = {
 	version: "1.5",
