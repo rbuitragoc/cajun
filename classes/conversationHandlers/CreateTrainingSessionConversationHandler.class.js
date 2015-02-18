@@ -95,33 +95,50 @@ CreateTrainingSessionConversationHandler.prototype = {
 			});			
 		}
 		if (conversation.state == 'desiredDate'){
-			this.bot.say(from, text + " sounds good to me.");
-			this.bot.conversationManager.setConversationData(conversation, 'desiredDate', text, function(){});
-			this.bot.conversationManager.changeConversationState(conversation, "time", function(){
-				that.bot.say(from, "At what time will you be giving the talk?");
-			});
+			var match = /^\d{4}\/\d{1,2}\/\d{1,2}$/.exec(text);
+			if(match){
+				var date = new Date(match[0]);
+				console.log(date);
+				var curDate = new Date();
+				console.log(curDate);
+				if(date < curDate){
+					this.bot.say(from, "What are you, a time traveler? Come on.");
+				} else{
+					this.bot.say(from, text + " sounds good to me.");
+					this.bot.conversationManager.setConversationData(conversation, 'desiredDate', text, function(){});
+					this.bot.conversationManager.changeConversationState(conversation, "time", function(){
+						that.bot.say(from, "That looks good. At what time will you be giving the talk? (e.g. 08:30 or 8:30am)");
+					});	
+				}				
+			} else {
+				this.bot.say(from, "What's that? I asked for this format (YYYY/MM/DD), come on.");
+			}
 		}
 		if (conversation.state == 'time'){
-			this.bot.say(from, text + " sounds good to me.");
-			this.bot.conversationManager.setConversationData(conversation, 'time', text, function(){});
-			this.bot.conversationManager.changeConversationState(conversation, "save", function(){
-				that.bot.say(from, "What do you think, should we go ahead and notify people? (YES/NO)");
-			});
+			if(/^\d{1,2}:\d{2}([ap]m)?$/.exec(text)){
+				this.bot.say(from, text + " sounds good to me.");
+				this.bot.conversationManager.setConversationData(conversation, 'time', text, function(){});
+				this.bot.conversationManager.changeConversationState(conversation, "save", function(){
+					that.bot.say(from, "What do you think, should we go ahead and notify people? (YES/NO)");
+				});				
+			} else {
+				this.bot.say(from, "What's that? I asked for this format (HH:come), MM on.");
+			}			
 		}
 		if (conversation.state == 'save'){
 			if(text.indexOf("YES")>-1){
 				this.bot.say(from, "Cool. We're doing this.");
-				this.bot.persistence.insertTrainingSession(conversation.data, function(session, err){
+				this.bot.trainingSessionManager.createTrainingSession(conversation.data, function(res, err){
 					if (err){
 						that.bot.say(from, "I couldn't save the session: "+err);
 					} else {
-						that.bot.say(from, "@channel The training session: \""+session[0].title+"\" was created.");
-						that.bot.share("The training session: \"" + session[0].title + "\" has been created.");
-						that.bot.share("It will take place at the " + session[0].location + " office.");
-						that.bot.share("@" + session[0].presenter + " will be giving it on " + session[0].desiredDate + " at " + session[0].time + "." );
+						that.bot.share("@channel The training session: \""+res[0].title+"\" was created.");
+						that.bot.share("The training session: \"" + res[0].title + "\" has been created.");
+						that.bot.share("It will take place at the " + res[0].location + " office.");
+						that.bot.share("@" + res[0].presenter + " will be presenting it on " + res[0].desiredDate + " at " + res[0].time + "." );
 						that.bot.share("You can register by producing a Corporeal Patronus and naming all the planets that Captain Jean Luc Picard visited during his tenure on the Enterprise.");
 					}
-         		});
+				});
 				this.bot.conversationManager.endConversation(conversation);
 			} else {
 				this.bot.say(from, "Ok... Let me know when you decide to go for it.");

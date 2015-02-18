@@ -56,6 +56,10 @@ TrainingSessionManager.prototype =  {
 				bot.say(requestor, "I couldn't authorize "+presenter+", This happened: "+error);
  			}
 		});
+	},
+	createTrainingSession: function(session, callback){
+		var bot = this.bot;
+		bot.persistence.insertTrainingSession(session, callback);
 	}
 };
 
