@@ -7,14 +7,14 @@ CreateTrainingSessionConversationHandler.prototype = {
 		var that = this;
 		console.log('Handling {'+conversation.topic+'} with {'+from+'}, he said "'+text+'". State is {'+conversation.state+'}');
 		if (conversation.state == 'presenters'){
-			if (text.indexOf("me") != -1){
-				this.bot.say(from, "Cool! I thought so. You're a very good presenter.");
+			/*if (text.indexOf("me") != -1){*/
+				/*this.bot.say(from, "Cool! I thought so. You're a very good presenter.");*/
 				this.bot.conversationManager.setConversationData(conversation, 'presenter', from, function(){});
 				this.bot.conversationManager.changeConversationState(conversation, 'sessionTitle', function(){
-					that.bot.say(from, "Now, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
+					that.bot.say(from, "First, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
 				});
-			} else if (text){
-				var presenter = this.bot.persistence.getPlayerByName(text, function(player, err){
+			/*} else if (text){*/
+				/*var presenter = this.bot.persistence.getPlayerByName(text, function(player, err){
 					if(err || !player){
 						that.bot.say(from, "Sorry, I don't know who "+text+ " is. Can you double-check?");
 					} 
@@ -26,7 +26,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 					}
 				});				
 				
-			}
+			}*/
 		}
 		if (conversation.state == 'sessionTitle'){
 			this.bot.say(from, "Your session's title will be: "+text);

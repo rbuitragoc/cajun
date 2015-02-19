@@ -112,7 +112,7 @@ CommandConversationHandler.prototype = {
 		var handler = this;
 		this.bot.conversationManager.startConversation(from, "createTrainingSession", "presenters", function(){
 			handler.bot.say(from, "Hey "+from+", Sure!");
-			handler.bot.say(from, "First we need the slack username of the presenter. Just type \"me\" if it's you.");
+			/*handler.bot.say(from, "First we need the slack username of the presenter. Just type \"me\" if it's you.");*/
 		},
 		function(conversation){
 			// TODO: Add support to resume conversations
