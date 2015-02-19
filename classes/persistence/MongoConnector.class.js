@@ -228,6 +228,7 @@ MongoConnector.prototype = {
 		this.db.collection('conversations').insert(conversation, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
 	},
 	updateConversation: function(topic, withPlayer, updateObject, callback){
+		console.log("updating conversation with topic "+topic+" and player "+withPlayer+", update object "+updateObject)
 		this.db.collection('conversations').update({topic: topic, withPlayer: withPlayer}, updateObject, {}, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
 	},
 	getConversations: function(person, callback){
@@ -276,7 +277,27 @@ MongoConnector.prototype = {
 	getTrainingSessions: function(callback){
 		this.db.collection('trainings').find().sort({'desiredDate': -1}).toArray(
 			function (err, result) {
-				console.log("getTrainingSessions: "+result);
+				if (err) {
+					console.log(err);
+			    } else {
+			    	callback(result);
+			    }
+		    }
+	    );
+	},
+	insertRegisteredUsers: function(user, sessionId, callback){
+		this.db.collection('registeredUsers').insert({
+			user : user,
+			sessionId : sessionId,
+			date : new Date(),
+			notified : true
+		}, function(err, result) {
+			MongoConnector.defaultHandler(err, result, callback);
+		});
+	},
+	getRegisteredUsers: function(user, sessionId, callback){
+		this.db.collection('registeredUsers').find({user : user, sessionId : sessionId}).toArray(
+			function (err, result) {
 				if (err) {
 					console.log(err);
 			    } else {

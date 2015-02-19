@@ -1,3 +1,6 @@
+var async = require('async');
+
+
 var CommandConversationHandler = function(bot){
 	this.bot = bot;
 }
@@ -20,6 +23,8 @@ CommandConversationHandler.prototype = {
 			this._howAmIDoing(from);
 		} else if (/authorize (.+) as presenter$/.exec(text)){
 			this._autorizeAsPresenter(from, text);
+		} else if(text.indexOf("show me upcoming sessions") > -1){
+			this._showUpcomingSessions(from);
 		} else {
 			this._wtf(from);
 		}
@@ -104,7 +109,10 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "["+this.bot.config.botName+" about] Gets some information about the collabot.");
 		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
 		this.bot.say(who, "["+this.bot.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
-	}
+	},
+	_showUpcomingSessions: function(from){
+		this.bot.trainingSessionManager.initRegisterToSession(from);
+ 	}
 }
 
 
