@@ -138,7 +138,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 						that.bot.share("The training session: \"" + res[0].title + "\" has been created.");
 						that.bot.share("It will take place at the " + res[0].location + " office.");
 						that.bot.share("@" + res[0].presenter + " will be presenting it on " + res[0].desiredDate + " at " + res[0].time + "." );
-						that.bot.share("You can register by producing a Corporeal Patronus and naming all the planets that Captain Jean Luc Picard visited during his tenure on the Enterprise.");
+						that.bot.share("You can enroll to this training session by asking 'Collabot, show me upcoming sessions'");
 					}
 				});
 				this.bot.conversationManager.endConversation(conversation);
