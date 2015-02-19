@@ -274,6 +274,9 @@ MongoConnector.prototype = {
 		    }
 	    );
 	},
+	insertTrainingSession: function(trainingData, callback){
+		this.db.collection('trainings').insert(trainingData, function(err, result) {MongoConnector.defaultHandler(err,result,callback);})
+	},
 	getTrainingSessions: function(callback){
 		this.db.collection('trainings').find().sort({'desiredDate': -1}).toArray(
 			function (err, result) {
@@ -304,7 +307,7 @@ MongoConnector.prototype = {
 			    	callback(result);
 			    }
 		    }
-	    );
+		);
 	}
 }
 
