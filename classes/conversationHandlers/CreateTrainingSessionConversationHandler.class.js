@@ -71,7 +71,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 			this.bot.say(from, "You're trying to reach this audience: "+text);
 			this.bot.conversationManager.setConversationData(conversation, 'targetAudience', text, function(){});
 			this.bot.conversationManager.changeConversationState(conversation, "duration", function(){
-				that.bot.say(from, "How long do you need to give the B&L session about " + conversation.data.title + "? You can enter decimal values, I will save those as hours.");
+				that.bot.say(from, "How long will the " + conversation.data.title + " B&L session take? You can enter decimal values, I will save those as hours.");
 			});			
 		}
 		if (conversation.state == 'duration'){
