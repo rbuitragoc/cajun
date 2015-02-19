@@ -228,7 +228,6 @@ MongoConnector.prototype = {
 		this.db.collection('conversations').insert(conversation, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
 	},
 	updateConversation: function(topic, withPlayer, updateObject, callback){
-		console.log("updating conversation with topic "+topic+" and player "+withPlayer+", update object "+updateObject)
 		this.db.collection('conversations').update({topic: topic, withPlayer: withPlayer}, updateObject, {}, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
 	},
 	getConversations: function(person, callback){

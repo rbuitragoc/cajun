@@ -1,6 +1,3 @@
-var async = require('async');
-
-
 var CommandConversationHandler = function(bot){
 	this.bot = bot;
 }
