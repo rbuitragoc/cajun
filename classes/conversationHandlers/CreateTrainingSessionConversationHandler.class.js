@@ -14,15 +14,17 @@ CreateTrainingSessionConversationHandler.prototype = {
 					that.bot.say(from, "Now, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
 				});
 			} else if (text){
-				var presenter = this.bot.persistence.getPlayerByName(text);
-				if(!presenter){
-					this.bot.say(from, "Sorry, I don't know who "+text+ " is. Can you double-check?");
-				} else {
-					this.bot.say(from, "Great! I'm sure " + presenter + " will do a great job.")
-					this.bot.conversationManager.changeConversationState(conversation, 'sessionTitle', function(){
-						that.bot.say(from, "Now, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
-					});
-				}
+				var presenter = this.bot.persistence.getPlayerByName(text, function(player, err){
+					if(err || !player){
+						that.bot.say(from, "Sorry, I don't know who "+text+ " is. Can you double-check?");
+					} 
+					else {
+						that.bot.say(from, "Great! I'm sure " + player.name + " will do a great job.")
+						that.bot.conversationManager.changeConversationState(conversation, 'sessionTitle', function(){
+							that.bot.say(from, "Now, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
+						});
+					}
+				});				
 				
 			}
 		}
