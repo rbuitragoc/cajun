@@ -272,6 +272,9 @@ MongoConnector.prototype = {
 			    }
 		    }
 	    );
+	},
+	insertTrainingSession: function(trainingData, callback){
+		this.db.collection('trainings').insert(trainingData, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
 	}
 }
 
