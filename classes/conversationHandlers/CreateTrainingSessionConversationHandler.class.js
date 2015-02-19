@@ -32,20 +32,19 @@ CreateTrainingSessionConversationHandler.prototype = {
 			this.bot.say(from, "Your session's title will be: "+text);
 			this.bot.say(from, "It sounds really interesting, let's keep talking about it!");
 			this.bot.conversationManager.setConversationData(conversation, 'title', text, function(){});
-			this.bot.conversationManager.changeConversationState(conversation, "sessionType", function(){
+			/*this.bot.conversationManager.changeConversationState(conversation, "sessionType", function(){
 				that.bot.say(from, "Is this a Breakfast & Learn (B&L) or an Internal Training? What type of training session are we creating?");
-			});			
+			});
 		}
 
 		if (conversation.state == 'sessionType'){
 			this.bot.say(from, "So, it's a "+text+ "!");
 			this.bot.say(from, "Those are always cool.");
-			this.bot.conversationManager.setConversationData(conversation, 'sessionType', text, function(){});
+			this.bot.conversationManager.setConversationData(conversation, 'sessionType', text, function(){});*/
 			this.bot.conversationManager.changeConversationState(conversation, "description", function(){
 				that.bot.say(from, "How about giving me a brief description of your B&L Session? Maybe some context will help people understand what it is about.");
 			});			
 		}
-
 
 		if (conversation.state == 'description'){
 			this.bot.say(from, "Your B&L session's description will be: "+text);
