@@ -124,7 +124,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 					that.bot.say(from, "What do you think, should we go ahead and notify people? (YES/NO)");
 				});				
 			} else {
-				this.bot.say(from, "What's that? I asked for this format (HH:come), MM on.");
+				this.bot.say(from, "What's that? I asked for this format (HH:MM), come on.");
 			}			
 		}
 		if (conversation.state == 'save'){
