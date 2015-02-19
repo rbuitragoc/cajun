@@ -33,7 +33,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 			this.bot.say(from, "It sounds really interesting, let's keep talking about it!");
 			this.bot.conversationManager.setConversationData(conversation, 'title', text, function(){});
 			this.bot.conversationManager.changeConversationState(conversation, "sessionType", function(){
-				that.bot.say(from, "Is this a Breakfast&Learn or an Internal Training? What type of training session are we creating?");
+				that.bot.say(from, "Is this a Breakfast & Learn (B&L) or an Internal Training? What type of training session are we creating?");
 			});			
 		}
 
@@ -42,13 +42,13 @@ CreateTrainingSessionConversationHandler.prototype = {
 			this.bot.say(from, "Those are always cool.");
 			this.bot.conversationManager.setConversationData(conversation, 'sessionType', text, function(){});
 			this.bot.conversationManager.changeConversationState(conversation, "description", function(){
-				that.bot.say(from, "How about giving me a brief description of your "+ text +"? Maybe some context will help people understand what the training is about.");
+				that.bot.say(from, "How about giving me a brief description of your B&L Session? Maybe some context will help people understand what it is about.");
 			});			
 		}
 
 
 		if (conversation.state == 'description'){
-			this.bot.say(from, "Your session's description will be: "+text);
+			this.bot.say(from, "Your B&L session's description will be: "+text);
 			this.bot.conversationManager.setConversationData(conversation, 'description', text, function(){});
 			this.bot.conversationManager.changeConversationState(conversation, "contents", function(){
 				that.bot.say(from, "What will you be sharing with other VP'ers? Provide your audience with a breakdown of the topics you'll discuss.");
@@ -65,14 +65,14 @@ CreateTrainingSessionConversationHandler.prototype = {
 			this.bot.say(from, "Here's what people need to know for your presentation: "+text);
 			this.bot.conversationManager.setConversationData(conversation, 'requirements', text, function(){});
 			this.bot.conversationManager.changeConversationState(conversation, "targetAudience", function(){
-				that.bot.say(from, "Who are you trying to reach with this session? Developers? QAs? Managers? Everybody?");
+				that.bot.say(from, "Who are you trying to reach with this B&L session? Developers? QAs? Managers? Everybody?");
 			});
 		}
 		if (conversation.state == 'targetAudience'){
 			this.bot.say(from, "You're trying to reach this audience: "+text);
 			this.bot.conversationManager.setConversationData(conversation, 'targetAudience', text, function(){});
 			this.bot.conversationManager.changeConversationState(conversation, "duration", function(){
-				that.bot.say(from, "How long do you need to give the talk about " + conversation.data.title + "?");
+				that.bot.say(from, "How long do you need to give the B&L session about " + conversation.data.title + "?");
 			});			
 		}
 		if (conversation.state == 'duration'){
@@ -86,14 +86,14 @@ CreateTrainingSessionConversationHandler.prototype = {
 			this.bot.say(from, "Remember to make them very clear and concise. Add value with your slides!");
 			this.bot.conversationManager.setConversationData(conversation, 'slides', text, function(){});
 			this.bot.conversationManager.changeConversationState(conversation, "location", function(){
-				that.bot.say(from, "Where will you be giving this talk? We have offices in Medellín - Colombia, Rosario - Argentina, Buenos Aires - Argentina, Paraná - Argentina and Montevideo - Uruguay. We're everywhere!");
+				that.bot.say(from, "Where will you be giving this B&L session? We have offices in Medellín - Colombia, Rosario - Argentina, Buenos Aires - Argentina, Paraná - Argentina and Montevideo - Uruguay. We're everywhere!");
 			});
 		}
 		if (conversation.state == 'location'){
 			this.bot.say(from, text + " is a pretty cool place.");
 			this.bot.conversationManager.setConversationData(conversation, 'location', text, function(){});
 			this.bot.conversationManager.changeConversationState(conversation, "desiredDate", function(){
-				that.bot.say(from, "When do you want to give the talk? (YYYY/MM/DD)");
+				that.bot.say(from, "When do you want to give the B&L session? (YYYY/MM/DD)");
 			});			
 		}
 		if (conversation.state == 'desiredDate'){
@@ -109,7 +109,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 					this.bot.say(from, text + " sounds good to me.");
 					this.bot.conversationManager.setConversationData(conversation, 'desiredDate', text, function(){});
 					this.bot.conversationManager.changeConversationState(conversation, "time", function(){
-						that.bot.say(from, "That looks good. At what time will you be giving the talk? (e.g. 08:30 or 8:30am)");
+						that.bot.say(from, "That looks good. At what time will you be giving the B&L session? (e.g. 08:30 or 8:30am)");
 					});	
 				}				
 			} else {
@@ -121,7 +121,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 				this.bot.say(from, text + " sounds good to me.");
 				this.bot.conversationManager.setConversationData(conversation, 'time', text, function(){});
 				this.bot.conversationManager.changeConversationState(conversation, "save", function(){
-					that.bot.say(from, "What do you think, should we go ahead and notify people? (YES/NO)");
+					that.bot.say(from, "What do you think, should we go ahead and notify people about this B&L session? (YES/NO)");
 				});				
 			} else {
 				this.bot.say(from, "What's that? I asked for this format (HH:MM), come on.");
@@ -132,13 +132,13 @@ CreateTrainingSessionConversationHandler.prototype = {
 				this.bot.say(from, "Cool. We're doing this.");
 				this.bot.trainingSessionManager.createTrainingSession(from, conversation.data, function(res, err){
 					if (err){
-						that.bot.say(from, "I couldn't save the session: "+err);
+						that.bot.say(from, "I couldn't save the B&L session: "+err);
 					} else {
-						that.bot.share("@channel The training session: \""+res[0].title+"\" was created.");
-						that.bot.share("The training session: \"" + res[0].title + "\" has been created.");
+						that.bot.share("@channel The B&L session: \""+res[0].title+"\" was created.");
+						that.bot.share("The B&L session: \"" + res[0].title + "\" has been created.");
 						that.bot.share("It will take place at the " + res[0].location + " office.");
 						that.bot.share("@" + res[0].presenter + " will be presenting it on " + res[0].desiredDate + " at " + res[0].time + "." );
-						that.bot.share("You can enroll to this training session by asking 'Collabot, show me upcoming sessions'");
+						that.bot.share("You can enroll to this B&L session by asking 'Collabot, show me upcoming sessions'");
 					}
 				});
 				this.bot.conversationManager.endConversation(conversation);
