@@ -88,10 +88,10 @@ TrainingSessionManager.prototype =  {
 			},
 			function (trainings, next){
 				if (!trainings || trainings.length == 0){
-					bot.say(from, "Sorry, there are no training sessions");
+					bot.say(from, "Hmmm... I know of no training sessions");
 					manager._endConversation(conversation);
 				} else {
-					bot.say(from, "Sure, please let me know what training?");
+					bot.say(from, "What training session?");
 					for (var i = 0; i < trainings.length; i++){
 						var training = traginings[i];
 						bot.say(from, (i+1)+" - \""+training.title+"\" by "+training.trainerName);
@@ -102,7 +102,7 @@ TrainingSessionManager.prototype =  {
 		],
 		function (error){
 			if (error){
-				bot.say(from, "I couldn't complete your command: "+err);
+				bot.say(from, "Heck, something happened! : "+err);
 				console.log(error);
 				console.log(error.stack);
  			}
