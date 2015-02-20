@@ -121,7 +121,7 @@ CommandConversationHandler.prototype = {
 		});
 	
 	},
-	_showUpcomingSessions: function(from){
+	_showUpcomingSessions: function(from) {
 		this.bot.trainingSessionManager.initRegisterToSession(from);
 	}
 }

@@ -1,4 +1,4 @@
-var RegisterToSessionConversationHandler = function(bot){
+var RegisterToSessionConversationHandler = function(bot) {
 	this.bot = bot;
 }
 
@@ -7,14 +7,12 @@ RegisterToSessionConversationHandler.prototype = {
 		var handler = this;
 		console.log('Haaaaandling {'+conversation.topic+'} with {'+from+'}, he said "'+text+'". State is {'+conversation.state+'}');
 
-		if (conversation.state == 'waitingForRegistration'){
+		if (conversation.state == 'waitingForRegistration') {
 			var command = /(.+)$/.exec(text);
-			if (!command || !command.length || !command.length == 2 && conversation.data.sessions){
+			if (!command || !command.length || !command.length == 2 && conversation.data.sessions) {
 				handler.bot.say(from, 'Sorry, I  Can\'t understand that!');
-			}
-			else {
+			} else {
 				var sessionIdOrName = command[1];
-
 				this.bot.trainingSessionManager.registerToSession(from, sessionIdOrName, conversation);
 			}
 		}
