@@ -21,9 +21,9 @@ ConversationManager.prototype =  {
 					data: {},
 					startedOn: new Date().formatYYYYMMDD()
 				}
-				manager.bot.persistence.insertConversation(conversationData, function(result, err){
-					if (!err){
-						callback();
+				manager.bot.persistence.insertConversation(conversationData, function(result, err) {
+					if (!err) {
+						callback(result[0]);
 					}
 				})
 			}
