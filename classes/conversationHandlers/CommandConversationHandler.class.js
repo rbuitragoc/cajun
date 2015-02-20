@@ -109,6 +109,7 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
 		this.bot.say(who, "["+this.bot.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
 		this.bot.say(who, "["+this.bot.config.botName+" create BnL session] Starts a conversation to register a session");
+		this.bot.say(who, "["+this.bot.config.botName+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session")
 	},
 	_createTraining: function(from){
 		var handler = this;
