@@ -281,6 +281,9 @@ MongoConnector.prototype = {
 	},
 	getAttendants: function(trainingSessionId, callback){
 		this.db.collection('registeredUsers').find({sessionId: trainingSessionId}).toArray(function(err, result) { MongoConnector.defaultHandler(err,result,callback);});
+	},
+	insertTrainingSession: function(trainingData, callback){
+		this.db.collection('trainings').insert(trainingData, function(err, result) {MongoConnector.defaultHandler(err,result,callback);});
 	}
 }
 

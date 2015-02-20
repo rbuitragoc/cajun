@@ -139,6 +139,12 @@ TrainingSessionManager.prototype =  {
 				console.log(error.stack);
  			}
 		});
+	},
+	createTrainingSession: function(creator, session, callback){
+		var bot = this.bot;
+		bot.persistence.insertTrainingSession(session, callback);
+		bot.say(creator, "The session has been created by "+creator+" and published.");
+		bot.share("A training session has been created.");
 	}
 };
 
