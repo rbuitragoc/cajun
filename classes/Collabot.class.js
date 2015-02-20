@@ -27,6 +27,7 @@ var CommandConversationHandler = require('./conversationHandlers/CommandConversa
 var GreetingConversationHandler = require('./conversationHandlers/GreetingConversationHandler.class')
 var ListAttendantsConversationHandler = require('./conversationHandlers/ListAttendantsConversationHandler.class')
 var CreateTrainingSessionConversationHandler = require('./conversationHandlers/CreateTrainingSessionConversationHandler.class');
+var RegisterToSessionConversationHandler = require('./conversationHandlers/RegisterToSessionConversationHandler.class')
 
 // Utility Classes
 var mentionCheck = require('./util/ChatUtils.class');
@@ -49,7 +50,8 @@ Collabot.prototype = {
 			this.handlers = {
 				greeting: new GreetingConversationHandler(this),
 				showAttendants: new ListAttendantsConversationHandler(this),
-				createTrainingSession: new CreateTrainingSessionConversationHandler(this)
+				createTrainingSession: new CreateTrainingSessionConversationHandler(this),
+				registerToSession: new RegisterToSessionConversationHandler(this)
 			}
 			this.guid = guid();
 			callback("started");
