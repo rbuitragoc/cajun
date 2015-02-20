@@ -100,10 +100,12 @@ CommandConversationHandler.prototype = {
 		this.bot.trainingSessionManager.requestAuthorizationAsPresenter(from, presenter);
 	},
 	_help: function (who){
+		this.bot.say(who, "These are the commands I will respond to, because I'm a robot believe it or not.");
 		this.bot.say(who, "["+this.bot.config.botName+" give] Gives a player X points. Example: 'bot give 5 points to slash'.");
 		this.bot.say(who, "["+this.bot.config.botName+" about] Gets some information about the collabot.");
 		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
 		this.bot.say(who, "["+this.bot.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
+		this.bot.say(who, "Apart from these I can also tell you who attended to a training session, just ask me!");
 	}
 }
 
