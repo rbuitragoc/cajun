@@ -23,7 +23,7 @@ ConversationManager.prototype =  {
 				}
 				manager.bot.persistence.insertConversation(conversationData, function(result, err){
 					if (!err){
-						callback(conversation);
+						callback(result[0]);
 					}
 				})
 			}
