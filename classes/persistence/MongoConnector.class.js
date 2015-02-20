@@ -276,7 +276,7 @@ MongoConnector.prototype = {
 	getTrainings: function(callback){
 		this.db.collection('trainings').find().toArray(function(err, result){MongoConnector.defaultHandler(err,result,callback);});
 	},
-	getTrainingSessionById: function(id, callback){
+	getTrainingById: function(id, callback){
 		this.db.collection('trainings').findById(id).toArray(function(err, result) { MongoConnector.singleResultHandler(err,result,callback);});
 	},
 	getAttendants: function(trainingSessionId, callback){

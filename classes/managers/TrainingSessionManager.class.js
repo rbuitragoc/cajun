@@ -94,8 +94,8 @@ TrainingSessionManager.prototype =  {
 					bot.say(from, "What training session?");
 					for (var i = 0; i < trainings.length; i++){
 						var training = trainings[i];
-						bot.say(from, (i+1)+" - \""+training.title+"\" by "+training.trainerName);
-						bot.conversationManager.setConversationData(conversation, 'trainingSessionIds.k'+(i+1), training._id.$oid, function(){});
+						bot.say(from, (i+1)+" - \""+training.title+"\" by "+training.presenter);
+						bot.conversationManager.setConversationData(conversation, 'trainingSessions.k'+(i+1), training, function(){});
 					}
 				}
 			}
@@ -108,24 +108,14 @@ TrainingSessionManager.prototype =  {
  			}
 		});
 	},
-	showAttendantsTo: function(conversation, requestor, trainingId){
+	showAttendantsTo: function(conversation, requestor, training){
 		var bot = this.bot;
 		var manager = this;
+		console.log("Getting attendants for training session");
+		console.log(training);
 		async.waterfall([
 			function(next){
-				bot.persistence.getTrainingById(trainingId, function(training, err){
-					next(err, trainingSession)
-				});
-			},
-			function(training, next){
-				if (!training){
-					next("I couldn't find the training session.");
-				} else {
-					next(false, training);
-				}
-			},
-			function(training, next){
-				bot.persistence.getAttendants(trainingSession._id, function(attendantsList, err){
+				bot.persistence.getAttendants(training._id, function(attendantsList, err){
 					next(err, training, attendantsList);
 				});
 			},
