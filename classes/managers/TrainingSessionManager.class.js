@@ -148,7 +148,7 @@ TrainingSessionManager.prototype =  {
 			}
 		} else if(sessionIdOrName == "NO") {
 			bot.conversationManager.endConversation(conversation);
-			bot.say(from,"Bye!");
+			bot.say(from,"You chose not to attend any of the upcoming sessions. I'll remind you of any new sessions scheduled, so you'll have chance to register to those. Have a nice day");
 		} else {
 			bot.say(from, 'Sorry, that session does not exist!');
 		}
