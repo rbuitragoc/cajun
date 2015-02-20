@@ -58,7 +58,7 @@ TrainingSessionManager.prototype =  {
 		});
 	},
 	_endConversation: function(conversation){
-		this.bot.endConversation(conversation);
+		this.bot.conversationManager.endConversation(conversation);
 	},
 	startShowAttendantsConversation: function(conversation, from){
 		var bot = this.bot;
@@ -87,8 +87,8 @@ TrainingSessionManager.prototype =  {
 				});
 			},
 			function (trainings, next){
-				if (!trainings){
-					bot.say(from, "There are no training sessions");
+				if (!trainings || trainings.length == 0){
+					bot.say(from, "Sorry, there are no training sessions");
 					manager._endConversation(conversation);
 				} else {
 					bot.say(from, "Sure, please let me know what training?");
