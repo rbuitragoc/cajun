@@ -28,7 +28,8 @@ module.exports = {
 			// 'http://localhost:3000/stop'
 	},
 	maxCollabPoints : 10,
-	trainingSessionManager: 'slizarazo'
+	trainingSessionManager: 'slizarazo',
+	enrollmentDaysThreshold : 1
 };
 
 // Slack API config prod
