@@ -10,9 +10,9 @@ module.exports = {
 	environment: process.env.ENVIRONMENT,
 	// environment: "rick's lap",
 	channel: "gambit-test",
-	botName: "collabot",
-	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
-	// token: 'xoxb-3749826050-mKrPHbMYqRDa0mb47lhf3sfr', // Rick's tal-bot 
+	botName: "tal-bot",
+	// token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
+	token: 'xoxb-3749826050-mKrPHbMYqRDa0mb47lhf3sfr', // Rick's tal-bot 
 	autoReconnect: true,
 	autoMark: true,
 	connector: SlackConnector,
@@ -29,7 +29,7 @@ module.exports = {
 	},
 	maxCollabPoints : 10,
 	trainingSessionManager: 'slizarazo',
-	registrationDaysDealineLimit : 1
+	enrollmentDaysThreshold : 1
 };
 
 // Slack API config prod

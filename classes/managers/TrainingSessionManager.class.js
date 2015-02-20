@@ -108,7 +108,7 @@ TrainingSessionManager.prototype =  {
 		for (var i = 0; i < conversation.data.sessions.length; i++) {
 			var session = conversation.data.sessions[i];
 			
-			if (session.customId == sessionIdOrName || session.title == sessionIdOrName {
+			if (session.customId == sessionIdOrName || session.title == sessionIdOrName) {
 				selectedSession = session;
 				break;
 			}
@@ -119,7 +119,7 @@ TrainingSessionManager.prototype =  {
 			currentDate.setDate(currentDate.getDate() + 1);
 
 			var desiredDate = new Date(selectedSession.desiredDate);
-			desiredDate.setDate(desiredDate.getDate() + bot.config.registrationDaysDealineLimit);
+			desiredDate.setDate(desiredDate.getDate() + bot.config.enrollmentDaysThreshold);
 
 			if (currentDate <= desiredDate) {
 				var hasRegistration = false;
