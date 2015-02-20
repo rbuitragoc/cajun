@@ -93,7 +93,7 @@ TrainingSessionManager.prototype =  {
 				} else {
 					bot.say(from, "What training session?");
 					for (var i = 0; i < trainings.length; i++){
-						var training = traginings[i];
+						var training = trainings[i];
 						bot.say(from, (i+1)+" - \""+training.title+"\" by "+training.trainerName);
 						bot.conversationManager.setConversationData(conversation, 'trainingSessionIds.k'+(i+1), training._id.$oid, function(){});
 					}

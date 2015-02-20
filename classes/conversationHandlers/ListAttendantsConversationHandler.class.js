@@ -12,11 +12,12 @@ ListAttendantsConversationHandler.prototype = {
 				this.bot.say(from, "Please tell me the number of the training session.");
 				return;
 			}
-			if (index < 1 || index > conversation.data.trainingSessionIds.keys.length){
-				this.bot.say(from,"Please use a number between 1 and "+conversation.data.trainingSessionIds.keys.length+".");
+			var keys = Object.keys(conversation.data.trainingSessionIds);
+			if (index < 1 || index > keys.length){
+				this.bot.say(from,"Please use a number between 1 and "+keys.length+".");
 				return;
 			}
-			this.bot.trainingSessionsManager.showAttendantsTo(conversation, from, conversation.data.trainingSessionIds['k'+index]);
+			this.bot.trainingSessionManager.showAttendantsTo(conversation, from, conversation.data.trainingSessionIds['k'+index]);
 		}
 	}
 }
