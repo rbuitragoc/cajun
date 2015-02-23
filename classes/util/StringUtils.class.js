@@ -7,5 +7,8 @@ module.exports = {
 			}
 		}
 		return false;
+	},
+	isNumber: function(text) {
+		return /^\d+$/.exec(text);
 	}
 }
