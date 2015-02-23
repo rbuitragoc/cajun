@@ -12,7 +12,7 @@ DefaultConversationHandler.prototype = {
 			function(conversation){
 				// TODO: Add support to resume conversations
 			});
-		}
+		}		
 	}
 }
 

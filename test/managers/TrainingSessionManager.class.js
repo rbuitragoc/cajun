@@ -20,6 +20,9 @@ function setupMocks(){
 		},
 		insertAuthorizedPresenter: function(presenter, callback){
 			callback({});
+		},
+		insertTrainingSession: function(presenter, callback){
+			callback();
 		}
 	}
 	return {
@@ -84,9 +87,42 @@ function testUnexistingPresenters() {
 	}, 1000);
 }
 
+function testCreateTrainingSession() {
+	// Initialize and inject mocks
+	var mocks = setupMocks();
+	var mockBot = mocks.bot;
+	// Initialize object of class under test (real class, not mock)
+	var manager = new TrainingSessionManager(mockBot);
+	// Execute operation under test
+	var session = { 
+		contents: 'How to dominate the world',
+		description: 'World domination desc',
+       	desiredDate: '2015/03/25',
+       	duration: '1 hour',
+       	location: 'Medellín',
+       	presenter: 'gguevara',
+       	requirements: 'Nothing',
+       	sessionType: 'BNL',
+       	slides: '10',
+       	targetAudience: 'Everybody',
+       	time: '08:30',
+       	title: 'World Domination' 
+   	};
+
+	manager.createTrainingSession("slash", session, function(){});
+	// Assert results
+	setTimeout(function(){
+		assert(mockBot.said("The session has been created by slash and published.", "slash"), "Message not sent to user");
+		assert(mockBot.shared("A training session has been created."), "Message not shared");
+	}, 1000);
+}
+
+ 
+
 module.exports = { 
 	testManagerCanAuthPresenters: testManagerCanAuthPresenters,
 	testNonManagerCannotAuthPresenters: testNonManagerCannotAuthPresenters,
 	testPreexistingPresenters: testPreexistingPresenters,
-	testUnexistingPresenters: testUnexistingPresenters
+	testUnexistingPresenters: testUnexistingPresenters,
+	testCreateTrainingSession: testCreateTrainingSession
 }

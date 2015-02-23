@@ -272,6 +272,41 @@ MongoConnector.prototype = {
 			    }
 		    }
 	    );
+	},
+	insertTrainingSession: function(trainingData, callback){
+		this.db.collection('trainings').insert(trainingData, function(err, result) {MongoConnector.defaultHandler(err,result,callback);})
+	},
+	getTrainingSessions: function(callback){
+		this.db.collection('trainings').find().sort({'desiredDate': -1}).toArray(
+			function (err, result) {
+				if (err) {
+					console.log(err);
+			    } else {
+			    	callback(result);
+			    }
+		    }
+	    );
+	},
+	insertRegisteredUsers: function(user, sessionId, callback){
+		this.db.collection('registeredUsers').insert({
+			user : user,
+			sessionId : sessionId,
+			date : new Date(),
+			notified : true
+		}, function(err, result) {
+			MongoConnector.defaultHandler(err, result, callback);
+		});
+	},
+	getRegisteredUsers: function(user, sessionId, callback){
+		this.db.collection('registeredUsers').find({user : user, sessionId : sessionId}).toArray(
+			function (err, result) {
+				if (err) {
+					console.log(err);
+			    } else {
+			    	callback(result);
+			    }
+		    }
+		);
 	}
 }
 

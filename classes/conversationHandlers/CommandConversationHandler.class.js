@@ -20,6 +20,10 @@ CommandConversationHandler.prototype = {
 			this._howAmIDoing(from);
 		} else if (/authorize (.+) as presenter$/.exec(text)){
 			this._autorizeAsPresenter(from, text);
+		} else if(text.indexOf("show me upcoming sessions") > -1){
+			this._showUpcomingSessions(from);
+		} else if (text.toLowerCase().indexOf("create bnl session") > -1){
+			this._createTraining(from);
 		} else {
 			this._wtf(from);
 		}
@@ -104,6 +108,22 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "["+this.bot.config.botName+" about] Gets some information about the collabot.");
 		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
 		this.bot.say(who, "["+this.bot.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
+		this.bot.say(who, "["+this.bot.config.botName+" create BnL session] Starts a conversation to register a session");
+		this.bot.say(who, "["+this.bot.config.botName+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session")
+	},
+	_createTraining: function(from){
+		var handler = this;
+		this.bot.conversationManager.startConversation(from, "createTrainingSession", "presenters", function(){
+			handler.bot.say(from, "Hey "+from+", Sure!");
+			/*handler.bot.say(from, "First we need the slack username of the presenter. Just type \"me\" if it's you.");*/
+		},
+		function(conversation){
+			// TODO: Add support to resume conversations
+		});
+	
+	},
+	_showUpcomingSessions: function(from) {
+		this.bot.trainingSessionManager.initRegisterToSession(from);
 	}
 }
 
