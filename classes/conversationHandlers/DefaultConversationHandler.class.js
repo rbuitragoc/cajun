@@ -1,3 +1,5 @@
+var StringUtils = require('../util/StringUtils.class')
+
 var DefaultConversationHandler = function(bot){
 	this.bot = bot;
 	this.showAttendantsRegexes = [
@@ -15,7 +17,7 @@ DefaultConversationHandler.prototype = {
 			function(conversation){
 				// TODO: Add support to resume conversations
 			});
-		} else if (this.testRegexes(this.showAttendantsRegexes, text)){
+		} else if (StringUtils.testRegexes(this.showAttendantsRegexes, text)) {
 			this.bot.conversationManager.startConversation(from, "showAttendants", "waitingForTrainingSession", function(conversation){
 				handler.bot.trainingSessionManager.startShowAttendantsConversation(conversation, from);
 			},
@@ -23,16 +25,7 @@ DefaultConversationHandler.prototype = {
 				// TODO: Add support to resume conversations
 			});
 		}
-	},
-	testRegexes: function(regexes, text){
-		for (var i = 0; i < regexes.length; i++){
-			var regex = regexes[i];
-			if (regex.exec(text))
-				return true;
-		}
-		return false;
 	}
 }
-
 
 module.exports = DefaultConversationHandler;
