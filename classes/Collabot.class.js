@@ -25,6 +25,7 @@ var TrainingSessionManager = require('./managers/TrainingSessionManager.class');
 var DefaultConversationHandler = require('./conversationHandlers/DefaultConversationHandler.class')
 var CommandConversationHandler = require('./conversationHandlers/CommandConversationHandler.class')
 var GreetingConversationHandler = require('./conversationHandlers/GreetingConversationHandler.class')
+var ListAttendantsConversationHandler = require('./conversationHandlers/ListAttendantsConversationHandler.class')
 var CreateTrainingSessionConversationHandler = require('./conversationHandlers/CreateTrainingSessionConversationHandler.class');
 var RegisterToSessionConversationHandler = require('./conversationHandlers/RegisterToSessionConversationHandler.class')
 
@@ -48,6 +49,7 @@ Collabot.prototype = {
 			this.defaultConversationHandler = new DefaultConversationHandler(this);
 			this.handlers = {
 				greeting: new GreetingConversationHandler(this),
+				showAttendants: new ListAttendantsConversationHandler(this),
 				createTrainingSession: new CreateTrainingSessionConversationHandler(this),
 				registerToSession: new RegisterToSessionConversationHandler(this)
 			}
@@ -75,9 +77,11 @@ Collabot.prototype = {
 			if (!text)
 				return;
 			var wasMentioned = mentionCheck(this.config.botName, text)
-			if (wasMentioned)
+			if (wasMentioned) {
 				this.commandConversationHandler.handle(from, text);
-			this.defaultConversationHandler.handle(from, text);
+			} else {
+				this.defaultConversationHandler.handle(from, text);
+			}
 			var bot = this;
 			this.conversationManager.getCurrentConversations(from, function(error, conversations){
 				if (error){
