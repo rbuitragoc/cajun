@@ -77,9 +77,11 @@ Collabot.prototype = {
 			if (!text)
 				return;
 			var wasMentioned = mentionCheck(this.config.botName, text)
-			if (wasMentioned)
+			if (wasMentioned) {
 				this.commandConversationHandler.handle(from, text);
-			this.defaultConversationHandler.handle(from, text);
+			} else {
+				this.defaultConversationHandler.handle(from, text);
+			}
 			var bot = this;
 			this.conversationManager.getCurrentConversations(from, function(error, conversations){
 				if (error){
