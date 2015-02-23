@@ -1,10 +1,21 @@
+What's new in v. 0.4.0
+======================
+- Environment variables isolation to ease release process (Env variable for "environment")
+- An user can create (register) a new training (BnL) session with all the information associated to it
+- An user can register (enroll) to an existing, upcoming BnL session
+- Stabilization of dependencies versions and adde dinfo about the project in package.json
+
+What's new in v. 0.3.0
+======================
+- A separate set of infrastructure for PROD was created (stability enhanced)
+- An HR user can authorize another user to be a presenter
+
 What's New in v. 0.2.0
 ======================
 
 - Filters for 'top' operation are available: Bot top now takes two optional arguments: a period of time (day, week, month, year) and a channel. Those values are used to filter top scores data.
 - web tier now finds the app endpoints using config file or environment properties (appUrls)
 - minor bug fixes
-
 
 What's New in v. 0.1.0
 ======================
