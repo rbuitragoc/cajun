@@ -17,7 +17,7 @@ DefaultConversationHandler.prototype = {
 			function(conversation){
 				// TODO: Add support to resume conversations
 			});
-		} else if (StringUtils.testRegexes(this.showAttendantsRegexes, text)) {
+		} else if (StringUtils.isMatch(this.showAttendantsRegexes, text)) {
 			this.bot.conversationManager.startConversation(from, "showAttendants", "waitingForTrainingSession", function(conversation){
 				handler.bot.trainingSessionManager.startShowAttendantsConversation(conversation, from);
 			},
