@@ -6,13 +6,13 @@ var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
 // Slack API config karmabot for tests
 module.exports = {
-	version: "0.2.0",
+	version: "0.4.0",
 	environment: process.env.ENVIRONMENT,
 	// environment: "rick's lap",
 	channel: "gambit-test",
-	botName: "tal-bot",
-	// token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
-	token: 'xoxb-3749826050-mKrPHbMYqRDa0mb47lhf3sfr', // Rick's tal-bot 
+	botName: "collabot",
+	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
+	// token: 'xoxb-3749826050-mKrPHbMYqRDa0mb47lhf3sfr', // Rick's tal-bot 
 	autoReconnect: true,
 	autoMark: true,
 	connector: SlackConnector,
