@@ -91,7 +91,7 @@ TrainingSessionManager.prototype =  {
 					bot.say(from, "Hmmm... I know of no training sessions");
 					manager._endConversation(conversation);
 				} else {
-					bot.say(from, "What training session?");
+					bot.say(from, "From which session do you wish to list the attendees?");
 					for (var i = 0; i < trainings.length; i++){
 						var training = trainings[i];
 						bot.say(from, (i+1)+" - \""+training.title+"\" by "+training.presenter);
@@ -111,7 +111,7 @@ TrainingSessionManager.prototype =  {
 	showAttendantsTo: function(conversation, requestor, training){
 		var bot = this.bot;
 		var manager = this;
-		console.log("Getting attendants for training session");
+		console.log("Getting attendees for session");
 		console.log(training);
 		async.waterfall([
 			function(next){
