@@ -121,7 +121,7 @@ TrainingSessionManager.prototype =  {
 			},
 			function(training, attendantsList, next){
 				if (!attendantsList || attendantsList.length == 0){
-					bot.say(requestor, "Noone registered for \""+training.title+"\"");
+					bot.say(requestor, "Nobody has registered for \""+training.title+"\"");
 				} else {
 					bot.say(requestor, attendantsList.length+" people registered for \""+training.title+"\":");
 					for (var i = 0; i < attendantsList.length; i++){
