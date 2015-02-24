@@ -1,3 +1,8 @@
+What's New in v. 0.5.0
+======================
+- Environment variables further independence
+- As an HR user I can see a list of attendants to a session
+
 What's new in v. 0.4.0
 ======================
 - Environment variables isolation to ease release process (Env variable for "environment")
