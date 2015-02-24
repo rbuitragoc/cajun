@@ -6,24 +6,24 @@ var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
 // Slack API config karmabot for tests
 module.exports = {
-	version: "0.4.0",
+	version: "0.5.0",
 	environment: process.env.ENVIRONMENT,
 	// environment: "rick's lap",
-	channel: "gambit-test",
-	botName: "collabot",
-	token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr',
-	// token: 'xoxb-3749826050-mKrPHbMYqRDa0mb47lhf3sfr', // Rick's tal-bot 
+	channel: process.env.CHANNEL,
+	botName: process.env.BOTNAME,
+	// token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr', // Good ol' Collabot
+	token: process.env.BOT_TOKEN, //'xoxb-3749826050-mKrPHbMYqRDa0mb47lhf3sfr', // Rick's tal-bot 
 	autoReconnect: true,
 	autoMark: true,
 	connector: SlackConnector,
 	persistence: MongoConnector,
-	dbURL: 'mongodb://'+process.env.MDBUSERNAME+':'+process.env.MDBPWD+'@'+process.env.MDBHOST+':'+process.env.MDBPORT+'/'+process.env.MDBDB,
-	// dbURL: 'mongodb://localhost:27017/collabot',
+	// dbURL: 'mongodb://'+process.env.MDBUSERNAME+':'+process.env.MDBPWD+'@'+process.env.MDBHOST+':'+process.env.MDBPORT+'/'+process.env.MDBDB,
+	dbURL: process.env.MDBURL,// 'mongodb://localhost:27017/collabot',
 	appUrls: {
-		start: process.env.APPSTART, 
+		start: process.env.APPURL+'start', 
 			// 'http://salty-inlet-8617.herokuapp.com/start',
 			// 'http://localhost:3000/start',
-		stop: process.env.APPSTOP
+		stop: process.env.APPURL+'stop'
 			// 'http://salty-inlet-8617.herokuapp.com/stop'
 			// 'http://localhost:3000/stop'
 	},
