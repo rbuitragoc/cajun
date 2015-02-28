@@ -40,6 +40,10 @@ CommandConversationHandler.prototype = {
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
 		}
+        if (from == target){
+            this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that buddy");
+            return;
+        }
 		var updateScoreRequest = {
 			fromPlayerName: from,
 			toPlayerName: target,
