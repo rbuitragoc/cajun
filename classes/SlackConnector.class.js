@@ -200,6 +200,34 @@ SlackConnector.prototype = {
 				slack: slackOpts
 			})
 		});
+	},
+	_searchTextPlace: function(query) {
+		var slackOpts = {bot: this.bot, from: who}
+		this.slack._apiCall('search.messages', {query: query}, function(data) {
+			var success = handle_api_response(data, {
+				call: 'search.messages',
+				console: JSON.stringify(data.messages),
+				msg: null,
+				slack: slackOpts
+			});
+			if (success) {
+				console.log("Successful invocation. Checking for matches...")
+				if (data.messages && data.messages.total && data.messages.total > 1) {
+					console.log("Got %s messages!", data.messages.total)
+					var place = data.messages.matches.channel
+					if (channel) {
+						console.log("Got the channel! %s", channel.name)
+						return channel.name;
+					} else {
+						console.error("No channel data when querying with string [%s]", query)
+					}
+				} else {
+					console.error("Unsuccessful retrieval of messages that match with the query [%s]. Returning null.", query)	
+				}
+			} else {
+				console.error("Unsuccessful retrieval of messages that match with the query [%s]. Returning null.", query)
+			}
+		})
 	}
 }
 
@@ -216,7 +244,8 @@ var handle_api_response = function(data, options) {
 			return false;
 		} else {
 			console.log("%s API call came back with OK=%s; also got the following payload: %s", apiCall, data.ok, consoleMessage)
-			bot.say(who, apiCall+" API call came back with OK="+data.ok+"; also got some payload: "+slackMessage)
+			if (slackMessage)
+				bot.say(who, apiCall+" API call came back with OK="+data.ok+"; also got some payload: "+slackMessage)
 			return true;
 		}
 	}

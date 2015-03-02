@@ -101,7 +101,8 @@ CommandConversationHandler.prototype = {
 			toPlayerName: target,
 			collabPoints: parseInt(points),
 			channel: this.bot.connector.slackChannel.name,
-			maxCollabPoints: this.bot.config.maxCollabPoints
+			maxCollabPoints: this.bot.config.maxCollabPoints,
+			originaltext: text
 		}
 		console.log("updateScoreRequest:");
 		console.log(updateScoreRequest)

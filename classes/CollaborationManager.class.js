@@ -6,16 +6,23 @@ var DateUtils = require('./util/DateUtils.class');
 
 CollaborationManager.prototype =  {
 	givePoints: function(updateScoreRequest, bot){
+		
+		var place = null;
+		place = bot.connector._searchTextPlace(updateScoreRequest.originaltext);
+		
 		async.waterfall([
 			function(next){
 				bot.persistence.getPlayerByName(updateScoreRequest.fromPlayerName, function(player, err){
-					if (err){
-						bot.share("I couldn't give the points: "+err);
+					if (err) {
+						if (place)
+							bot.shareOn(place, "I couldn't give the points: "+err);
+						console.err("Cannot assign points due to an error in callback function: %s", err)
 					} else if (!player){
 						bot.persistence.insertNewPlayer(updateScoreRequest.fromPlayerName, function(player, err){
 							if(!player || err){
-								bot.share("I couldn't give the points: "+err);
-								console.log(err.stack);
+								if (place)
+									bot.shareOn(place, "I couldn't give the points: "+err);
+								console.err(err.stack);
 							} else {
 								next(false, player);
 							}
@@ -28,10 +35,19 @@ CollaborationManager.prototype =  {
 			function(player, next){
 				bot.persistence.getDailyGrantedPoints(updateScoreRequest.fromPlayerName, function(dailyGrantedPoints, err){
 					if (err){
-						bot.share("I couldn't get Daily granted points: "+err);
+						if (place)
+							bot.shareOn(place, "I couldn't get Daily granted points: "+err);
+						console.error("I couldn't retrieve daily granted points, due to an error in callback function: %s", err)
 					}
 					else if (dailyGrantedPoints && updateScoreRequest.maxCollabPoints < (dailyGrantedPoints.collabPtsCount + updateScoreRequest.collabPoints)) {
-						bot.share("You don't have enough points!");
+						var msg = "You don't have enough points!";
+						if (place) {
+							bot.shareOn(place, msg);
+						} else {
+							// try your best and say it!
+							bot.say(updateScoreRequest.fromPlayerName, msg)
+						}
+						console.error(msg)
 					} 
 					else {
 						next(false, dailyGrantedPoints);
@@ -41,7 +57,11 @@ CollaborationManager.prototype =  {
             function(dailyGrantedPoints, next){
 				bot.persistence.updateDailyGrantedPoints(updateScoreRequest, dailyGrantedPoints, function(player, err){
 					if (err){
-						bot.share("I couldn't set daily granted points: "+err);
+						var msg = "I couldn't set daily granted points: "+err
+						if (place) {
+							bot.shareOn(place, msg);
+						}
+						console.error(msg);
 					} else {
 						next();
 					}
@@ -50,9 +70,16 @@ CollaborationManager.prototype =  {
 			function(next){
 				bot.persistence.getPlayerByName(updateScoreRequest.toPlayerName, function(player, err){
 					if (err){
-						bot.share("I couldn't give the points: "+err);
+						var msg = "I couldn't give the points: "+err;
+						if (place) {
+							bot.shareOn(place, msg);
+						}
+						console.error(msg)
 					} else if (!player){
-						bot.share("Who's that?");
+						if (place) {
+							bot.shareOn(place, "Who's that?");
+						}
+						console.error("Who's that?")
 					} else {
 						next();
 					}
@@ -61,7 +88,11 @@ CollaborationManager.prototype =  {
 			function(next){
 				bot.persistence.updatePlayerScore(updateScoreRequest, function(player, err){
 					if (err){
-						bot.share("I couldn't give the points: "+err);
+						var msg = "I couldn't give the points: "+err;
+						if (place) {
+							bot.shareOn(place, msg);
+						}
+						console.error(msg)
 					} else {
 						next();
 					}
@@ -70,7 +101,11 @@ CollaborationManager.prototype =  {
              function(next) {
 				bot.persistence.updateDailyScore(updateScoreRequest, function(player, err) {
 					if (err) {
-						bot.share("Unable to grant the points: " + err)
+						var msg = "I couldn't give the points: "+err;
+						if (place) {
+							bot.shareOn(place, msg);
+						}
+						console.error(msg)
 					} else {
 						next()
 					}
@@ -79,7 +114,11 @@ CollaborationManager.prototype =  {
 			 function(next) {
 				bot.persistence.updateChannelScore(updateScoreRequest, function(player, err) {
 					if (err) {
-						bot.share("Unable to grant the points: " + err)
+						var msg = "I couldn't give the points: "+err;
+						if (place) {
+							bot.shareOn(place, msg);
+						}
+						console.error(msg)
 					} else {
 						next()
 					}
@@ -88,14 +127,20 @@ CollaborationManager.prototype =  {
              function(next){
  				bot.persistence.saveHistoricalGrant(updateScoreRequest, function(player, err){
  					if (err){
- 						bot.share("Error Saving Historical Grant: "+err);
+						var msg = "Error Saving Historical Grant: "+err;
+						if (place) {
+							bot.shareOn(place, msg);
+						}
+						console.error(msg)
  					} else {
  						next();
  					}
           		});
               },
 			function(next){
-				bot.share("@"+updateScoreRequest.toPlayerName+", you have been given "+updateScoreRequest.collabPoints+" points by @"+updateScoreRequest.fromPlayerName);
+				if (place) {
+					bot.shareOn(place, "@"+updateScoreRequest.toPlayerName+", you have been given "+updateScoreRequest.collabPoints+" points by @"+updateScoreRequest.fromPlayerName);
+				} 
 			}
 		],
         function (error){
@@ -103,8 +148,10 @@ CollaborationManager.prototype =  {
 				console.log("General error.");
 				console.log(error);
 				console.log(error.stack);
-				bot.share("I couldn't give the points: "+error);
-
+				var msg = "I couldn't give the points: "+err;
+				if (place) {
+					bot.shareOn(place, msg);
+				}
 			}
 		});
 	},
