@@ -41,7 +41,7 @@ CommandConversationHandler.prototype = {
 			return;
 		}
         if (from == target){
-            this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that buddy");
+            this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
             return;
         }
 		var updateScoreRequest = {
