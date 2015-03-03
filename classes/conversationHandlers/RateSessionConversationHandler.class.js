@@ -47,7 +47,7 @@ RateSessionConversationHandler.prototype = {
 				this.bot.say(from, "Can't understand that rating.")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'understandingRating', text, function() {})
-				this.bot.conversationManager.changeConversationState(conversation. 'waitingForRelevanceRating', function() {})
+				this.bot.conversationManager.changeConversationState(conversation, 'waitingForRelevanceRating', function() {})
 				this.bot.say(from, "'"+text+"'? Thanks. How readily you think you can APPLY the Breakfast&Learn session topics in a real project? (1-5 scale)")
 			}
 			
@@ -56,7 +56,7 @@ RateSessionConversationHandler.prototype = {
 				this.bot.say(from, "Can't understand that rating.")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'relevanceRating', text, function() {})
-				this.bot.conversationManager.changeConversationState(conversation. 'waitingForPerformanceRating', function() {})
+				this.bot.conversationManager.changeConversationState(conversation, 'waitingForPerformanceRating', function() {})
 				this.bot.say(from, "'"+text+"'? Thanks. How well would you evaluate the presenter's performance? (1-5 scale)")
 			}
 			
@@ -65,7 +65,7 @@ RateSessionConversationHandler.prototype = {
 				this.bot.say(from, "Can't understand that rating.")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'performanceRating', text, function() {})
-				this.bot.conversationManager.changeConversationState(conversation. 'waitingForContentRating', function() {})
+				this.bot.conversationManager.changeConversationState(conversation, 'waitingForContentRating', function() {})
 				this.bot.say(from, "'"+text+"'? Thanks. How do you rate the CONTENT of this session? (1-5 scale)")
 			}
 			
@@ -74,14 +74,14 @@ RateSessionConversationHandler.prototype = {
 				this.bot.say(from, "Can't understand that rating.")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'contentRating', text, function() {})
-				this.bot.conversationManager.changeConversationState(conversation. 'waitingForMethodologyRating', function() {})
+				this.bot.conversationManager.changeConversationState(conversation, 'waitingForMethodologyRating', function() {})
 				this.bot.say(from, "'"+text+"'? Thanks. How do you rate the TOOLS and METHODOLOGY of this session? (1-5 scale, or any comment on this you may want to add instead)")
 			}
 			
 		} else if (conversation.state == 'waitingForMethodologyRating') {
 			
 			this.bot.conversationManager.setConversationData(conversation, 'methodologyRating', text, function() {})
-			this.bot.conversationManager.changeConversationState(conversation. 'waitingForRecommendation', function() {})
+			this.bot.conversationManager.changeConversationState(conversation, 'waitingForRecommendation', function() {})
 			this.bot.say(from, "'"+text+"'? Thanks. Would you recommend this Breakfast & learn to others? (yes/no)")
 			
 		} else if (conversation.state == 'waitingForRecommendation') {
@@ -89,7 +89,7 @@ RateSessionConversationHandler.prototype = {
 				this.bot.say(from, "I'm sorry, was that a yes, or a no?")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'recommended', text, function() {})
-				this.bot.conversationManager.changeConversationState(conversation. 'waitingForOverallRating', function() {})
+				this.bot.conversationManager.changeConversationState(conversation, 'waitingForOverallRating', function() {})
 				this.bot.say(from, "'"+text+"'? Thanks. How do you rate the Breakfast & Learn session in general? (1-5 scale)")
 			}
 			
@@ -98,14 +98,14 @@ RateSessionConversationHandler.prototype = {
 				this.bot.say(from, "Can't understand that rating.")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'overallRating', text, function() {})
-				this.bot.conversationManager.changeConversationState(conversation. 'waitingForComments', function() {})
+				this.bot.conversationManager.changeConversationState(conversation, 'waitingForComments', function() {})
 				this.bot.say(from, "'"+text+"'? Thanks. Finally, do you have any other suggestions or comments?")
 			}
 			
 		} else if (conversation.state == 'waitingForComments') {
 			
 			this.bot.conversationManager.setConversationData(conversation, 'comments', text, function() {})
-			this.bot.conversationManager.changeConversationState(conversation. 'waitingForAnonymousMode', function() {})
+			this.bot.conversationManager.changeConversationState(conversation, 'waitingForAnonymousMode', function() {})
 			this.bot.say(from, "Thanks! One last thing. You can let us (or not) save your name on this survey. This is useful in case we need to contact you to follow up you ideas or suggestions. It will remain anonymous if you decline, don't worry :)  (yes/no)")
 			
 		} else if (conversation.state == 'waitingForAnonymousMode') {
@@ -115,7 +115,7 @@ RateSessionConversationHandler.prototype = {
 				if (text == "yes") {
 					this.bot.conversationManager.setConversationData(conversation, 'user', from, function() {})
 				}
-				this.bot.conversationManager.changeConversationState(conversation. 'readyToSave', function() {})
+				this.bot.conversationManager.changeConversationState(conversation, 'readyToSave', function() {})
 				this.bot.say(from, "'"+text+"'? Wonderful. This is it, we're done here. Again, thanks for taking the time, we appreciate it!")
 			}
 			
