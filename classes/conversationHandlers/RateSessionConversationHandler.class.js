@@ -25,7 +25,7 @@ RateSessionConversationHandler.prototype = {
 			}
 			
 		} else if (conversation.state == 'waitingForOffice') {
-			var offices = conversation.data.offices
+			var offices = conversation.data.offices.split(/\s+/)
 			var selectedOffice = null
 			for (var i = 0; i < offices.length; i++) {
 				var anOffice = offices[i]
@@ -37,7 +37,7 @@ RateSessionConversationHandler.prototype = {
 			if (selectedOffice) {
 				this.bot.conversationManager.setConversationData(conversation, 'office', selectedOffice, function() {})
 				this.bot.conversationManager.changeConversationState(conversation, 'waitingForUnderstandingRating', function () {})
-				this.bot.say(from, "'"+selectedOffice"'? Excellent! Now, let's start rating the training. How well you think you UNDERSTOOD the Breakfast&Learn topics? (1-5 scale)")
+				this.bot.say(from, "'"+selectedOffice+"'? Excellent! Now, let's start rating the training. How well you think you UNDERSTOOD the Breakfast&Learn topics? (1-5 scale)")
 			} else {
 				this.bot.say(from, "Sorry, we don't have an office there (yet?)")
 			}
@@ -117,6 +117,12 @@ RateSessionConversationHandler.prototype = {
 				}
 				this.bot.conversationManager.changeConversationState(conversation, 'readyToSave', function() {})
 				this.bot.say(from, "'"+text+"'? Wonderful. This is it, we're done here. Again, thanks for taking the time, we appreciate it!")
+				this.bot.trainingSessionManager.rateSession(from, conversation, function(err) {
+					if (err) {
+						console.error("An error occurred when trying to save session rating! "+err.stack)
+					}
+				})
+				
 			}
 			
 		} else if (conversation.state == 'readyToSave') {
@@ -124,3 +130,5 @@ RateSessionConversationHandler.prototype = {
 		}
 	}
 }
+
+module.exports = RateSessionConversationHandler
