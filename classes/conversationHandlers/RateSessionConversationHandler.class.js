@@ -25,7 +25,7 @@ RateSessionConversationHandler.prototype = {
 			}
 			
 		} else if (conversation.state == 'waitingForOffice') {
-			var offices = conversation.data.offices.split(/\s+/)
+			var offices = conversation.data.offices
 			var selectedOffice = null
 			for (var i = 0; i < offices.length; i++) {
 				var anOffice = offices[i]
@@ -115,18 +115,18 @@ RateSessionConversationHandler.prototype = {
 				if (text == "yes") {
 					this.bot.conversationManager.setConversationData(conversation, 'user', from, function() {})
 				}
-				this.bot.conversationManager.changeConversationState(conversation, 'readyToSave', function() {})
-				this.bot.say(from, "'"+text+"'? Wonderful. This is it, we're done here. Again, thanks for taking the time, we appreciate it!")
 				this.bot.trainingSessionManager.rateSession(from, conversation, function(err) {
 					if (err) {
 						console.error("An error occurred when trying to save session rating! "+err.stack)
 					}
 				})
+				this.bot.say(from, "'"+text+"'? Wonderful. This is it, we're done here. Again, thanks for taking the time, we appreciate it!")
+				this.bot.conversationManager.endConversation(conversation, function() {})
 				
 			}
 			
-		} else if (conversation.state == 'readyToSave') {
-			this.bot.say(from, "Bye!")
+		} else {
+			console.log("Got another message for a conversation in an unknown state: "+conversation.state+". Don't know what to do.")
 		}
 	}
 }

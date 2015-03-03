@@ -264,8 +264,10 @@ TrainingSessionManager.prototype =  {
 					trainingSessions[i].customId = i+1
 				}
 				bot.conversationManager.setConversationData(conversation, 'sessions', trainingSessions, function(){})
-				var offices = "BsAs Medellin Montevideo Rosario Parana"
+				
+				var offices = ["BsAs", "Medellin", "Montevideo", "Rosario", "Parana"]
 				bot.conversationManager.setConversationData(conversation, 'offices', offices, function(){})
+				
 				bot.say(requestor, sessions)
 			}
 		], function(){})
