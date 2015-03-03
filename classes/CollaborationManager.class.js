@@ -4,24 +4,20 @@ var CollaborationManager = function(){
 var async = require('async');
 var DateUtils = require('./util/DateUtils.class');
 
-CollaborationManager.prototype =  {
-	givePoints: function(updateScoreRequest, bot){
+CollaborationManager.prototype = {
+	givePoints: function(updateScoreRequest, bot) {
 		
-		var place = null;
-		place = bot.connector._searchTextPlace(updateScoreRequest.originaltext);
+var place = updateScoreRequest.channel;
 		
 		async.waterfall([
-			function(next){
-				bot.persistence.getPlayerByName(updateScoreRequest.fromPlayerName, function(player, err){
+			function(next) {
+				bot.persistence.getPlayerByName(updateScoreRequest.fromPlayerName, function(player, err) {
 					if (err) {
-						if (place)
-							bot.shareOn(place, "I couldn't give the points: "+err);
-						console.err("Cannot assign points due to an error in callback function: %s", err)
-					} else if (!player){
-						bot.persistence.insertNewPlayer(updateScoreRequest.fromPlayerName, function(player, err){
-							if(!player || err){
-								if (place)
-									bot.shareOn(place, "I couldn't give the points: "+err);
+						bot.shareOn(place, "I couldn't give the points: "+err);
+					} else if (!player) {
+						bot.persistence.insertNewPlayer(updateScoreRequest.fromPlayerName, function(player, err) {
+							if (!player || err) {
+								bot.shareOn(place, "I couldn't give the points: "+err);
 								console.err(err.stack);
 							} else {
 								next(false, player);
@@ -32,134 +28,100 @@ CollaborationManager.prototype =  {
 					}
 				});
 			},
-			function(player, next){
-				bot.persistence.getDailyGrantedPoints(updateScoreRequest.fromPlayerName, function(dailyGrantedPoints, err){
-					if (err){
-						if (place)
-							bot.shareOn(place, "I couldn't get Daily granted points: "+err);
-						console.error("I couldn't retrieve daily granted points, due to an error in callback function: %s", err)
-					}
-					else if (dailyGrantedPoints && updateScoreRequest.maxCollabPoints < (dailyGrantedPoints.collabPtsCount + updateScoreRequest.collabPoints)) {
+			function(player, next) {
+				bot.persistence.getDailyGrantedPoints(updateScoreRequest.fromPlayerName, function(dailyGrantedPoints, err) {
+					if (err) {
+						bot.shareOn(place, "I couldn't get Daily granted points: "+err);
+					} else if (dailyGrantedPoints && updateScoreRequest.maxCollabPoints < (dailyGrantedPoints.collabPtsCount + updateScoreRequest.collabPoints)) {
 						var msg = "You don't have enough points!";
-						if (place) {
-							bot.shareOn(place, msg);
-						} else {
-							// try your best and say it!
-							bot.say(updateScoreRequest.fromPlayerName, msg)
-						}
-						console.error(msg)
-					} 
-					else {
+						bot.shareOn(place, msg);
+					} else {
 						next(false, dailyGrantedPoints);
 					}
 				});
 			},
-            function(dailyGrantedPoints, next){
-				bot.persistence.updateDailyGrantedPoints(updateScoreRequest, dailyGrantedPoints, function(player, err){
-					if (err){
+			function(dailyGrantedPoints, next) {
+				bot.persistence.updateDailyGrantedPoints(updateScoreRequest, dailyGrantedPoints, function(player, err) {
+					if (err) {
 						var msg = "I couldn't set daily granted points: "+err
-						if (place) {
-							bot.shareOn(place, msg);
-						}
-						console.error(msg);
+						bot.shareOn(place, msg);
 					} else {
 						next();
 					}
 				});
 			},
-			function(next){
-				bot.persistence.getPlayerByName(updateScoreRequest.toPlayerName, function(player, err){
-					if (err){
+			function(next) {
+				bot.persistence.getPlayerByName(updateScoreRequest.toPlayerName, function(player, err) {
+					if (err) {
 						var msg = "I couldn't give the points: "+err;
-						if (place) {
-							bot.shareOn(place, msg);
-						}
+						bot.shareOn(place, msg);
 						console.error(msg)
-					} else if (!player){
-						if (place) {
-							bot.shareOn(place, "Who's that?");
-						}
-						console.error("Who's that?")
+					} else if (!player) {
+						bot.shareOn(place, "Who's that?");
 					} else {
 						next();
 					}
 				});
 			},
-			function(next){
-				bot.persistence.updatePlayerScore(updateScoreRequest, function(player, err){
-					if (err){
+			function(next) {
+				bot.persistence.updatePlayerScore(updateScoreRequest, function(player, err ){
+					if (err) {
 						var msg = "I couldn't give the points: "+err;
-						if (place) {
-							bot.shareOn(place, msg);
-						}
-						console.error(msg)
+						bot.shareOn(place, msg);
 					} else {
 						next();
 					}
-         		});
-             },
-             function(next) {
+				});
+			},
+			function(next) {
 				bot.persistence.updateDailyScore(updateScoreRequest, function(player, err) {
 					if (err) {
 						var msg = "I couldn't give the points: "+err;
-						if (place) {
-							bot.shareOn(place, msg);
-						}
-						console.error(msg)
+						bot.shareOn(place, msg);
 					} else {
 						next()
 					}
 				})
-             }, 
-			 function(next) {
+			}, 
+ 			function(next) {
 				bot.persistence.updateChannelScore(updateScoreRequest, function(player, err) {
 					if (err) {
 						var msg = "I couldn't give the points: "+err;
-						if (place) {
-							bot.shareOn(place, msg);
-						}
-						console.error(msg)
+						bot.shareOn(place, msg);
 					} else {
 						next()
 					}
 				})
-             },
-             function(next){
- 				bot.persistence.saveHistoricalGrant(updateScoreRequest, function(player, err){
- 					if (err){
+			},
+			function(next) {
+				bot.persistence.saveHistoricalGrant(updateScoreRequest, function(player, err) {
+					if (err) {
 						var msg = "Error Saving Historical Grant: "+err;
-						if (place) {
-							bot.shareOn(place, msg);
-						}
-						console.error(msg)
- 					} else {
- 						next();
- 					}
-          		});
-              },
-			function(next){
-				if (place) {
-					bot.shareOn(place, "@"+updateScoreRequest.toPlayerName+", you have been given "+updateScoreRequest.collabPoints+" points by @"+updateScoreRequest.fromPlayerName);
-				} 
+						bot.shareOn(place, msg);
+					} else {
+						next();
+					}
+				});
+			},
+			function(next) {
+				bot.shareOn(place, "@"+updateScoreRequest.toPlayerName+", you have been given "+updateScoreRequest.collabPoints+" points by @"+updateScoreRequest.fromPlayerName);
 			}
 		],
-        function (error){
+		function (error){
 			if (error) {
 				console.log("General error.");
 				console.log(error);
 				console.log(error.stack);
 				var msg = "I couldn't give the points: "+err;
-				if (place) {
-					bot.shareOn(place, msg);
-				}
+				bot.shareOn(place, msg);
 			}
 		});
 	},
-	topTen: function(period, channel, bot){
+	topTen: function(period, channel, bot, postToChannel){
 		var shareStr = "Calculating top 10..." + new Date();
 		shareStr += period ? ". Period: " + period: "";
 		shareStr += channel ? ". Channel: " + channel: "";
-		bot.share(shareStr);
+		bot.shareOn(postToChannel, shareStr);
 
 		console.log("period:" + period);
 		console.log("channel:" + channel);
@@ -170,7 +132,7 @@ CollaborationManager.prototype =  {
 				var string = "#" + (i+1) + " - " + result[i].totalCollabPoints + " CP - " + result[i]._id + "\n";
 				top += string;
 			}
-			bot.share(top);
+			bot.shareOn(postToChannel, top);
 		});
 		
 	},
