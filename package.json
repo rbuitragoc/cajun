@@ -1,6 +1,6 @@
 {
   "name": "collabot",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "A collaboration-enabled interactive modular bot system",
   "main": "app.js",
   "scripts": {
@@ -30,6 +30,9 @@
   },
   "contributors": [
     "Rick Buitrago <rbuitrago@velocitypartners.net>",
+		"Daniel Silva <dsilva@velocitypartners.net>",
+		"Alex Cano <acano@velocitypartners.net>",
+		"Johnny Gamba <jgamba@velocitypartners.net>",
     "Santiago Zapata <szapata@velocitypartners.net>",
     "Gustavo Guevara <gguevara@velocitypartners.net>",
     "Ronald Manrique <rmanrique@velocitypartners.net>",
