@@ -24,6 +24,8 @@ CommandConversationHandler.prototype = {
 			this._showUpcomingSessions(from);
 		} else if (text.toLowerCase().indexOf("create bnl session") > -1){
 			this._createTraining(from);
+		} else if (text.indexOf("rate session") > -1) {
+			this._initRateSession(from)
 		} else {
 			this._wtf(from);
 		}
@@ -125,6 +127,9 @@ CommandConversationHandler.prototype = {
 	},
 	_showUpcomingSessions: function(from) {
 		this.bot.trainingSessionManager.initRegisterToSession(from);
+	},
+	_initRateSession: function(from) {
+		this.bot.trainingSessionManager.initRateSession(from)
 	}
 }
 
