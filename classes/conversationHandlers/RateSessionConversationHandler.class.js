@@ -26,7 +26,7 @@ RateSessionConversationHandler.prototype = {
 			}
 			
 		} else if (conversation.state == 'waitingForOffice') {
-			var offices = conversation.data.offices
+			var offices = conversation.data.offices.split(/\s+/)
 			var selectedOffice = null
 			for (var i = 0; i < offices.length; i++) {
 				var anOffice = offices[i]
