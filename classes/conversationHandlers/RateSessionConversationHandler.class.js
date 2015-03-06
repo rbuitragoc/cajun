@@ -5,6 +5,7 @@ var RateSessionConversationHandler = function(bot) {
 RateSessionConversationHandler.prototype = {
 	handle: function (from, text, conversation) {
 		var that = this
+		var conversationManager = that.bot.conversationManager
 		console.log('RateSessionHandling {'+conversation.topic+'} with {'+from+'}, he said "'+text+'". State is {'+conversation.state+'}')
 		
 		if (conversation.state == 'waitingForSession') {
@@ -43,7 +44,7 @@ RateSessionConversationHandler.prototype = {
 			}
 			
 		} else if (conversation.state == 'waitingForUnderstandingRating') {
-			if (isNaN(text) || (text < 1 && text > 5) || !(text % 1 === 0)) {
+			if (isNaN(text) || (text < 1 || text > 5) || !(text % 1 === 0)) {
 				this.bot.say(from, "Can't understand that rating.")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'understandingRating', text, function() {})
@@ -52,7 +53,7 @@ RateSessionConversationHandler.prototype = {
 			}
 			
 		} else if (conversation.state == 'waitingForRelevanceRating') {
-			if (isNaN(text) || (text < 1 && text > 5) || !(text % 1 === 0)) {
+			if (isNaN(text) || (text < 1 || text > 5) || !(text % 1 === 0)) {
 				this.bot.say(from, "Can't understand that rating.")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'relevanceRating', text, function() {})
@@ -61,7 +62,7 @@ RateSessionConversationHandler.prototype = {
 			}
 			
 		} else if (conversation.state == 'waitingForPerformanceRating') {
-			if (isNaN(text) || (text < 1 && text > 5) || !(text % 1 === 0)) {
+			if (isNaN(text) || (text < 1 || text > 5) || !(text % 1 === 0)) {
 				this.bot.say(from, "Can't understand that rating.")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'performanceRating', text, function() {})
@@ -70,7 +71,7 @@ RateSessionConversationHandler.prototype = {
 			}
 			
 		} else if (conversation.state == 'waitingForContentRating') {
-			if (isNaN(text) || (text < 1 && text > 5) || !(text % 1 === 0)) {
+			if (isNaN(text) || (text < 1 || text > 5) || !(text % 1 === 0)) {
 				this.bot.say(from, "Can't understand that rating.")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'contentRating', text, function() {})
@@ -94,7 +95,7 @@ RateSessionConversationHandler.prototype = {
 			}
 			
 		} else if (conversation.state == 'waitingForOverallRating') {
-			if (isNaN(text) || (text < 1 && text > 5) || !(text % 1 === 0)) {
+			if (isNaN(text) || (text < 1 || text > 5) || !(text % 1 === 0)) {
 				this.bot.say(from, "Can't understand that rating.")
 			} else {
 				this.bot.conversationManager.setConversationData(conversation, 'overallRating', text, function() {})
@@ -109,21 +110,23 @@ RateSessionConversationHandler.prototype = {
 			this.bot.say(from, "Thanks! One last thing. You can let us (or not) save your name on this survey. This is useful in case we need to contact you to follow up you ideas or suggestions. It will remain anonymous if you decline, don't worry :)  (yes/no)")
 			
 		} else if (conversation.state == 'waitingForAnonymousMode') {
-			if (text != "yes" && text != "no"){
+			if (text != "yes" && text != "no") {
 				this.bot.say(from, "I'm sorry, was that a yes, or a no?")
 			} else {
 				if (text == "yes") {
-					this.bot.conversationManager.setConversationData(conversation, 'user', from, function() {})
+					console.log("the user said YES!")
+					conversationManager.setConversationData(conversation, 'user', from, function() {})
 				}
+				conversationManager.changeConversationState(conversation, 'done', function(){})
 				this.bot.trainingSessionManager.rateSession(from, conversation, function(result, err) {
 					if (err) {
 						console.error("An error occurred when trying to save session rating! "+err.stack)
 					} else {
 						console.log("Succesfully saved session rating! "+result)
 					}
+					conversationManager.endConversation(conversation, function() {})
 				})
 				this.bot.say(from, "'"+text+"'? Wonderful. This is it, we're done here. Again, thanks for taking the time, we appreciate it!")
-				this.bot.conversationManager.endConversation(conversation, function() {})
 				
 			}
 			

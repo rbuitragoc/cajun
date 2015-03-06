@@ -288,10 +288,11 @@ TrainingSessionManager.prototype =  {
 				overall: conversation.data.overallRating
 			},
 			recommended: conversation.data.recommended,
-			comments: conversation.data.comments			
+			comments: conversation.data.comments
 		}
 		if (conversation.data.user) {
 			sessionRatingData.user = conversation.data.user
+			console.log("If we did, then sessionRatingData will too! "+sessionRatingData.user)
 		}
 		bot.persistence.insertSessionRating(sessionRatingData, callback)
 	}
