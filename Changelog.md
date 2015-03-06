@@ -1,3 +1,7 @@
+What's New in v. 0.5.2
+======================
+- Bot can now join private groups (only those it's been invited to)
+
 What's New in v. 0.5.1
 ======================
 - You cannot assign points to yourself anymore. Hey! That's just fair!
