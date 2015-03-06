@@ -28,19 +28,27 @@ SlackConnector.prototype = {
 					slackChannel = slack.channels[key];
 				}
 			}
-			if (!slackChannel){
-				/*if (slack.groups[channelName].is_open && !slack.groups[channelName].is_archived) {
-					slackChannel = slack.groups[channelName];
-				} else { 
-					console.log("Error: Channel or group ["+that.config.channel+"] not found or inaccessible by user");
-					return;
-				}*/
-				console.log("Error: Channel ["+channelName+"] not found or inaccessible");
-				return;
-			} else if (!slackChannel.is_member) {
-				console.log("Bot is not member of channel ["+channelName+"], joining");
-				slack.joinChannel(channelName); // @slash 090215 - This does nothing.
+			if (slackChannel) {
+				if (!slackChannel.is_member) {
+					console.warn("Bot is not member of channel ["+channelName+"], can you manually add it?");
+					// Error returned on channels.join: user_is_bot	(This method cannot be called by a bot user)
+				}
+			} else { 
+				// try with groups too
+				for (key in slack.groups) {
+					console.log("Group: "+slack.groups[key].name)
+					if (slack.groups[key].name === channelName) {
+						slackChannel = slack.groups[key]
+					}
+				}
 			}
+			// Still nada? Oops!
+			if (!slackChannel) {
+				console.error("Error: Channel or group ["+channelName+"] not found or inaccessible")
+				return
+				
+			} 
+			
 			that.slackChannel = slackChannel;
 			that._registerAllMembers(slack.users);
 			console.log('Welcome to Slack. You are @%s of %s', slack.self.name, slack.team.name);
