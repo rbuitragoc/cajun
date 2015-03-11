@@ -3,9 +3,21 @@ function Collabot(){
 	this.config = {};
 	this.reverseSayMap = {};
 	this.reverseShareMap = {};
+
+	this.collaborationManager = new CollaborationManagerMock();
 }
 
 module.exports = Collabot;
+
+function CollaborationManagerMock() {
+	this.givenArguments = {};
+}
+
+CollaborationManagerMock.prototype = {
+	givePoints: function() {
+		this.givenArguments['givePoints'] = arguments;
+	}
+}
 
 Collabot.prototype = {
 	start: function(callback){
