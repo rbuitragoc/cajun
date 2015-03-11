@@ -1,3 +1,7 @@
+What's New in v. 0.5.3
+======================
+- Added support for specifying a reason when giving points
+
 What's New in v. 0.5.2
 ======================
 - Bot can now join private groups (only those it's been invited to)
