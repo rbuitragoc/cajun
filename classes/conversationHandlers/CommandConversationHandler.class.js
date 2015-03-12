@@ -29,13 +29,13 @@ CommandConversationHandler.prototype = {
 		}
 	},
 	_give: function (from, text){
-		var command = /give (\d+) points to (.+)$/.exec(text);
-		if (!command || !command.length || !command.length == 3){
+		var command = /give (\d+) point(s*) to (\w*) (.+)/.exec(text);
+		if (!command || !command.length){
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
 		}
 		var points = command[1];
-		var target = command[2];
+		var target = command[3];
 		if (!points || !target){
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
