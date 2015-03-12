@@ -272,8 +272,10 @@ TrainingSessionManager.prototype =  {
 			}
 		], function(){})
 	},
-	rateSession: function(requestor, conversation, callback) {
+	rateSession: function(conversationUserObject, callback) {
 		var bot = this.bot
+		var conversation = conversationUserObject.conversation
+		var user = conversationUserObject.user
 		var sessionRatingData = {
 			sessionId: conversation.data.session._id,
 			sessionTitle: conversation.data.session.title,
@@ -290,9 +292,8 @@ TrainingSessionManager.prototype =  {
 			recommended: conversation.data.recommended,
 			comments: conversation.data.comments
 		}
-		if (conversation.data.user) {
-			sessionRatingData.user = conversation.data.user
-			console.log("If we did, then sessionRatingData will too! "+sessionRatingData.user)
+		if (user) {
+			sessionRatingData.user = user
 		}
 		bot.persistence.insertSessionRating(sessionRatingData, callback)
 	}

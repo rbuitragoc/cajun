@@ -127,6 +127,7 @@ RateSessionConversationHandler.prototype = {
 					this.bot.conversationManager.endConversation(conversation, function() {})
 				})
 				this.bot.say(from, "'"+text+"'? Wonderful. This is it, we're done here. Again, thanks for taking the time, we appreciate it!")
+				this.bot.conversationManager.changeConversationState(conversation, 'done', function(){})
 				
 			}
 			
