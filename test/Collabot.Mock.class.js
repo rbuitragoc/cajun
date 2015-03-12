@@ -1,23 +1,17 @@
+var CollaborationManagerMock = require('./CollaborationManager.Mock.class')
+var SlackConnectorMock = require('./SlackConnector.Mock.class')
+
 function Collabot(){
 	this.version = '666';
 	this.config = {};
 	this.reverseSayMap = {};
 	this.reverseShareMap = {};
+	this.connector = new SlackConnectorMock();
 
 	this.collaborationManager = new CollaborationManagerMock();
 }
 
 module.exports = Collabot;
-
-function CollaborationManagerMock() {
-	this.givenArguments = {};
-}
-
-CollaborationManagerMock.prototype = {
-	givePoints: function() {
-		this.givenArguments['givePoints'] = arguments;
-	}
-}
 
 Collabot.prototype = {
 	start: function(callback){
