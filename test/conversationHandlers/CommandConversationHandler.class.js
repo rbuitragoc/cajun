@@ -7,7 +7,7 @@ var mocks = (function setupMocks(){
 	mockBot.config = {
 		maxCollabPoints: undefined
 	}
-	mockBot.connector = {slackChannel: {name: undefined}};
+	mockBot.connector['slackChannel'] = {name: undefined};
 	return {
 		bot: mockBot
 	}
@@ -15,7 +15,8 @@ var mocks = (function setupMocks(){
 
 function testAtSignSupported() {
 	//Given
-	var testTextWithAtSign = "give 6 points to @expected";
+	var testTextWithAtSign = "give 6 points to <@Uexpectedid|expected>";
+	var testTextWithAtSignWithoutUserName = "give 6 points to <@Uexpectedid>";
 	var testTextWithoutAtSign = "give 6 points to expected"; //Destinatary can come without @ (Backwards compatibility)
 	var from = "author"; //Author always comes without @
 	var mockbot = mocks.bot;
@@ -30,8 +31,18 @@ function testAtSignSupported() {
 	//When avalid string with the at sign is given
 	testedClassInstance._give(from, testTextWithAtSign)
 	//Then The fromPlayerName attribute in the request must be the expected
-	var receivedArguments = mockbot.collaborationManager.givenArguments['givePoints'];
+	receivedArguments = mockbot.collaborationManager.givenArguments['givePoints'];
 	assert.equal(receivedArguments[0].toPlayerName, 'expected', 'The player name wasn\'t captured from text')
+
+	
+	//When avalid string with the at sign is given
+	mockbot.connector.mockedResponses['findUserById'] = {name: "expected"};
+	testedClassInstance._give(from, testTextWithAtSignWithoutUserName)
+	//Then The fromPlayerName attribute in the request must be the expected
+	var queriedUserId = mockbot.connector.givenArguments['findUserById'];
+	receivedArguments = mockbot.collaborationManager.givenArguments['givePoints'];
+	assert.equal(queriedUserId[0], 'Uexpectedid', 'With user id int he string, the user was not queried with the connector' );
+	assert.equal(receivedArguments[0].toPlayerName, 'expected', 'The queried string to the connector wasn\'t returned in response' );
 }
 
 module.exports = {
