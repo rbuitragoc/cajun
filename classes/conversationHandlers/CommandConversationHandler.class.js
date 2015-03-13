@@ -34,7 +34,7 @@ CommandConversationHandler.prototype = {
 			slackUserRef,
 			tokens;
 		tokens = commandRegex.exec(text)
-		if (!tokens || tokens[0] != text){
+		if (!tokens || (!tokens[1] || !tokens[2])){
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
 		}
