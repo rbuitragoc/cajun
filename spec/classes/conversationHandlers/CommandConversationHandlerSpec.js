@@ -13,7 +13,8 @@ describe("A command conversation", function() {
 				connector:{
 					slackChannel:{
 						name:'any'
-					}
+					},
+					findUserById: function(){return {name:'jhon_doe'};}
 				},
 				config:{
 					maxCollabPoints: 10
@@ -41,10 +42,10 @@ describe("A command conversation", function() {
 				}), bot);
 		});
 		it("give points with at(@)", function() {
-			command.handle('jhon_doe', 'give 1 point to @somebody');
+			command.handle('another_jhon_doe', 'give 1 point to <@U03PY6S5F>');
 			expect(bot.collaborationManager.givePoints)
 				.toHaveBeenCalledWith(jasmine.objectContaining({
-					toPlayerName: 'somebody'
+					toPlayerName: 'jhon_doe'
 				}), bot);
 		});
 		it("shows an error on 1 point but plural", function() {
