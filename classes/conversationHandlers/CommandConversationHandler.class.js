@@ -40,7 +40,8 @@ CommandConversationHandler.prototype = {
 		}
 		var points = tokens[1];
 		var target = tokens[2];
-		//var reason = tokens[3]; //TODO Pending feature
+		var reason = tokens[3]; 
+		console.log("Well, it seems like "+from+" decided to give "+points+" points to "+target+" because of "+reason)
 		if ( !!(slackUsrRef = slackUserReferenceRegex.exec(target)) ) {
 			if (!!slackUsrRef[2]) {
 				target = slackUsrRef[2];
@@ -54,24 +55,10 @@ CommandConversationHandler.prototype = {
 				}
 			}
 		}
-		if (target.indexOf('@') == 0) {
-			var targetUser = target.split('|');
-			if (targetUser.length == 2 && !!targetUser[1]) {
-				target = targetUser[1];
-			} else {
-				var slackUser = this.bot.connector.findUserById(targetUser[0].substring(1));
-				if (!slackUser || !slackUser.name) {
-					console.error("Couldn't retrieve from connector with referenced user %s", target);
-					return;
-				} else {
-					target = slackUser.name;
-				}
-			}
+		if (from == target){
+				this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
+				return;
 		}
-        if (from == target){
-            this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
-            return;
-        }
 		var updateScoreRequest = {
 			fromPlayerName: from,
 			toPlayerName: target,
