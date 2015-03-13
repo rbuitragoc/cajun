@@ -38,7 +38,7 @@ CommandConversationHandler.prototype = {
 		var target = command[3];
 		var singular = command[2];
 		var reason = command[5];
-		console.log("Well, it seems like "+from+" decided to give "+points+" points to "+target+" because of "+reason)
+		console.log("Well, it seems like " + from + " decided to give " + points + " points to " + target + (reason ? " because of " + reason : ''))
 
 		if (!points || !target || isNaN(points)) {
 			this.bot.share("Sorry, I didn't understand that..");
