@@ -1,6 +1,6 @@
 var CommandConversationHandler = function(bot){
 	this.bot = bot;
-}
+};
 
 CommandConversationHandler.prototype = {
 	handle: function (from, text){
@@ -29,17 +29,25 @@ CommandConversationHandler.prototype = {
 		}
 	},
 	_give: function (from, text){
-		var command = /give (\d+) points* to (\w*).*/.exec(text);
-		if (!command || !command.length){
+		var command = /give (\d+) point(s{0,1}) to (\w+).*/.exec(text);
+		if (!command || command.length != 3){
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
 		}
 		var points = command[1];
-		var target = command[2];
-		if (!points || !target){
+		var target = command[3];
+		var singular = command[2];
+
+		if (!points || !target || isNaN(points)){
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
 		}
+        if ((points == '1' && singular != '') ||
+					(points > 1 && singular != 's') ||
+					!(singular == 's' || singular == '')){
+            this.bot.share("Sorry, I didn't understand one point? multiple points?");
+            return;
+        }
         if (from == target){
             this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
             return;
@@ -50,9 +58,9 @@ CommandConversationHandler.prototype = {
 			collabPoints: parseInt(points),
 			channel: this.bot.connector.slackChannel.name,
 			maxCollabPoints : this.bot.config.maxCollabPoints
-		}
+		};
 		console.log("updateScoreRequest:");
-		console.log(updateScoreRequest)
+		console.log(updateScoreRequest);
 		this.bot.collaborationManager.givePoints(updateScoreRequest, this.bot);
 	},
 	_top: function(text){
@@ -62,7 +70,7 @@ CommandConversationHandler.prototype = {
 		if(filters){
 			var filter1 = filters[1]? filters[1].trim() : null;
 			var filter2 = filters[2]? filters[2].trim() : null;
-			var period = filter1;
+			period = filter1;
 			if(!filter1 && filter2){
 				if(filter2 == "day" || filter2 == "week" || filter2 == "month" || filter2 == "year" ){
 					period = filter2;
@@ -114,7 +122,7 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
 		this.bot.say(who, "["+this.bot.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
 		this.bot.say(who, "["+this.bot.config.botName+" create BnL session] Starts a conversation to register a session");
-		this.bot.say(who, "["+this.bot.config.botName+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session")
+		this.bot.say(who, "["+this.bot.config.botName+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session");
 		this.bot.say(who, "Apart from these I can also tell you who attended to a training session, just ask me! (Tip: if you DM me, no need to call my name)");
 	},
 	_createTraining: function(from){
@@ -130,7 +138,6 @@ CommandConversationHandler.prototype = {
 	_showUpcomingSessions: function(from) {
 		this.bot.trainingSessionManager.initRegisterToSession(from);
 	}
-}
-
+};
 
 module.exports = CommandConversationHandler;
