@@ -29,7 +29,7 @@ CommandConversationHandler.prototype = {
 		}
 	},
 	_give: function (from, text){
-		var command = /give +(\d+) +point(s{0,1}) +to +@{0,1}(\w+) *(for +([\w ]*)){0,1}/.exec(text.toLowerCase());
+		var command = /give +(\d+) +point(s?) +to +@?(\w+) *(for +([\w ]*))?/.exec(text.toLowerCase());
 		if (!command || !command.length) {
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
