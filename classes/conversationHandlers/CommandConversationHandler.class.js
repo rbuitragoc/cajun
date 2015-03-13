@@ -29,8 +29,8 @@ CommandConversationHandler.prototype = {
 		}
 	},
 	_give: function (from, text){
-		var command = /give (\d+) point(s{0,1}) to @{0,1}(\w+).*/.exec(text);
-		if (!command || !command.length){
+		var command = /give (\d+) point(s{0,1}) to @{0,1}(\w+).*/.exec(text.toLowerCase());
+		if (!command || !command.length) {
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
 		}
@@ -38,26 +38,25 @@ CommandConversationHandler.prototype = {
 		var target = command[3];
 		var singular = command[2];
 
-		if (!points || !target || isNaN(points)){
+		if (!points || !target || isNaN(points)) {
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
 		}
-        if ((points == '1' && singular != '') ||
-					(points > 1 && singular != 's') ||
-					!(singular == 's' || singular == '')){
-            this.bot.share("Sorry, I didn't understand one point? multiple points?");
-            return;
-        }
-        if (from == target){
-            this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
-            return;
-        }
+		if ((points == '1' && singular != '') ||
+			(points > 1 && singular != 's') || !(singular == 's' || singular == '')) {
+			this.bot.share("Sorry, I didn't understand one point? multiple points?");
+			return;
+		}
+		if (from == target) {
+			this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
+			return;
+		}
 		var updateScoreRequest = {
 			fromPlayerName: from,
 			toPlayerName: target,
 			collabPoints: parseInt(points),
 			channel: this.bot.connector.slackChannel.name,
-			maxCollabPoints : this.bot.config.maxCollabPoints
+			maxCollabPoints: this.bot.config.maxCollabPoints
 		};
 		console.log("updateScoreRequest:");
 		console.log(updateScoreRequest);
