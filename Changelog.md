@@ -1,3 +1,8 @@
+What's New in v. 0.5.4
+======================
+- support addressing users with @ when giving points
+- when giving 1 point, you are not required to say "points"
+
 What's New in v. 0.5.3
 ======================
 - Added support for specifying a reason when giving points

@@ -29,23 +29,36 @@ CommandConversationHandler.prototype = {
 		}
 	},
 	_give: function (from, text){
-		var command = /give +(\d+) +point[s]? +to +(<@u[^ ]+>|[^ ]+)( +[\s\S]+)?/i.exec(text);
-		if (!command || !command.length){
+		var commandRegex = /give +(\d+) +point[s]? +to +(<@u[^ ]+>|[^ ]+)( +[\s\S]+)?/i,
+			slackUserReferenceRegex = /<@(U[^\|]+)\|?(.*)>/i,
+			slackUserRef,
+			tokens;
+		tokens = commandRegex.exec(text)
+		if (!tokens || tokens[0] != text){
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
 		}
-		var points = command[1];
-		var target = command[2];
-		var reason = command[3]
+		var points = tokens[1];
+		var target = tokens[2];
+		var reason = tokens[3]; 
 		console.log("Well, it seems like "+from+" decided to give "+points+" points to "+target+" because of "+reason)
-		if (!points || !target){
-			this.bot.share("Sorry, I didn't understand that..");
-			return;
+		if ( !!(slackUsrRef = slackUserReferenceRegex.exec(target)) ) {
+			if (!!slackUsrRef[2]) {
+				target = slackUsrRef[2];
+			} else {
+				var slackUser = this.bot.connector.findUserById(slackUsrRef[1]);
+				if (!slackUser) {
+					console.error("Couldn't retrieve User info from connector with reference %s", target);
+					return;
+				} else {
+					target = slackUser.name;
+				}
+			}
 		}
-        if (from == target){
-            this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
-            return;
-        }
+		if (from == target){
+				this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
+				return;
+		}
 		var updateScoreRequest = {
 			fromPlayerName: from,
 			toPlayerName: target,
