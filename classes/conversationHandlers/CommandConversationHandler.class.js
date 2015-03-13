@@ -29,27 +29,25 @@ CommandConversationHandler.prototype = {
 		}
 	},
 	_give: function (from, text){
-		var command = /give (\d+) points to <(@[U|u].+)>$|give (\d+) points to (.+)$/.exec(text);
-		if (!command || !command.length || !command.length == 5){
+		var commandRegex = /give +(\d+) +point[s]? +to +(<@u[^ ]+>|[^ ]+)( +[\s\S]+)?/i,
+			slackUserReferenceRegex = /<@(U[^\|]+)\|?(.*)>/i,
+			slackUserRef,
+			tokens;
+		tokens = commandRegex.exec(text)
+		if (!tokens || tokens[0] != text){
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
 		}
-		//By having two alternatives in the regex, capture group for the same concept is in two indexes
-		var points = command[1] || command[3];
-		var target = command[2] || command[4];
-
-		if (!points || !target){
-			this.bot.share("Sorry, I didn't understand that..");
-			return;
-		}
-		if (target.indexOf('@') == 0) {
-			var targetUser = target.split('|');
-			if (targetUser.length == 2 && !!targetUser[1]) {
-				target = targetUser[1];
+		var points = tokens[1];
+		var target = tokens[2];
+		//var reason = tokens[3]; //TODO Pending feature
+		if ( !!(slackUsrRef = slackUserReferenceRegex.exec(target)) ) {
+			if (!!slackUsrRef[2]) {
+				target = slackUsrRef[2];
 			} else {
-				var slackUser = this.bot.connector.findUserById(targetUser[0].substring(1));
-				if (!slackUser || !slackUser.name) {
-					console.error("Couldn't retrieve from connector with referenced user %s", target);
+				var slackUser = this.bot.connector.findUserById(slackUsrRef[1]);
+				if (!slackUser) {
+					console.error("Couldn't retrieve User info from connector with reference %s", target);
 					return;
 				} else {
 					target = slackUser.name;
