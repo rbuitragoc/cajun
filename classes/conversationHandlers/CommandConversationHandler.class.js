@@ -29,13 +29,15 @@ CommandConversationHandler.prototype = {
 		}
 	},
 	_give: function (from, text){
-		var command = /give (\d+) point(s*) to (\w*) (.+)/.exec(text);
+		var command = /give +(\d+) +point[s]? +to +(<@u[^ ]+>|[^ ]+)( +[\s\S]+)?/i.exec(text);
 		if (!command || !command.length){
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
 		}
 		var points = command[1];
-		var target = command[3];
+		var target = command[2];
+		var reason = command[3]
+		console.log("Well, it seems like "+from+" decided to give "+points+" points to "+target+" because of "+reason)
 		if (!points || !target){
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
