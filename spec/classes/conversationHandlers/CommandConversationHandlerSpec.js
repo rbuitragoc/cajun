@@ -40,6 +40,13 @@ describe("A command conversation", function() {
 					collabPoints: 10
 				}), bot);
 		});
+		it("give points with at(@)", function() {
+			command.handle('jhon_doe', 'give 1 point to @somebody');
+			expect(bot.collaborationManager.givePoints)
+				.toHaveBeenCalledWith(jasmine.objectContaining({
+					toPlayerName: 'somebody'
+				}), bot);
+		});
 		it("shows an error on 1 point but plural", function() {
 			command.handle('jhon_doe', 'give 1 points to somebody');
 			expect(bot.share).toHaveBeenCalledWith("Sorry, I didn't understand one point? multiple points?");

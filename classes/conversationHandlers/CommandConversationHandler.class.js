@@ -29,7 +29,7 @@ CommandConversationHandler.prototype = {
 		}
 	},
 	_give: function (from, text){
-		var command = /give (\d+) point(s{0,1}) to @{0,1}(\w+).*/.exec(text.toLowerCase());
+		var command = /give +(\d+) +point(s{0,1}) +to +@{0,1}(\w+) *(for +([\w ]*)){0,1}/.exec(text.toLowerCase());
 		if (!command || !command.length) {
 			this.bot.share("Sorry, I didn't understand that..");
 			return;
@@ -37,6 +37,8 @@ CommandConversationHandler.prototype = {
 		var points = command[1];
 		var target = command[3];
 		var singular = command[2];
+		var reason = command[5];
+		console.log("Well, it seems like "+from+" decided to give "+points+" points to "+target+" because of "+reason)
 
 		if (!points || !target || isNaN(points)) {
 			this.bot.share("Sorry, I didn't understand that..");
