@@ -1,5 +1,6 @@
 var util = require('./util')
 var managers = require('./managers')
+var handlers = require('./conversationHandlers')
 
 /* DateUtils.class#testFormatYYYYMMDD */
 util.dateUtils.testFormat();
@@ -21,3 +22,5 @@ managers.trainingSessionManager.testNonManagerCannotAuthPresenters();
 managers.trainingSessionManager.testPreexistingPresenters();
 managers.trainingSessionManager.testUnexistingPresenters();
 managers.trainingSessionManager.testCreateTrainingSession();
+
+handlers.commandConversationHandler.testAtSignSupportedOnReference();
