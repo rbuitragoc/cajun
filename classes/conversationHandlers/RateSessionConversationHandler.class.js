@@ -115,16 +115,16 @@ RateSessionConversationHandler.prototype = {
 			} else {
 				if (text == "yes") {
 					console.log("the user said YES!")
-					conversationManager.setConversationData(conversation, 'user', from, function() {})
+					this.bot.conversationManager.setConversationData(conversation, 'user', from, function() {})
 				}
-				conversationManager.changeConversationState(conversation, 'done', function(){})
+				this.bot.conversationManager.changeConversationState(conversation, 'done', function(){})
 				this.bot.trainingSessionManager.rateSession(from, conversation, function(result, err) {
 					if (err) {
 						console.error("An error occurred when trying to save session rating! "+err.stack)
 					} else {
 						console.log("Succesfully saved session rating! "+result)
 					}
-					conversationManager.endConversation(conversation, function() {})
+					this.bot.conversationManager.endConversation(conversation, function() {})
 				})
 				this.bot.say(from, "'"+text+"'? Wonderful. This is it, we're done here. Again, thanks for taking the time, we appreciate it!")
 				
