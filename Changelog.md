@@ -1,3 +1,20 @@
+What's New in v. 0.5.4
+======================
+- support addressing users with @ when giving points
+- when giving 1 point, you are not required to say "points"
+
+What's New in v. 0.5.3
+======================
+- Added support for specifying a reason when giving points
+
+What's New in v. 0.5.2
+======================
+- Bot can now join private groups (only those it's been invited to)
+
+What's New in v. 0.5.1
+======================
+- You cannot assign points to yourself anymore. Hey! That's just fair!
+
 What's New in v. 0.5.0
 ======================
 - Environment variables further independence
@@ -17,14 +34,12 @@ What's new in v. 0.3.0
 
 What's New in v. 0.2.0
 ======================
-
 - Filters for 'top' operation are available: Bot top now takes two optional arguments: a period of time (day, week, month, year) and a channel. Those values are used to filter top scores data.
 - web tier now finds the app endpoints using config file or environment properties (appUrls)
 - minor bug fixes
 
 What's New in v. 0.1.0
 ======================
-
 - Collabot will support ony one instance in backend (guid)
 - Web interface uses now a switch component instead of two buttons
 - commands now require the bot name as specified in config file
