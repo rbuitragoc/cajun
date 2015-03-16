@@ -235,6 +235,67 @@ TrainingSessionManager.prototype =  {
 		} else {
 			bot.say(from, 'Sorry, that session does not exist!');
 		}
+	},
+	initRateSession: function (requestor) {
+		var bot = this.bot
+		async.waterfall([
+			function (next) {
+				bot.conversationManager.startConversation(requestor, 'rateSession', 'waitingForSession', 
+					function(conversation) {
+ 						next(false, conversation);
+ 					},
+ 					function(conversation) {
+ 						// TODO: Add support to resume conversations
+ 					})
+				bot.say(requestor, "First thing's first, thanks for taking the time to anonymously rate a Breakfast & Learn. This is really important to us! Now, let's begin with selecting a session to rate. Which from the following sessions you've attended do you wish to rate?")
+			},
+			function (conversation, next) {
+ 				bot.persistence.getTrainingSessions(function(result, err) {
+ 					next(err, conversation, result);
+ 				});
+ 			}, 
+			function (conversation, trainingSessions, next) {
+ 				var sessions = ""
+				for (var i = 0; i < trainingSessions.length; i++) {
+					var string = "" + (i+1) + " - '" + trainingSessions[i].title + "' on "+ trainingSessions[i].desiredDate +
+								" " + trainingSessions[i].time +" ("+trainingSessions[i].duration + "h) @ " + trainingSessions[i].location + 
+								" - Presenter: " + trainingSessions[i].presenter + "\n"
+					sessions += string
+					trainingSessions[i].customId = i+1
+				}
+				bot.conversationManager.setConversationData(conversation, 'sessions', trainingSessions, function(){})
+				
+				var offices = ["BsAs", "Medellin", "Montevideo", "Rosario", "Parana"]
+				bot.conversationManager.setConversationData(conversation, 'offices', offices, function(){})
+				
+				bot.say(requestor, sessions)
+			}
+		], function(){})
+	},
+	rateSession: function(conversationUserObject, callback) {
+		var bot = this.bot
+		var conversation = conversationUserObject.conversation
+		var user = conversationUserObject.user
+		var sessionRatingData = {
+			sessionId: conversation.data.session._id,
+			sessionTitle: conversation.data.session.title,
+			ratingDate: new Date(),
+			ratingOffice: conversation.data.office,
+			ratings: {
+				understanding: conversation.data.understandingRating,
+				relevance: conversation.data.relevanceRating,
+				performance: conversation.data.performanceRating,
+				content: conversation.data.contentRating,
+				methodology: conversation.data.methodologyRating,
+				overall: conversation.data.overallRating
+			},
+			recommended: conversation.data.recommended,
+			comments: conversation.data.comments
+		}
+		if (user) {
+			sessionRatingData.user = user
+		}
+		bot.persistence.insertSessionRating(sessionRatingData, callback)
 	}
 };
 
