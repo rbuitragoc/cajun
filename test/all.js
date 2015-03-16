@@ -1,7 +1,7 @@
 var util = require('./util')
 var managers = require('./managers')
 var handlers = require('./conversationHandlers')
-
+console.log("[Starting (old) tests]")
 /* DateUtils.class#testFormatYYYYMMDD */
 util.dateUtils.testFormat();
 
@@ -24,3 +24,4 @@ managers.trainingSessionManager.testUnexistingPresenters();
 managers.trainingSessionManager.testCreateTrainingSession();
 
 handlers.commandConversationHandler.testAtSignSupportedOnReference();
+console.log("[Finished (old) tests!]")
