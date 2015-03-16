@@ -1,3 +1,7 @@
+What's New in v. 0.7.0
+======================
+- As an user I can rate sessions that I have attended
+
 What's New in v. 0.5.5
 ======================
 - When giving only 1 point, it won't expect the word "points"
