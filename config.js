@@ -28,7 +28,7 @@ module.exports = {
 			// 'http://localhost:3000/stop'
 	},
 	maxCollabPoints : 10,
-	trainingSessionManager: 'slizarazo',
+	trainingSessionManager: 'rbuitrago',
 	enrollmentDaysThreshold : 1
 };
 
