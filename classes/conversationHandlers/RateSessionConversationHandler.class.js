@@ -115,19 +115,16 @@ RateSessionConversationHandler.prototype = {
 			} else {
 				if (text == "yes") {
 					console.log("the user said YES!")
-					this.bot.conversationManager.setConversationData(conversation, 'user', from, function() {})
+					this.bot.trainingSessionManager.rateSession({conversation: conversation, user: from}, function (result, err) {
+						handleRateResult(result, err, conversationManager, conversation)
+					})
+				} else {
+					this.bot.trainingSessionManager.rateSession({conversation: conversation}, function(result, err) {
+						handleRateResult(result, err, conversationManager, conversation)
+					})
 				}
 				this.bot.conversationManager.changeConversationState(conversation, 'done', function(){})
-				this.bot.trainingSessionManager.rateSession(from, conversation, function(result, err) {
-					if (err) {
-						console.error("An error occurred when trying to save session rating! "+err.stack)
-					} else {
-						console.log("Succesfully saved session rating! "+result)
-					}
-					this.bot.conversationManager.endConversation(conversation, function() {})
-				})
 				this.bot.say(from, "'"+text+"'? Wonderful. This is it, we're done here. Again, thanks for taking the time, we appreciate it!")
-				this.bot.conversationManager.changeConversationState(conversation, 'done', function(){})
 				
 			}
 			
@@ -135,6 +132,15 @@ RateSessionConversationHandler.prototype = {
 			console.log("Got another message for a conversation in an unknown state: "+conversation.state+". Don't know what to do.")
 		}
 	}
+}
+
+function handleRateResult(result, err, conversationManager, conversation) {
+	if (err) {
+		console.error("An error occurred when trying to save session rating! "+err.stack)
+	} else {
+		console.log("Succesfully saved session rating! "+result)
+	}
+	conversationManager.endConversation(conversation, function() {})
 }
 
 module.exports = RateSessionConversationHandler
