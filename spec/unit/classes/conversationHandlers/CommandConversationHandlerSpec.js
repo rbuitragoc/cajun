@@ -1,4 +1,4 @@
-require('./../../../support/SetBasicCalls')('classes/conversationHandlers', 'CommandConversationHandler');
+require('./../../../support/setBasicCalls')('classes/conversationHandlers', 'CommandConversationHandler');
 
 describe("A command conversation", function() {
 	describe("A give points conversation", function() {
