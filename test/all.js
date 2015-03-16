@@ -6,7 +6,9 @@ console.log("[Starting (old) tests]")
 util.dateUtils.testFormat();
 
 /* ChatUtils.class#testWasMentioned_plain_mention */
-util.chatUtils.testMentions();
+/* ChatUtils.class#testWasMentioned_case_insensitive */
+util.chatUtils.testMentions()
+util.chatUtils.testMentionCases()
 
 /* StringUtils.isNumber(100) */
 util.stringUtils.testIsNumber100();
