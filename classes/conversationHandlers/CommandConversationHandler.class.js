@@ -24,6 +24,8 @@ CommandConversationHandler.prototype = {
 			this._showUpcomingSessions(from);
 		} else if (text.toLowerCase().indexOf("create bnl session") > -1){
 			this._createTraining(from);
+		} else if (text.indexOf("rate session") > -1) {
+			this._initRateSession(from)
 		} else {
 			this._wtf(from);
 		}
@@ -135,7 +137,8 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
 		this.bot.say(who, "["+this.bot.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
 		this.bot.say(who, "["+this.bot.config.botName+" create BnL session] Starts a conversation to register a session");
-		this.bot.say(who, "["+this.bot.config.botName+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session");
+		this.bot.say(who, "["+this.bot.config.botName+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session")
+		this.bot.say(who, "["+this.bot.config.botName+" rate session] Starts a conversation to rate a session you've attended")
 		this.bot.say(who, "Apart from these I can also tell you who attended to a training session, just ask me! (Tip: if you DM me, no need to call my name)");
 	},
 	_createTraining: function(from){
@@ -150,6 +153,9 @@ CommandConversationHandler.prototype = {
 	},
 	_showUpcomingSessions: function(from) {
 		this.bot.trainingSessionManager.initRegisterToSession(from);
+	},
+	_initRateSession: function(from) {
+		this.bot.trainingSessionManager.initRateSession(from)
 	}
 };
 

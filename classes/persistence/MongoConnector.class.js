@@ -316,6 +316,9 @@ MongoConnector.prototype = {
 			    }
 		    }
 		);
+	},
+	insertSessionRating: function(sessionRatingData, callback) {
+		this.db.collection('sessionRatings_BNL').insert(sessionRatingData, function(err, result) {MongoConnector.defaultHandler(err, result, callback)})
 	}
 }
 
