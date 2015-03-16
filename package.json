@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "node test/all.js"
+    "test": "node test/all.js; node_modules/jasmine/bin/jasmine.js"
   },
   "dependencies": {
     "async": "~0.9.0",
