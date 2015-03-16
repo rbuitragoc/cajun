@@ -1,3 +1,8 @@
+What's New in v. 0.5.5
+======================
+- When giving only 1 point, it won't expect the word "points"
+- You don't need to name "collabot" in all lowercase to get bot's attention
+
 What's New in v. 0.5.4
 ======================
 - support addressing users with @ when giving points
