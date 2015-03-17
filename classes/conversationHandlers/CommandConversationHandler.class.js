@@ -26,8 +26,6 @@ CommandConversationHandler.prototype = {
 			this._createTraining(from);
 		} else if (text.indexOf("rate session") > -1) {
 			this._initRateSession(from)
-		} else if (text.indexOf("schedule") > -1) {
-			this._schedule(from)
 		} else {
 			this._wtf(from);
 		}
@@ -158,8 +156,6 @@ CommandConversationHandler.prototype = {
 	},
 	_initRateSession: function(from) {
 		this.bot.trainingSessionManager.initRateSession(from)
-	},
-	_schedule: function(from) {
 	}
 };
 
