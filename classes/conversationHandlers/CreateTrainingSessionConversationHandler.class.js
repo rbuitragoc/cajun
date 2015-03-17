@@ -140,6 +140,9 @@ CreateTrainingSessionConversationHandler.prototype = {
 						that.bot.share("You can enroll to this B&L session by asking 'Collabot, show me upcoming sessions'");
 					}
 				});
+				this.bot.schedulingManager.scheduleRegisterToSessionReminder(new Date(), from) // FIXME we need to extract the date from the saved training!
+				// ALSO TODO: while we don't have a way to check attendance yet, we must assume all registered actually attended the session and are therefore enabled to rate it
+				this.bot.schedulingManager.scheduleRateAttendedSessionReminder(new Date(), from) // FIXME we need to extract the date from the saved training!
 				this.bot.conversationManager.endConversation(conversation);
 			} else {
 				this.bot.say(from, "Ok... Let me know when you decide to go for it.");
