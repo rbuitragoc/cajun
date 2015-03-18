@@ -1,3 +1,5 @@
+var later = require('later')
+
 Date.prototype.formatYYYYMMDD = function() {
 	var month = this.getUTCMonth() + 1;
 	var day = this.getUTCDate();
@@ -15,6 +17,22 @@ Date.prototype.getWeek = function() {
 	return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
 }
 
+Date.prototype.subtractHours = function(hours) {
+	var subtractMillis = hours * 60 * 60 * 1000
+	this.setMilliseconds(this.getMilliseconds() - subtractMillis)
+	return this
+}
+
+Date.prototype.getCronspec = function() {
+	var cronspec = '' + this.getSeconds()
+								+ ' ' + this.getMinutes()
+								+ ' ' + this.getHours()
+								+ ' ' + this.getUTCDate()
+								+ ' ' + (this.getUTCMonth()+1)
+								+ ' ?'
+	return cronspec
+}
+
 module.exports = {
 	getCurrentDate: function(){
 		var date = new Date();
@@ -29,5 +47,15 @@ module.exports = {
 		var date = new Date(year+1, 0, 1, 1, 0, 0, 0);
 		date.setDate(0);
 		return date.getWeek();
+	},
+	simpleSchedule: function(spec, action) {
+		later.date.localTime()
+		var scheduleconfig = later.parse.cron(spec, true)
+		var sched = later.schedule(scheduleconfig),
+				start = new Date()
+				next = sched.next(2, start)
+		console.log('\tSCHEDULED EVENT. Using [%s] as cronspec, and calculating from startdate [%s] Next (2) occurence(s): %s', spec, start, next)
+		var timeout = later.setTimeout(action, sched)
+		return sched
 	}
 }
