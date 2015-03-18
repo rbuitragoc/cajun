@@ -1,19 +1,23 @@
 var later = require('later')
+var DateUtils = require('../util/DateUtils.class')
 
 var SchedulingManager = function(bot) {
 	this.bot = bot
 	this.schedulingManager = this.bot.config.schedulingManager
-	later.date.localTime()
 }
 
 SchedulingManager.prototype = {
 	scheduleRegisterToSessionReminder: function(date, requestor) {
 		// take bot.config and read the REGISTRATION_THRESHOLD parameter or default to 24h
+		var registrationThreshold = (this.bot.config.registrationThreshold)? this.bot.registrationThreshold: 24
+		// subtract the desired hours
+		var reminderDate = date.subtractHours(registrationThreshold)
 		// create a cronspec 
-		// use date passed by parameter
+		var cronspec = reminderDate.getCronspec()
+		console.log("Calculated cronspec: [%s]", cronspec)
 		// call _schedule
-		// persist scheduled event (resilience)
-		console.log("TODO: scheduleRegisterToSessionReminder with date '%s' as requested by %s", date, requestor)
+		var sched = DateUtils.simpleSchedule(cronspec)
+		// TODO persist scheduled event (resilience)
 	}, 
 	scheduleAttendToSessionReminder: function(date, requestor) {
 		// take bot.config and read the EVENT_THRESHOLD parameter or default it to 20h
@@ -33,16 +37,10 @@ SchedulingManager.prototype = {
 		// call _schedule
 		// persist scheduled event
 		console.log("TODO: scheduleRateAttendedSessionReminder with date '%s' as requested by '%s'", date, requestor)
-	}
-	_schedule: function(cronspec, date, requestor) {
-		this._schedule_later(cronspec, date, requestor)
 	},
-	_schedule_later: function(cronspec, date, requestor) {
-		var cronsched = later.parse.cron(cronspec)
-		var sched = later.schedule(cronsched),
-				start = date
-		
-		//console.log(sched.next(1, start))
+	schedule: function(cronspec, requestor) {
+		console.log("Scheduling something for %s", requestor)
+		DateUtils.schedule(cronspec)
 	}
 }
 

@@ -26,6 +26,8 @@ CommandConversationHandler.prototype = {
 			this._createTraining(from);
 		} else if (text.indexOf("rate session") > -1) {
 			this._initRateSession(from)
+		} else if (text.indexOf("schedule") > -1) {
+			this._schedule(text, from)
 		} else {
 			this._wtf(from);
 		}
@@ -156,6 +158,11 @@ CommandConversationHandler.prototype = {
 	},
 	_initRateSession: function(from) {
 		this.bot.trainingSessionManager.initRateSession(from)
+	},
+	_schedule: function(text, from) {
+		var justTheSpec = text.substring(text.indexOf('schedule')+9)
+		console.log("text %s trimmed to contain only the cron expression: %s", text, justTheSpec)
+		this.bot.schedulingManager.schedule(justTheSpec, from)
 	}
 };
 
