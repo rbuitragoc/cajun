@@ -48,14 +48,21 @@ module.exports = {
 		date.setDate(0);
 		return date.getWeek();
 	},
-	simpleSchedule: function(spec, action) {
+	simpleSchedule: function(spec) {
 		later.date.localTime()
 		var scheduleconfig = later.parse.cron(spec, true)
 		var sched = later.schedule(scheduleconfig),
 				start = new Date()
 				next = sched.next(2, start)
 		console.log('\tSCHEDULED EVENT. Using [%s] as cronspec, and calculating from startdate [%s] Next (2) occurence(s): %s', spec, start, next)
-		var timeout = later.setTimeout(action, sched)
 		return sched
+	},
+	scheduleAndExecute: function(spec, action) {
+		later.date.localTime()
+		var scheduleconfig = later.parse.cron(spec, true)
+		var sched = later.schedule(scheduleconfig)
+		var	timeout = later.setTimeout(action, scheduleconfig)
+		console.log('\tA timeout for an event has been set. Schedule ready [%s], Timeout ready [%s]', sched, timeout)
+		return {schedule: sched, timer: timeout}
 	}
 }

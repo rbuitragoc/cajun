@@ -34,9 +34,21 @@ function testSimpleSchedule() {
 	assert(sched.isValid(aDate))
 }
 
+function testScheduleAndExecute() {
+	var aDate = new Date()
+	aDate.setSeconds(aDate.getSeconds()+5)
+	var spec = aDate.getCronspec()
+	var func = function () {
+		console.log("<<executing! Timestamp now is %s", new Date())
+	}
+	var scheduleObject = DateUtils.scheduleAndExecute(spec, func)
+	console.log(">>testScheduleAndExecute(): aDate: [%s], spec [%s]SCHEDULE, next occurrence: [%s]", aDate, spec, scheduleObject.schedule.next(1, new Date()))
+}
+
 module.exports = {
 	testFormat: testFormatYYYYMMDD,
 	testSubtractHours: testSubtractHours,
 	testGetCronspec: testGetCronspec,
-	testSchedule: testSimpleSchedule
+	testSchedule: testSimpleSchedule,
+	testSchedAndExec: testScheduleAndExecute
 }

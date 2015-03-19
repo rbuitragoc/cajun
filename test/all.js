@@ -7,6 +7,7 @@ util.dateUtils.testFormat();
 util.dateUtils.testSubtractHours()
 util.dateUtils.testGetCronspec()
 util.dateUtils.testSchedule()
+util.dateUtils.testSchedAndExec()
 
 /* ChatUtils.class#testWasMentioned_plain_mention */
 /* ChatUtils.class#testWasMentioned_case_insensitive */
