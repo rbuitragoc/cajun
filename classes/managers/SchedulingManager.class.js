@@ -1,4 +1,3 @@
-var later = require('later')
 var DateUtils = require('../util/DateUtils.class')
 
 var SchedulingManager = function(bot) {
