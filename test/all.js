@@ -6,8 +6,13 @@ console.log("[Starting (old) tests]")
 util.dateUtils.testFormat();
 util.dateUtils.testSubtractHours()
 util.dateUtils.testGetCronspec()
+util.dateUtils.testSetDateFromExp()
+util.dateUtils.testSetTimeFromExp()
+util.dateUtils.testDateConst()
 util.dateUtils.testSchedule()
 util.dateUtils.testSchedAndExec()
+util.dateUtils.testSchedAndShare()
+util.dateUtils.testSchedAndSay()
 
 /* ChatUtils.class#testWasMentioned_plain_mention */
 /* ChatUtils.class#testWasMentioned_case_insensitive */
