@@ -6,19 +6,22 @@ var SchedulingManager = function(bot) {
 }
 
 SchedulingManager.prototype = {
-	scheduleRegisterToSessionReminder: function(date, requestor) {
+	scheduleRegisterToSessionReminder: function(sessionData) {
 		// take bot.config and read the REGISTRATION_THRESHOLD parameter or default to 24h
 		var registrationThreshold = (this.bot.config.registrationThreshold)? this.bot.registrationThreshold: 24
+		// use the date from the just created training session
+		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time)
 		// subtract the desired hours
 		var reminderDate = date.subtractHours(registrationThreshold)
 		// create a cronspec 
 		var cronspec = reminderDate.getCronspec()
 		console.log("Calculated cronspec: [%s]", cronspec)
 		// call _schedule
-		var sched = DateUtils.simpleSchedule(cronspec)
+		var text = "Remember to register to the upcoming '"+sessionData.title+"' session, by "+sessionData.presenter+". It'll take place in "+sessionData.location+", on "+sessionData.desiredDate+",  "+sessionData.time+" ("+sessionData.duration+" h). You can talk to collabot and ask about 'upcoming sessions', or 'help' if you need any more information."
+		var schedObject = DateUtils.scheduleAndShare(cronspec, bot, text) 
 		// TODO persist scheduled event (resilience)
 	}, 
-	scheduleAttendToSessionReminder: function(date, requestor) {
+	scheduleAttendToSessionReminder: function(sessionData, requestor) {
 		// take bot.config and read the EVENT_THRESHOLD parameter or default it to 20h
 		// create a cronspec
 		// use date parameter
@@ -26,7 +29,7 @@ SchedulingManager.prototype = {
 		// persist scheduled event (resilience)
 		console.log("TODO: scheduleAttendToSessionReminder with date '%s' as requested by %s", date, requestor)
 	},
-	scheduleRateAttendedSessionReminder: function(date, requestor) {
+	scheduleRateAttendedSessionReminder: function(sessionData, requestor) {
 		// take bot.config and read:
 		//	RATING_THRESHOLD or default to 1h
 		//	RATING_REMINDER_PERIOD or default to 24h
