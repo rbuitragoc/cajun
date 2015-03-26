@@ -23,16 +23,24 @@ SchedulingManager.prototype = {
 	}, 
 	scheduleAttendToSessionReminder: function(sessionData, requestor) {
 		// take bot.config and read the EVENT_THRESHOLD parameter or default it to 20h
+		var eventThreshold = (this.bot.config.eventThreshold)? this.bot.config.eventThreshold: 20
+		// use the date from the just created training session, subtracting the desired hours
+		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time).subtractHours(eventThreshold)
 		// create a cronspec
-		// use date parameter
+		var cronspec = date.getCronspec()
+		console.log('Calculated cronspec: [%s]', cronspec)
 		// call _schedule
+		var text = "Remember, you're registered to '"+sessionData.title+"' session, by "+sessionData.presenter+". We expect to see you in "+sessionData.location+", on "+sessionData.desiredDate+",  "+sessionData.time+"."
+		var schedObject = DateUtils.scheduleAndSay(cronspec, bot, requestor, text)
 		// persist scheduled event (resilience)
 		console.log("TODO: scheduleAttendToSessionReminder with date '%s' as requested by %s", date, requestor)
 	},
 	scheduleRateAttendedSessionReminder: function(sessionData, requestor) {
 		// take bot.config and read:
 		//	RATING_THRESHOLD or default to 1h
+		var ratingThreshold = (this.bot.config.ratingThreshold)? this.bot.config.ratingThreshold: 1
 		//	RATING_REMINDER_PERIOD or default to 24h
+		var ratingReminderPeriod = (this.bot.config.ratingReminderPeriod)? this.bot.config.ratingReminderPeriod: 24
 		//	RATING_REMINDER_REPETITIONS or default to 5
 		// create a cronspec
 		// use date parameter

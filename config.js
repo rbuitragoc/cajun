@@ -30,7 +30,11 @@ module.exports = {
 	maxCollabPoints : 10,
 	trainingSessionManager: 'slizarazo',
 	enrollmentDaysThreshold : 1,
-	registrationThreshold: 24
+	registrationThreshold: 24,
+	eventThreshold: 20,
+	ratingThreshold: 1,
+	ratingReminderPeriod: 24,
+	
 };
 
 // Slack API config prod

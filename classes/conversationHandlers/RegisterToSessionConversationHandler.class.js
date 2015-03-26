@@ -14,7 +14,7 @@ RegisterToSessionConversationHandler.prototype = {
 			} else {
 				var sessionIdOrName = command[1];
 				this.bot.trainingSessionManager.registerToSession(from, sessionIdOrName, conversation);
-				this.bot.schedulingManager.scheduleAttendToSessionReminder(new Date(), from) // FIXME we need to extract the date from the saved training!
+				/*this.bot.schedulingManager.scheduleAttendToSessionReminder(conversation.data, from) */ // FIXME need to extract important information from conversation.data
 			}
 		}
 	}
