@@ -45,6 +45,9 @@ CommandConversationHandler.prototype = {
 		var reason = tokens[4];
 		var singular = tokens[2];
 		console.log("Well, it seems like " + from + " decided to give " + points + " points to " + target + (reason ? " because of " + reason : ''));
+
+		// Check if the target user for the point assignment contains an at(@)
+		// symbol, parse it and return the name from the slack connector obj.
 		if ( !!(slackUsrRef = slackUserReferenceRegex.exec(target)) ) {
 			if (!!slackUsrRef[2]) {
 				target = slackUsrRef[2];
@@ -66,6 +69,12 @@ CommandConversationHandler.prototype = {
 		if (from == target){
 				this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
 				return;
+		}
+		// Check if a given player is trying to assign points to a <BOT>
+		var slackUser = this.bot.connector.findUserById(target);
+		if (slackUser && slackUser.is_bot){
+			this.bot.share("Great to get some love from you, " + from + ". But, as a robot, I'm based on rules, and rules say I cannot get or give points. Thanks anyway!");
+			return;
 		}
 		var updateScoreRequest = {
 			fromPlayerName: from,
