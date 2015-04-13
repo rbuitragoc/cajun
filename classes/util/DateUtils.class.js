@@ -34,6 +34,10 @@ Date.prototype.getCronspec = function() {
 	return cronspec
 }
 
+Date.prototype.getCronspec = function(interval, repetitions) {
+	// need to create the cron spec using the interval and repetitions passed as parameter  
+}
+
 Date.prototype.fromExpressions = function(dateExpression, timeExpression) {
 	this.setDateFromExpression(dateExpression)
 	this.setTimeFromExpression(timeExpression)

@@ -34,7 +34,7 @@ module.exports = {
 	eventThreshold: 20,
 	ratingThreshold: 1,
 	ratingReminderPeriod: 24,
-	
+	ratingReminderRepetitions: 5
 };
 
 // Slack API config prod
