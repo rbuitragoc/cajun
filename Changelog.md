@@ -1,3 +1,7 @@
+What's New in v0.7.1
+====================
+- A bot is not a player, so points assigned to bot shouldn't be valid
+
 What's New in v. 0.7.0
 ======================
 - As an user I can rate sessions that I have attended
