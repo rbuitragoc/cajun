@@ -42,7 +42,7 @@ function testAtSignSupported() {
 	//Then The fromPlayerName attribute in the request must be the expected
 	var queriedUserId = mockbot.connector.givenArguments['findUserById'];
 	receivedArguments = mockbot.collaborationManager.givenArguments['givePoints'];
-	assert.equal(queriedUserId[0], 'Uexpectedid', 'With user id int he string, the user was not queried with the connector' );
+	assert.equal(queriedUserId[0], 'Uexpectedid', 'With user id in the string, the user was not queried with the connector' );
 	assert.equal(receivedArguments[0].toPlayerName, 'expected', 'The queried string to the connector wasn\'t returned in response' );
 
 	//When avalid string with the at sign is given
