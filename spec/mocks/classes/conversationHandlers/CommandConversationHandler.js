@@ -15,6 +15,11 @@ module.exports = {
 					return { name: userId, "is_bot": true }
 				}
 				return {name: 'jhon_doe'};
+			},
+			findUserByName: function (userName) {
+				if (userName && userName.indexOf('bot') != -1) {
+					return {name: userName, "is_bot": true}
+				}
 			}
 		},
 		config: {
