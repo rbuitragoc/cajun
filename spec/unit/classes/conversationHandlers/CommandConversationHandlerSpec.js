@@ -56,5 +56,10 @@ describe("A command conversation", function() {
 			command.handle('jhon_doe', 'give 1 point to jhon_doe');
 			expect(bot.share).toHaveBeenCalledWith("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
 		});
+
+        it("shows an error assigning points to bots", function() {
+            command.handle('jhon_doe', 'give 1 point to collabot');
+            expect(bot.share).toHaveBeenCalledWith("Great to get some love from you, jhon_doe. But, as a robot, I'm based on rules, and rules say I cannot get or give points. Thanks anyway!");
+        });
 	});
 });
