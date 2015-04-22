@@ -142,6 +142,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 				});
 				this.bot.schedulingManager.scheduleRegisterToSessionReminder(conversation.data) 
 				// ALSO TODO: while we don't have a way to check attendance yet, we must assume all registered actually attended the session and are therefore allowed to rate it
+				// ALSO TODO: we're not checking who rated and who didn't, so every one will get their reminder
 				this.bot.schedulingManager.scheduleRateAttendedSessionReminder(conversation.data, from)
 				this.bot.conversationManager.endConversation(conversation);
 			} else {
