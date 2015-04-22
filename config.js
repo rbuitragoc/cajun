@@ -32,9 +32,7 @@ module.exports = {
 	enrollmentDaysThreshold : 1,
 	registrationThreshold: 24,
 	eventThreshold: 20,
-	ratingThreshold: 1,
-	ratingReminderPeriod: 24,
-	ratingReminderRepetitions: 5
+	ratingThreshold: 1
 };
 
 // Slack API config prod
