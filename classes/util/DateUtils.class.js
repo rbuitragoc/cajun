@@ -23,19 +23,19 @@ Date.prototype.subtractHours = function(hours) {
 	return this
 }
 
-Date.prototype.getCronspec = function() {
-	// Why not using UTC values? The main reason is that those timers are configured to use local time!
-	var cronspec = '' + this.getSeconds()
-								+ ' ' + this.getMinutes()
-								+ ' ' + this.getHours()
-								+ ' ' + this.getDate()
-								+ ' ' + (this.getMonth()+1)
-								+ ' ?'
-	return cronspec
-}
-
 Date.prototype.getCronspec = function(interval, repetitions) {
-	// need to create the cron spec using the interval and repetitions passed as parameter  
+	if (interval && repetitions) {
+		return null	
+	} else {
+		// Why not using UTC values? The main reason is that those timers are configured to use local time!
+		var cronspec = '' + this.getSeconds()
+									+ ' ' + this.getMinutes()
+									+ ' ' + this.getHours()
+									+ ' ' + this.getDate()
+									+ ' ' + (this.getMonth()+1)
+									+ ' ?'
+		return cronspec
+	}
 }
 
 Date.prototype.fromExpressions = function(dateExpression, timeExpression) {
