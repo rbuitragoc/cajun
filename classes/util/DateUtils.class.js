@@ -24,7 +24,14 @@ Date.prototype.subtractHours = function(hours) {
 }
 
 Date.prototype.getCronspec = function(interval, repetitions) {
-	if (interval && repetitions) {
+	if (interval || repetitions) {
+		// Setting the interval is as easy as creating a spec with the form
+		// 0 0 0/24 X X ? 
+		// , where clearly the interval defines the repetitions every 24h (in this example)
+		// To fully implement recurrent reminders to rate training sessions we need: 
+		// 1. Control Repetitions. As this needs to be fired up to $repetitions times,
+		// we have to carry around the count per user/training (?), and probably
+		// want to assert (at the manager level, of course) if the user hasn't actually rated the training.
 		return null	
 	} else {
 		// Why not using UTC values? The main reason is that those timers are configured to use local time!

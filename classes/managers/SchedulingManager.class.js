@@ -50,9 +50,9 @@ SchedulingManager.prototype = {
 		//	RATING_THRESHOLD or default to 1h
 		var ratingThreshold = (this.bot.config.ratingThreshold)? this.bot.config.ratingThreshold: 1
 		//	RATING_REMINDER_PERIOD or default to 24h
-		var ratingReminderPeriod = (this.bot.config.ratingReminderPeriod)? this.bot.config.ratingReminderPeriod: 24
+		// var ratingReminderPeriod = (this.bot.config.ratingReminderPeriod)? this.bot.config.ratingReminderPeriod: 24
 		//	RATING_REMINDER_REPETITIONS or default to 5
-		var ratingReminderRepetitions = (this.bot.config.ratingReminderRepetitions)? this.bot.config.ratingReminderRepetitions: 5
+		// var ratingReminderRepetitions = (this.bot.config.ratingReminderRepetitions)? this.bot.config.ratingReminderRepetitions: 5
 		
 		// use date parameter
 		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time).subtractHours(-ratingThreshold)
@@ -62,7 +62,7 @@ SchedulingManager.prototype = {
 		console.log("Calculated cronspec: [%s]", cronspec)
 		
 		// call _schedule
-		// persist scheduled event
+		// TODO persist scheduled event
 		console.log("TODO: scheduleRateAttendedSessionReminder with date '%s' as requested by '%s'", date, requestor)
 	},
 	schedule: function(cronspec, requestor) {
