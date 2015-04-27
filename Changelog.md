@@ -1,3 +1,7 @@
+What's New in v0.7.2
+====================
+- Add the command to publish (to a configurable channel only) the link to COPASO  gdoc template
+
 What's New in v0.7.1
 ====================
 - A bot is not a player, so points assigned to bot shouldn't be valid
