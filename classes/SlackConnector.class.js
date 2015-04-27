@@ -120,6 +120,35 @@ SlackConnector.prototype = {
 		console.log("Sharing: " + text);
 		this.slackChannel.send(text);
 	},
+	shareOn: function(text, where) {
+		console.log("Trying to share '%s' on a different channel different than default: %s", text, where)
+		var slackChannelOrGroup = null;
+		for (key in this.slack.channels) {
+			console.log("Channel: "+this.slack.channels[key].name);
+			if (/*slack.channels[key].is_member && */this.slack.channels[key].name === where) {
+				slackChannelOrGroup = this.slack.channels[key];
+			}
+		}
+		if (slackChannelOrGroup) {
+			if (!slackChannelOrGroup.is_member) {
+				console.warn("Bot is not member of channel ["+where+"], can you manually add it?");
+				// Error returned on channels.join: user_is_bot	(This method cannot be called by a bot user)
+			}
+		} else {
+			// try with groups too
+			for (key in this.slack.groups) {
+				console.log("Group: "+this.slack.groups[key].name)
+				if (this.slack.groups[key].name === where) {
+					slackChannelOrGroup = this.slack.groups[key]
+				}
+			}
+		}
+		
+		if (slackChannelOrGroup) {
+			console.log("Saying '%s' on %s ", text, where)
+			slackChannelOrGroup.send(text)
+		}
+	},
 	_registerAllMembers: function (users){
 		var userNamesArray = [];
 		Object.keys(users).forEach(function(key){
