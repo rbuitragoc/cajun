@@ -26,6 +26,8 @@ CommandConversationHandler.prototype = {
 			this._createTraining(from);
 		} else if (text.indexOf("rate session") > -1) {
 			this._initRateSession(from)
+		} else if(text.indexOf("copaso") > -1) {
+			this._copaso()
 		} else {
 			this._wtf(from);
 		}
@@ -170,6 +172,9 @@ CommandConversationHandler.prototype = {
 	},
 	_initRateSession: function(from) {
 		this.bot.trainingSessionManager.initRateSession(from)
+	},
+	_copaso: function() {
+		this.bot.shareOn("Copaso Template: " + this.bot.config.copaso.template, this.bot.config.copaso.group)
 	}
 };
 

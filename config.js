@@ -29,7 +29,11 @@ module.exports = {
 	},
 	maxCollabPoints : 10,
 	trainingSessionManager: 'slizarazo',
-	enrollmentDaysThreshold : 1
+	enrollmentDaysThreshold : 1,
+	copaso: {
+		group: 'vpc-copaso', 
+		template: 'https://docs.google.com/spreadsheets/d/15BmXmYVE0Yc7704VgV_N8vGypr4vFWoOiX-rfHN0MDg'
+	}
 };
 
 // Slack API config prod
