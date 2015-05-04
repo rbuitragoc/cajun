@@ -285,13 +285,22 @@ MongoConnector.prototype = {
 	insertTrainingSession: function(trainingData, callback){
 		this.db.collection('trainings').insert(trainingData, function(err, result) {MongoConnector.defaultHandler(err,result,callback);})
 	},
-	getTrainingSessions: function(callback){
+	getTrainingSessions: function(callback) {
+		// modifying this to retrieve only the sessions that have not yet taken place
 		this.db.collection('trainings').find().sort({'desiredDate': -1}).toArray(
 			function (err, result) {
 				if (err) {
 					console.log(err);
 			    } else {
-			    	callback(result);
+						var filteredResult = new Array();
+						for (var i = 0; var < result.length; i++) {
+							var desiredDate = result[i].desiredDate;
+							var time = result[i].time;
+							// TODO cherry pick from feature/reminders and create date from bot vars
+							// TODO use date to determine if the rtaining session has already passed or not
+							// TODO add to filteredResult only pending training sessions
+						}
+			    	callback(filteredResult);
 			    }
 		    }
 	    );
