@@ -293,12 +293,19 @@ MongoConnector.prototype = {
 					console.log(err);
 			    } else {
 						var filteredResult = new Array();
-						for (var i = 0; var < result.length; i++) {
+						for (var i = 0; i < result.length; i++) {
 							var desiredDate = result[i].desiredDate;
 							var time = result[i].time;
-							// TODO cherry pick from feature/reminders and create date from bot vars
-							// TODO use date to determine if the rtaining session has already passed or not
-							// TODO add to filteredResult only pending training sessions
+							// cherry pick from feature/reminders and create date from bot vars
+							var trainingDate = new Date().fromExpressions(desiredDate, time);
+							console.log("getTrainingSessions: training '%s' has date '%s'", result[i].title, result[i].desiredDate)
+							// use date to determine if the training session has already passed or not
+							if (!trainingDate.hasPassed()) {
+							// add to filteredResult only pending training sessions
+								filteredResult.push(result[i]);
+							} else {
+								console.log("The training session titled '%s' has already passed. Skipping...", result[i].title);
+							}
 						}
 			    	callback(filteredResult);
 			    }
