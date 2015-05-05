@@ -3,7 +3,13 @@ var managers = require('./managers')
 var handlers = require('./conversationHandlers')
 console.log("[Starting (old) tests]")
 /* DateUtils.class#testFormatYYYYMMDD */
+util.dateUtils.testHasPassed();
 util.dateUtils.testFormat();
+util.dateUtils.testSubtractHours()
+util.dateUtils.testGetCronspec()
+util.dateUtils.testSetDateFromExp()
+util.dateUtils.testSetTimeFromExp()
+util.dateUtils.testDateConst()
 
 /* ChatUtils.class#testWasMentioned_plain_mention */
 /* ChatUtils.class#testWasMentioned_case_insensitive */

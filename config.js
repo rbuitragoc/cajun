@@ -6,7 +6,7 @@ var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
 // Slack API config karmabot for tests
 module.exports = {
-	version: "0.7.2",
+	version: "0.7.3",
 	environment: process.env.ENVIRONMENT,
 	// environment: "rick's lap",
 	channel: process.env.CHANNEL,
