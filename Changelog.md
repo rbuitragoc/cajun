@@ -1,3 +1,7 @@
+What's New in v0.7.4
+====================
+- When a presenter is entering a training's time, only the format `HH:MM` should be accepted
+
 What's New in v0.7.3
 ====================
 - Do not display past training sessions when "show me upcoming sessions" is invoked

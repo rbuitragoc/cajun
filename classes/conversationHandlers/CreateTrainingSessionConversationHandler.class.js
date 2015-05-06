@@ -116,7 +116,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 			}
 		}
 		if (conversation.state == 'time'){
-			if(/^\d{1,2}:\d{2}([ap]m)?$/.exec(text)){
+			if (/^\d{1,2}:\d{2}$/.exec(text)) {
 				this.bot.say(from, text + " sounds good to me.");
 				this.bot.conversationManager.setConversationData(conversation, 'time', text, function(){});
 				this.bot.conversationManager.changeConversationState(conversation, "save", function(){
