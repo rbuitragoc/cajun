@@ -1,6 +1,6 @@
 {
   "name": "collabot",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "A collaboration-enabled interactive modular bot system",
   "main": "app.js",
   "scripts": {

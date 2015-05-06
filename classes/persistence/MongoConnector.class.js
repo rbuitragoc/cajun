@@ -296,15 +296,16 @@ MongoConnector.prototype = {
 						for (var i = 0; i < result.length; i++) {
 							var desiredDate = result[i].desiredDate;
 							var time = result[i].time;
+							var title = result[i].title;
 							// cherry pick from feature/reminders and create date from bot vars
 							var trainingDate = new Date().fromExpressions(desiredDate, time);
-							console.log("getTrainingSessions: training '%s' has date '%s'", result[i].title, result[i].desiredDate)
+							console.log("getTrainingSessions: training '%s' has date '%s'", title, trainingDate)
 							// use date to determine if the training session has already passed or not
 							if (!trainingDate.hasPassed()) {
 							// add to filteredResult only pending training sessions
 								filteredResult.push(result[i]);
 							} else {
-								console.log("The training session titled '%s' has already passed. Skipping...", result[i].title);
+								console.log("The training session titled '%s' has already passed (Today it's %s). Skipping...", title, new Date());
 							}
 						}
 			    	callback(filteredResult);

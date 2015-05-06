@@ -177,6 +177,7 @@ TrainingSessionManager.prototype =  {
 					bot.say(from, sessions);
 				} else {
 					bot.say(from, "No sessions scheduled ahead. Stay tuned!")
+					bot.conversationManager.endConversation(conversation)
 				}
  			}
  			],
