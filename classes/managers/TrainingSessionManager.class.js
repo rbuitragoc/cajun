@@ -140,6 +140,28 @@ TrainingSessionManager.prototype =  {
  			}
 		});
 	},
+	initCreateTrainingSession: function(from) {
+		var bot = this.bot;
+		
+		async.waterfall([
+			function(next) {
+				bot.conversationManager.startConversation(from, "createTrainingSession", "sessionTitle", function() {
+					bot.say(from, "First, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
+				},
+				function(conversation) {
+					// TODO: Add support to resume conversations
+				})
+			}, function (conversation, next) {
+				bot.conversationManager.setConversationData(conversation, 'presenter', from, function(){});
+			}
+		],
+		function (err) {
+			if (err) {
+				bot.say(from,"Something happened when I tried to find out... "+err);
+			} 
+		})
+		
+	},
 	createTrainingSession: function(creator, session, callback) {
 		var bot = this.bot;
 		bot.persistence.insertTrainingSession(session, callback);

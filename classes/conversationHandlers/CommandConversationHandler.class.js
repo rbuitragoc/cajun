@@ -158,14 +158,7 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "Apart from these I can also tell you who attended to a training session, just ask me! (Tip: if you DM me, no need to call my name)");
 	},
 	_createTraining: function(from){
-		var handler = this;
-		this.bot.conversationManager.startConversation(from, "createTrainingSession", "presenters", function(){
-			handler.bot.say(from, "Hey "+from+", Sure!");
-			/*handler.bot.say(from, "First we need the slack username of the presenter. Just type \"me\" if it's you.");*/
-		},
-		function(conversation){
-			// TODO: Add support to resume conversations
-		});
+		this.bot.trainingSessionManager.initCreateTrainingSession(from);
 	},
 	_showUpcomingSessions: function(from) {
 		this.bot.trainingSessionManager.initRegisterToSession(from);
