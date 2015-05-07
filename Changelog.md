@@ -1,3 +1,7 @@
+What's New in v0.7.5
+====================
+- Fixed the conversation for create training session (it was awkwardly waiting for an extra line from the user before starting)
+
 What's New in v0.7.4
 ====================
 - When a presenter is entering a training's time, only the format `HH:MM` should be accepted
