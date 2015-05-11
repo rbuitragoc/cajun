@@ -2,7 +2,7 @@ var async = require('async');
 
 var TrainingSessionManager = function(bot) {
 	this.bot = bot;
-	this.trainingSessionManager = this.bot.config.trainingSessionManager;
+	this.trainingSessionManager = this.bot.config.edserv.manager;
 };
 
 TrainingSessionManager.prototype =  {
@@ -234,7 +234,8 @@ TrainingSessionManager.prototype =  {
 			currentDate.setDate(currentDate.getDate() + 1);
 
 			var desiredDate = new Date(selectedSession.desiredDate);
-			desiredDate.setDate(desiredDate.getDate() + bot.config.enrollmentDaysThreshold);
+			var enrollmentHoursThreshold = bot.config.edserv.thresholds.enrollment;
+			desiredDate.addHours(enrollmentHoursThreshold);
 
 			if (currentDate <= desiredDate) {
 				var hasRegistration = false;

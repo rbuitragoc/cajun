@@ -28,11 +28,15 @@ module.exports = {
 			// 'http://localhost:3000/stop'
 	},
 	maxCollabPoints : 10,
-	trainingSessionManager: 'slizarazo',
-	enrollmentDaysThreshold : 1,
-	registrationThreshold: 24,
-	eventThreshold: 20,
-	ratingThreshold: 1,
+	edserv: {
+		thresholds: {
+			enrollment: 24,
+			registration: 24,
+			attend: 20,
+			rating: 1
+		},
+		manager: 'slizarazo'
+	},
 	copaso: {
 		group: 'vpc-copaso', 
 		template: 'https://docs.google.com/spreadsheets/d/15BmXmYVE0Yc7704VgV_N8vGypr4vFWoOiX-rfHN0MDg'

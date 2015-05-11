@@ -4,7 +4,7 @@ var Collabot = require('../Collabot.Mock.class.js');
 
 function setupMocks(){
 	var mockBot = new Collabot();
-	mockBot.config.trainingSessionManager = 'slizarazo';
+	mockBot.config.edserv = {manager: 'mrmanager'};
 	mockBot.persistence = {
 		getPlayerByName: function(presenter, callback){
 			if (presenter === 'ancisar')

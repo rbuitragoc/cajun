@@ -9,27 +9,30 @@ SchedulingManager.prototype = {
 	scheduleRegisterToSessionReminder: function(sessionData) {
 		
 		// take bot.config and read the REGISTRATION_THRESHOLD parameter or default to 24h
-		var registrationThreshold = (this.bot.config.registrationThreshold)? this.bot.registrationThreshold: 24
+		var registrationThreshold = (this.bot.config.edserv.thresholds.registration)? this.bot.edserv.thresholds.registration: 24
 		
 		// use the date from the just created training session
 		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time)
+		console.log("Getting the date from the sessionData: %s", date)
 		
 		// subtract the desired hours
 		var reminderDate = date.subtractHours(registrationThreshold)
+		console.log("Getting the date after subtracting the hours: %s", reminderDate)
 		
 		// create a cronspec 
 		var cronspec = reminderDate.getCronspec()
 		console.log("Calculated cronspec: [%s]", cronspec)
 		
 		// call _schedule
-		var text = "Remember to register to the upcoming '"+sessionData.title+"' session, by "+sessionData.presenter+". It'll take place in "+sessionData.location+", on "+sessionData.desiredDate+",  "+sessionData.time+" ("+sessionData.duration+" h). You can talk to collabot and ask about 'upcoming sessions', or 'help' if you need any more information."
-		var schedObject = DateUtils.scheduleAndShare(cronspec, bot, text) 
+		var text = "Remember to register to the upcoming '"+sessionData.title+"' session, by "+sessionData.presenter+". It'll take place in "+sessionData.location+", on "+sessionData.desiredDate+",  "+sessionData.time+" ("+sessionData.duration+" h). You can talk to "+this.bot.config.botName+" and ask about 'upcoming sessions', or 'help' if you need any more information."
+		var schedObject = DateUtils.scheduleAndShare(cronspec, this.bot, text) 
 		// TODO persist scheduled event (resilience)
 	}, 
 	scheduleAttendToSessionReminder: function(sessionData, requestor) {
 		
 		// take bot.config and read the EVENT_THRESHOLD parameter or default it to 20h
-		var eventThreshold = (this.bot.config.eventThreshold)? this.bot.config.eventThreshold: 20
+		var edservConfig = this.bot.config.edserv;
+		var eventThreshold = (edservConfig.thresholds.attend)? edservConfig.thresholds.attend: 20
 		
 		// use the date from the just created training session, subtracting the desired hours
 		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time).subtractHours(eventThreshold)
@@ -48,7 +51,8 @@ SchedulingManager.prototype = {
 	scheduleRateAttendedSessionReminder: function(sessionData, requestor) {
 		// take bot.config and read:
 		//	RATING_THRESHOLD or default to 1h
-		var ratingThreshold = (this.bot.config.ratingThreshold)? this.bot.config.ratingThreshold: 1
+		var edservConfig = this.bot.config.edserv;
+		var ratingThreshold = (edservConfig.thresholds.rating)? edservConfig.thresholds.rating: 1
 		//	RATING_REMINDER_PERIOD or default to 24h
 		// var ratingReminderPeriod = (this.bot.config.ratingReminderPeriod)? this.bot.config.ratingReminderPeriod: 24
 		//	RATING_REMINDER_REPETITIONS or default to 5
