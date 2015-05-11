@@ -117,6 +117,9 @@ Collabot.prototype = {
 	share: function(text){
 		this.connector.share(text);
 	},
+	shareOn: function(text, where) {
+		this.connector.shareOn(text, where);
+	},
 	registerPlayers: function(players){
 		console.log("Registering players...");
 		console.log(players);

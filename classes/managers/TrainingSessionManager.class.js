@@ -140,6 +140,28 @@ TrainingSessionManager.prototype =  {
  			}
 		});
 	},
+	initCreateTrainingSession: function(from) {
+		var bot = this.bot;
+		
+		async.waterfall([
+			function(next) {
+				bot.conversationManager.startConversation(from, "createTrainingSession", "sessionTitle", function() {
+					bot.say(from, "First, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
+				},
+				function(conversation) {
+					// TODO: Add support to resume conversations
+				})
+			}, function (conversation, next) {
+				bot.conversationManager.setConversationData(conversation, 'presenter', from, function(){});
+			}
+		],
+		function (err) {
+			if (err) {
+				bot.say(from,"Something happened when I tried to find out... "+err);
+			} 
+		})
+		
+	},
 	createTrainingSession: function(creator, session, callback) {
 		var bot = this.bot;
 		bot.persistence.insertTrainingSession(session, callback);
@@ -163,17 +185,22 @@ TrainingSessionManager.prototype =  {
  					next(err, conversation, result);
  				});
  			}, function (conversation, trainingSessions, next) {
- 				var sessions = "Upcoming sessions \n";
-				for (var i = 0; i < trainingSessions.length; i++) {
-					var string = "" + (i+1) + " - '" + trainingSessions[i].title + "' on "+ trainingSessions[i].desiredDate +
-								" " + trainingSessions[i].time +" ("+trainingSessions[i].duration + "h) @ " + trainingSessions[i].location + 
-								" - Presenter: " + trainingSessions[i].presenter + "\n";
-					sessions += string;
-					trainingSessions[i].customId = i+1;
+				if (trainingSessions.length > 0) {
+					var sessions = "Upcoming sessions \n";
+					for (var i = 0; i < trainingSessions.length; i++) {
+						var string = "" + (i+1) + " - '" + trainingSessions[i].title + "' on "+ trainingSessions[i].desiredDate +
+									" " + trainingSessions[i].time +" ("+trainingSessions[i].duration + "h) @ " + trainingSessions[i].location + 
+									" - Presenter: " + trainingSessions[i].presenter + "\n";
+						sessions += string;
+						trainingSessions[i].customId = i+1;
+					}
+					bot.conversationManager.setConversationData(conversation, 'sessions', trainingSessions, function(){});
+					sessions += "Let's pick a session from the list (you can either spell the name or the number). If you don't want to enroll, you can say 'NO'.";
+					bot.say(from, sessions);
+				} else {
+					bot.say(from, "No sessions scheduled ahead. Stay tuned!")
+					bot.conversationManager.endConversation(conversation)
 				}
-				bot.conversationManager.setConversationData(conversation, 'sessions', trainingSessions, function(){});
-				sessions += "Let's pick a session from the list (you can either spell the name or the number). If you don't want to enroll, you can say 'NO'.";
-				bot.say(from, sessions);
  			}
  			],
  			function (err) {
@@ -186,17 +213,22 @@ TrainingSessionManager.prototype =  {
 	registerToSession: function(from, sessionIdOrName, conversation) {
 		var bot = this.bot;
 		var selectedSession = null;
+		var noSessions = false;
 		console.log("user " +from + " wants to enroll to "+ sessionIdOrName);
+		
+		if (!conversation.data.sessions) {
+			noSessions = true;
+		} else {
+			for (var i = 0; i < conversation.data.sessions.length; i++) {
+				var session = conversation.data.sessions[i];
 
-		for (var i = 0; i < conversation.data.sessions.length; i++) {
-			var session = conversation.data.sessions[i];
-			
-			if (session.customId == sessionIdOrName || session.title == sessionIdOrName) {
-				selectedSession = session;
-				break;
+				if (session.customId == sessionIdOrName || session.title == sessionIdOrName) {
+					selectedSession = session;
+					break;
+				}
 			}
-			
 		}
+
 		if (selectedSession) {
 			var currentDate = new Date();
 			currentDate.setDate(currentDate.getDate() + 1);
@@ -229,7 +261,10 @@ TrainingSessionManager.prototype =  {
 			} else {
 				bot.say(from, 'Sorry, that session inscriptions have expired!');
 			}
-		} else if(sessionIdOrName == "NO") {
+		} else if (noSessions) {
+			bot.conversationManager.endConversation(conversation);
+			bot.say(from, "We'll be publishing new training sessions soon.")
+		} else if (sessionIdOrName == "NO") {
 			bot.conversationManager.endConversation(conversation);
 			bot.say(from,"You chose not to attend any of the upcoming sessions. I'll remind you of any new sessions scheduled, so you'll have chance to register to those. Have a nice day");
 		} else {

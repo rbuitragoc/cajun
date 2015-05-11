@@ -11,6 +11,10 @@ SlackConnectorMock.prototype = {
 	findUserByName: function() {
 		this.givenArguments['findUserByName'] = arguments
 		return this.mockedResponses['findUserByName']
+	},
+	shareOn: function(text, where) {
+		this.givenArguments['shareOn'] = arguments
+		return this.mockedResponses['shareOn']
 	}
 }
 

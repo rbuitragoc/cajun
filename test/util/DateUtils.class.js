@@ -50,6 +50,28 @@ function testDateConstruction() {
 	assert.equal(currentDate.getSeconds(), expectedDate.getSeconds(), "seconds!")
 }
 
+function testHasPassed() {
+	var expectedDate = new Date(2015, 2, 23)
+	var actualDate = new Date()
+	var passedExpression = '2015/01/21'
+	var pendingExpression = '2015/12/24'
+	
+	// test a date prior to march 23rd
+	actualDate.setDateFromExpression(passedExpression)
+	console.log("testHasPassed(date): trying to check date %s is before eventDate [%s]", actualDate, expectedDate)
+	assert(actualDate.hasPassed(expectedDate), "Date has not yet passed!")
+	
+	// test a date after march 23rd
+	actualDate.setDateFromExpression(pendingExpression)
+	console.log("testHasPassed(date): trying to check date %s is after event date [%s]", actualDate, expectedDate)
+	assert(!actualDate.hasPassed(expectedDate), "Date has passed already!")
+	
+	// test a date 24 hours before now: eventDate parameter null
+	actualDate = new Date().subtractHours(24)
+	console.log("testHasPassed(): trying to check date %s is before now [%s]", actualDate, new Date())
+	assert(actualDate.hasPassed(), "Date has not yet passed!")
+}
+
 function testSetDateFromExpression() {
 	var expectedDate = new Date(2015, 2, 23)
 	var actualDate = new Date()
@@ -113,6 +135,7 @@ function testScheduleAndSay() {
 }
 
 module.exports = {
+	testHasPassed: testHasPassed,
 	testFormat: testFormatYYYYMMDD,
 	testSubtractHours: testSubtractHours,
 	testGetCronspec: testGetCronspec,
@@ -122,5 +145,6 @@ module.exports = {
 	testSchedule: testSimpleSchedule,
 	testSchedAndExec: testSimpleScheduleAndExecute,
 	testSchedAndShare: testScheduleAndShare,
-	testSchedAndSay: testScheduleAndSay
+	testSchedAndSay: testScheduleAndSay,
+	testDateConst: testDateConstruction
 }

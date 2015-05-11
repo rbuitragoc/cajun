@@ -28,6 +28,8 @@ CommandConversationHandler.prototype = {
 			this._initRateSession(from)
 		} else if (text.indexOf("schedule") > -1) {
 			this._schedule(text, from)
+		} else if(text.indexOf("copaso") > -1) {
+			this._copaso()
 		} else {
 			this._wtf(from);
 		}
@@ -158,14 +160,7 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "Apart from these I can also tell you who attended to a training session, just ask me! (Tip: if you DM me, no need to call my name)");
 	},
 	_createTraining: function(from){
-		var handler = this;
-		this.bot.conversationManager.startConversation(from, "createTrainingSession", "presenters", function(){
-			handler.bot.say(from, "Hey "+from+", Sure!");
-			/*handler.bot.say(from, "First we need the slack username of the presenter. Just type \"me\" if it's you.");*/
-		},
-		function(conversation){
-			// TODO: Add support to resume conversations
-		});
+		this.bot.trainingSessionManager.initCreateTrainingSession(from);
 	},
 	_showUpcomingSessions: function(from) {
 		this.bot.trainingSessionManager.initRegisterToSession(from);
@@ -177,6 +172,9 @@ CommandConversationHandler.prototype = {
 		var justTheSpec = text.substring(text.indexOf('schedule')+9)
 		console.log("text %s trimmed to contain only the cron expression: %s", text, justTheSpec)
 		this.bot.schedulingManager.schedule(justTheSpec, from)
+	},
+	_copaso: function() {
+		this.bot.shareOn("Copaso Template: " + this.bot.config.copaso.template, this.bot.config.copaso.group)
 	}
 };
 

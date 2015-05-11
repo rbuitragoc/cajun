@@ -34,6 +34,10 @@ Collabot.prototype = {
 		console.log("Sharing: "+text);
 		this.reverseShareMap[text] = true;
 	},
+	shareOn: function(text, where) {
+		console.log("Sharing '%s' on %s", text, where)
+		this.reverseShareMap[text] = true;
+	},
 	registerPlayers: function(players){
 		
 	},

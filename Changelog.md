@@ -1,3 +1,19 @@
+What's New in v0.7.5
+====================
+- Fixed the conversation for create training session (it was awkwardly waiting for an extra line from the user before starting)
+
+What's New in v0.7.4
+====================
+- When a presenter is entering a training's time, only the format `HH:MM` should be accepted
+
+What's New in v0.7.3
+====================
+- Do not display past training sessions when "show me upcoming sessions" is invoked
+
+What's New in v0.7.2
+====================
+- Add the command to publish (to a configurable channel only) the link to COPASO  gdoc template
+
 What's New in v0.7.1
 ====================
 - A bot is not a player, so points assigned to bot shouldn't be valid

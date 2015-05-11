@@ -45,6 +45,11 @@ Date.prototype.getCronspec = function(interval, repetitions) {
 	}
 }
 
+Date.prototype.hasPassed = function(eventDate) {
+	if (!eventDate) eventDate = new Date()
+	return this < eventDate;
+}
+
 Date.prototype.fromExpressions = function(dateExpression, timeExpression) {
 	this.setDateFromExpression(dateExpression)
 	this.setTimeFromExpression(timeExpression)

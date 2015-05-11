@@ -6,7 +6,7 @@ var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
 // Slack API config karmabot for tests
 module.exports = {
-	version: "0.7.1",
+	version: "0.7.5",
 	environment: process.env.ENVIRONMENT,
 	// environment: "rick's lap",
 	channel: process.env.CHANNEL,
@@ -32,7 +32,11 @@ module.exports = {
 	enrollmentDaysThreshold : 1,
 	registrationThreshold: 24,
 	eventThreshold: 20,
-	ratingThreshold: 1
+	ratingThreshold: 1,
+	copaso: {
+		group: 'vpc-copaso', 
+		template: 'https://docs.google.com/spreadsheets/d/15BmXmYVE0Yc7704VgV_N8vGypr4vFWoOiX-rfHN0MDg'
+	}
 };
 
 // Slack API config prod
