@@ -17,14 +17,28 @@ Date.prototype.getWeek = function() {
 	return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
 }
 
+Date.prototype.subtractTime = function(timeToSubtract, unit) {
+	var isInteger = timeToSubtract % 1 == 0;
+	if (!unit || isInteger || (unit && unit == 'hour' && isInteger)) {
+		return this.subtractHours(timeToSubtract);
+	} // TODO handle the rest of the cases: months, weeks, days, minutes, seconds, millis
+	
+}
+
 Date.prototype.subtractHours = function(hours) {
 	var subtractMillis = hours * 60 * 60 * 1000
-	this.setMilliseconds(this.getMilliseconds() - subtractMillis)
+	this.setMilliseconds(this.getMilliseconds() - Math.round(subtractMillis))
 	return this
 }
 
+Date.prototype.addHours = function(hours) {
+	var addMillis = hours * 60 * 60 * 1000;
+	this.setMilliseconds(this.getMilliseconds() + Math.round(addMillis));
+	return this;
+}
+
 Date.prototype.getCronspec = function(interval, repetitions) {
-	if (interval || repetitions) {
+	if (interval && repetitions) {
 		// Setting the interval is as easy as creating a spec with the form
 		// 0 0 0/24 X X ? 
 		// , where clearly the interval defines the repetitions every 24h (in this example)

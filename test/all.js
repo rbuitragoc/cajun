@@ -6,6 +6,7 @@ console.log("[Starting (old) tests]")
 util.dateUtils.testHasPassed();
 util.dateUtils.testFormat();
 util.dateUtils.testSubtractHours()
+util.dateUtils.testAddHours()
 util.dateUtils.testGetCronspec()
 util.dateUtils.testSetDateFromExp()
 util.dateUtils.testSetTimeFromExp()

@@ -28,6 +28,14 @@ function testSubtractHours() {
 	assert.equal(day+1, after.getDate(), 'Failed assertion! date is not the same!')
 }
 
+function testAddHours() {
+	var currentDate = new Date('2015-03-17')
+	var day = currentDate.getDate()
+	var after = currentDate.addHours(24)
+	console.log("testAddHours(): comparing day %s with day %s", day+1, after.getDate())
+	assert.equal(day+1, after.getDate(), "Failed assertion! The date is not the same!")
+}
+
 function testGetCronspec() {
 	var currentDate = new Date(2015, 2, 17, 0, 0, 0)
 	var expected = '0 0 0 17 3 ?'
@@ -138,6 +146,7 @@ module.exports = {
 	testHasPassed: testHasPassed,
 	testFormat: testFormatYYYYMMDD,
 	testSubtractHours: testSubtractHours,
+	testAddHours: testAddHours,
 	testGetCronspec: testGetCronspec,
 	testSetDateFromExp: testSetDateFromExpression,
 	testSetTimeFromExp: testSetTimeFromExpression,
