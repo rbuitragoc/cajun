@@ -94,11 +94,12 @@ SlackConnector.prototype = {
 		this.slack.disconnect();
 		console.log(this.config.botName+" ID ["+this.bot.guid+"] successfully logged out.")
 	},
-	say: function(who, text){
+	say: function(who, text) {
+		var slackOpts = {bot: this.bot, from: who}
 		console.log(typeof who);
 		console.log("Saying '%s' to: ", text, who);
 		var dm = this.slack.getDMByName(who);
-		if (!dm){
+		if (!dm) {
 			console.log('Slack can\'t find DMByName ['+who+']');
 			/* @slash 090215 - Obscure bug, hard to reproduce this situation happening,
 			 * seems to happen when the bot and the person have never talked.
@@ -109,6 +110,27 @@ SlackConnector.prototype = {
 			 * this.slack.dms[who] = new DM(this.slack, this.users[who]);
 			 * dm = this.slack.dms[who];
 			 */
+			this.slack._apiCall('im.open', {user: who}, function(data) {
+				handle_api_response(data, {
+					call: 'im.open',
+					console: JSON.stringify(data),
+					msg: JSON.stringify(data.channel),
+					slack: slackOpts
+				})
+				if (data) {
+					if (data.error) {
+						console.error("Error opening a DM, please tell the user to do that manually on slack, sorry: %s", data.error)
+						return;
+					}
+					dm = this.slack.getDMByID(data.channel.id)
+					if (!dm) {
+						console.error("still cannot do anything to open a DM. Tell the user to do that manually on slack, sorry.")
+						return;
+					} else {
+						dm.send(text)
+					}
+				}
+			});
 			return;
 		}
 		dm.send(text);
