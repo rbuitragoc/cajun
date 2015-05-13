@@ -1,6 +1,6 @@
 var Slack = require('slack-client');
 
-function SlackConnector(config) {
+function SlackConnector(config){
 	this.name = 'SlackConnector';
 	this.token = config.token;
 	this.autoReconnect = config.autoReconnect;
@@ -158,21 +158,47 @@ SlackConnector.prototype = {
 		this.bot.registerPlayers(userNamesArray);
 	},
 	_testApi: function(who) { // TODO - use this way to extend slack client
-		var bot = this.bot;
+		var slackOpts = {bot: this.bot, from: who};
 		this.slack._apiCall('api.test', {foo: 'bar'}, function(data) {
-			if (data) {
-				if (data.error) {
-					console.error("api.test came back with an error: %s", data.error)
-					bot.say(who, "api.test came back with an error: "+data.error)
-				} else {
-					var discloseable = {fooBackFromAPI: data.args.foo} 
-					console.log("api.test came back with OK=%s; also got the following args: %s", data.ok, JSON.stringify(discloseable))
-					bot.say(who, "api.test came back with OK="+data.ok+"; also got the following args: "+JSON.stringify(discloseable))
-				}
-			}
-			return true;
+			return handle_api_response(data, {
+				call: 'api.test',
+				console: JSON.stringify({returned: data.args.foo}),
+				msg: JSON.stringify({returned: data.args.foo}),
+				slack: slackOpts
+			})
+		});
+	},
+	_listIM: function(who) {
+		var slackOpts = {bot: this.bot, from: who}
+		this.slack._apiCall('im.list', {}, function(data) {
+			return handle_api_response(data, {
+				call: 'im.list',
+				console: JSON.stringify(data.ims),
+				msg: JSON.stringify(data.ims[0]),
+				slack: slackOpts
+			})
 		});
 	}
+}
+
+var handle_api_response = function(data, options) {
+	if (data) {
+		var apiCall = options.call;
+		var consoleMessage = options.console;
+		var slackMessage = options.msg;
+		var bot = options.slack.bot;
+		var who = options.slack.from;
+		if (data.error) {
+			console.error("%s came back with an error: %s", apiCall, data.error)
+			bot.say(who, apiCall+" came back with an error: "+data.error);
+			return false;
+		} else {
+			console.log("%s API call came back with OK=%s; also got the following payload: %s", apiCall, data.ok, consoleMessage)
+			bot.say(who, apiCall+" API call came back with OK="+data.ok+"; also got some payload: "+slackMessage)
+			return true;
+		}
+	}
+	return false;
 }
 
 module.exports = SlackConnector;

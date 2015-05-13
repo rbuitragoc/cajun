@@ -30,6 +30,8 @@ CommandConversationHandler.prototype = {
 			this._copaso()
 		} else if (text.indexOf("test-api") > -1) {
 			this._testApi(from);
+		} else if (text.indexOf("list-im") > -1) {
+			this._listIM(from);
 		} else if (text.indexOf("hadmin") > -1) {
 			this._adminOptions(from);
 		} else {
@@ -176,11 +178,14 @@ CommandConversationHandler.prototype = {
 	_testApi: function(who) {
 		this.bot.connector._testApi(who)
 	},
+	_listIM: function(who) {
+		this.bot.connector._listIM(who)
+	},	
 	_adminOptions: function(who) {
 		this.bot.say(who, "These are the hidden admin commands: ");
 		this.bot.say(who, "["+this.bot.config.botName+" copaso-url] Will share the URL to the COPASO template on private group "+this.bot.config.copaso.group)
 		this.bot.say(who, "["+this.bot.config.botName+" test-api] will invoke Slack's 'api.test' call.")
-		
+		this.bot.say(who, "["+this.bot.config.botName+" list-im] will invoke Slack's 'im.list' call.")
 	}
 };
 
