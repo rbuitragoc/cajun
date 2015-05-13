@@ -1,38 +1,22 @@
 var Slack = require('slack-client');
 
-function SlackConnector(config){
+function SlackConnector(config) {
 	this.name = 'SlackConnector';
 	this.token = config.token;
 	this.autoReconnect = config.autoReconnect;
 	this.autoMark = config.autoMark;
 	this.config = config;
-    this.slack = null;
-    this.activeUsersArray = [];
-    this.bot = null;
-    this.slackChannel = null;
-
+	this.slack = null;
+	this.activeUsersArray = [];
+	this.bot = null;
+	this.slackChannel = null;
 }
-
 SlackConnector.prototype = {
 	init: function(bot){
 		var that = this;
 		this.bot = bot;
 		console.log("Initializing with SlackConnector...");
 		var slack = new Slack(this.token, this.autoReconnect, this.autoMark);
-		var _testApi = function(data) {
-			if (data) {
-				if (data.error) {
-					console.error("api.test came back with an error: %s", data.error)
-				} else {
-					var discloseable = {returnedFoo: data.args.foo} 
-					console.log("api.test came back with OK=%s; also got the following args: %s", data.ok, JSON.stringify(discloseable))
-				}
-			}
-			return true
-		}
-		Slack.prototype.testApi = function() {
-			return slack._apiCall('api.test', {foo: 'bar'}, _testApi)
-		}
 		slack.on('open', function() {
 			var channelName = that.config.channel;
 			var slackChannel = null;
@@ -173,8 +157,21 @@ SlackConnector.prototype = {
 		});			
 		this.bot.registerPlayers(userNamesArray);
 	},
-	_testApi: function(who) {
-		this.slack.testApi()
+	_testApi: function(who) { // TODO - use this way to extend slack client
+		var bot = this.bot;
+		this.slack._apiCall('api.test', {foo: 'bar'}, function(data) {
+			if (data) {
+				if (data.error) {
+					console.error("api.test came back with an error: %s", data.error)
+					bot.say(who, "api.test came back with an error: "+data.error)
+				} else {
+					var discloseable = {fooBackFromAPI: data.args.foo} 
+					console.log("api.test came back with OK=%s; also got the following args: %s", data.ok, JSON.stringify(discloseable))
+					bot.say(who, "api.test came back with OK="+data.ok+"; also got the following args: "+JSON.stringify(discloseable))
+				}
+			}
+			return true;
+		});
 	}
 }
 
