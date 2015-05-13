@@ -19,6 +19,20 @@ SlackConnector.prototype = {
 		this.bot = bot;
 		console.log("Initializing with SlackConnector...");
 		var slack = new Slack(this.token, this.autoReconnect, this.autoMark);
+		var _testApi = function(data) {
+			if (data) {
+				if (data.error) {
+					console.error("api.test came back with an error: %s", data.error)
+				} else {
+					var discloseable = {returnedFoo: data.args.foo} 
+					console.log("api.test came back with OK=%s; also got the following args: %s", data.ok, JSON.stringify(discloseable))
+				}
+			}
+			return true
+		}
+		Slack.prototype.testApi = function() {
+			return slack._apiCall('api.test', {foo: 'bar'}, _testApi)
+		}
 		slack.on('open', function() {
 			var channelName = that.config.channel;
 			var slackChannel = null;
@@ -158,6 +172,9 @@ SlackConnector.prototype = {
 			userNamesArray.push(value.name);
 		});			
 		this.bot.registerPlayers(userNamesArray);
+	},
+	_testApi: function(who) {
+		this.slack.testApi()
 	}
 }
 
