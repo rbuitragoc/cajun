@@ -8,15 +8,17 @@ var SchedulingManager = function(bot) {
 SchedulingManager.prototype = {
 	scheduleRegisterToSessionReminder: function(sessionData) {
 		
+		var registerConfig = this.bot.config.edserv.reminders.register;
+		
 		// take bot.config and read the REGISTRATION_THRESHOLD parameter or default to 24h
-		var registrationThreshold = (this.bot.config.edserv.thresholds.registration)? this.bot.edserv.thresholds.registration: 24
+		var registerBefore = (registerConfig)? registerConfig.hours: 24
 		
 		// use the date from the just created training session
 		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time)
 		console.log("Getting the date from the sessionData: %s", date)
 		
 		// subtract the desired hours
-		var reminderDate = date.subtractHours(registrationThreshold)
+		var reminderDate = date.subtractHours(registerBefore)
 		console.log("Getting the date after subtracting the hours: %s", reminderDate)
 		
 		// create a cronspec 
@@ -31,11 +33,11 @@ SchedulingManager.prototype = {
 	scheduleAttendToSessionReminder: function(sessionData, requestor) {
 		
 		// take bot.config and read the EVENT_THRESHOLD parameter or default it to 20h
-		var edservConfig = this.bot.config.edserv;
-		var eventThreshold = (edservConfig.thresholds.attend)? edservConfig.thresholds.attend: 20
+		var attendConfig = this.bot.config.edserv.reminders.attend;
+		var attendHours = (attendConfig)? attendConfig.hours: 20
 		
 		// use the date from the just created training session, subtracting the desired hours
-		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time).subtractHours(eventThreshold)
+		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time).subtractHours(attendHours)
 		
 		// create a cronspec
 		var cronspec = date.getCronspec()
@@ -50,16 +52,19 @@ SchedulingManager.prototype = {
 	},
 	scheduleRateAttendedSessionReminder: function(sessionData, requestor) {
 		// take bot.config and read:
+		var rateConfig = this.bot.config.edserv.reminders.rate;
 		//	RATING_THRESHOLD or default to 1h
-		var edservConfig = this.bot.config.edserv;
-		var ratingThreshold = (edservConfig.thresholds.rating)? edservConfig.thresholds.rating: 1
-		//	RATING_REMINDER_PERIOD or default to 24h
-		// var ratingReminderPeriod = (this.bot.config.ratingReminderPeriod)? this.bot.config.ratingReminderPeriod: 24
-		//	RATING_REMINDER_REPETITIONS or default to 5
-		// var ratingReminderRepetitions = (this.bot.config.ratingReminderRepetitions)? this.bot.config.ratingReminderRepetitions: 5
+		var rateHours = (rateConfig)? rateConfig.hours: 1
+		//	RATING_REMINDER_PERIOD or default to null (no op)
+		var retryIntervalHours = (rateConfig && rateConfig.retry)? rateConfig.retry.intervalHours: null
+		//	RATING_REMINDER_REPETITIONS or default to null (no op)
+		var retryTimes = (rateConfig && rateConfig.retry)? rateConfig.retry.times: null
 		
 		// use date parameter
-		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time).subtractHours(-ratingThreshold)
+		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time)
+		var before = (rateConfig)? rateConfig.before: false
+		date = (before)? date.subtractHours(rateHours): date.addHours(rateHours)
+		// TODO config recurrent reminders, check for nulls to disable
 		
 		// create a cronspec
 		var cronspec = date.getCronspec()

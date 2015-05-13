@@ -98,7 +98,7 @@ SlackConnector.prototype = {
 	},
 	say: function(who, text){
 		console.log(typeof who);
-		console.log("Saying: " + text + " to " + who);
+		console.log("Saying '%s' to: ", text, who);
 		var dm = this.slack.getDMByName(who);
 		if (!dm){
 			console.log('Slack can\'t find DMByName ['+who+']');
@@ -117,36 +117,38 @@ SlackConnector.prototype = {
 		
 	},
 	share: function(text){
-		console.log("Sharing: " + text);
+		console.log("Sharing '%s'", text);
 		this.slackChannel.send(text);
 	},
-	shareOn: function(text, where) {
-		console.log("Trying to share '%s' on a different channel different than default: %s", text, where)
+	shareOn: function(place, text) {
+		console.log("Trying to share '%s' on a different channel different than default: %s", text, place)
 		var slackChannelOrGroup = null;
 		for (key in this.slack.channels) {
 			console.log("Channel: "+this.slack.channels[key].name);
-			if (/*slack.channels[key].is_member && */this.slack.channels[key].name === where) {
+			if (/*slack.channels[key].is_member && */this.slack.channels[key].name === place) {
 				slackChannelOrGroup = this.slack.channels[key];
 			}
 		}
 		if (slackChannelOrGroup) {
 			if (!slackChannelOrGroup.is_member) {
-				console.warn("Bot is not member of channel ["+where+"], can you manually add it?");
+				console.warn("Bot is not member of channel ["+place+"], can you manually add it?");
 				// Error returned on channels.join: user_is_bot	(This method cannot be called by a bot user)
 			}
 		} else {
 			// try with groups too
 			for (key in this.slack.groups) {
 				console.log("Group: "+this.slack.groups[key].name)
-				if (this.slack.groups[key].name === where) {
+				if (this.slack.groups[key].name === place) {
 					slackChannelOrGroup = this.slack.groups[key]
 				}
 			}
 		}
 		
 		if (slackChannelOrGroup) {
-			console.log("Saying '%s' on %s ", text, where)
+			console.log("Sharing '%s' (on channel/group: %s)", text, place)
 			slackChannelOrGroup.send(text)
+		} else {
+			console.log("Couldn't gain access to channel/group named '%s'. Sharing unsuccesful.", place)
 		}
 	},
 	_registerAllMembers: function (users){

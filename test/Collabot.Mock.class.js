@@ -27,15 +27,15 @@ Collabot.prototype = {
 
 	},
 	say: function(who, text){
-		console.log("Saying: "+text+" to "+who);
+		console.log("Saying '%s' to %s", text, who);
 		this.reverseSayMap[text+"/"+who] = true;
 	},
 	share: function(text){
-		console.log("Sharing: "+text);
+		console.log("Sharing '%s'", text);
 		this.reverseShareMap[text] = true;
 	},
-	shareOn: function(text, where) {
-		console.log("Sharing '%s' on %s", text, where)
+	shareOn: function(place, text) {
+		console.log("Sharing '%s' (on channel/group: %s)", text, place)
 		this.reverseShareMap[text] = true;
 	},
 	registerPlayers: function(players){

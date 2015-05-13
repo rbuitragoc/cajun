@@ -126,12 +126,12 @@ module.exports = {
 		console.log('\tA timeout for an event has been set. Schedule ready [%s], Timeout ready [%s]', sched, timeout)
 		return {schedule: sched, timer: timeout}
 	},
-	scheduleAndShare: function(spec, bot, text) {
+	scheduleAndShare: function(spec, bot, text, place) {
 		later.date.localTime()
 		var scheduleConfig = later.parse.cron(spec, true)
 		var sched = later.schedule(scheduleConfig)
-		var timeout = later.setTimeout(function() {bot.share(text)}, scheduleConfig)
-		console.log('\tA timeout for an event has been set. Schedule ready [%s], and will share the following text on channel #%s: %s', sched, bot.config.channel, text)
+		var timeout = later.setTimeout(function() {bot.shareOn(place, text)}, scheduleConfig)
+		console.log('\tA timeout for an event has been set. Schedule ready [%s], and will share the following text (on channel/group %s): %s', sched, place, text)
 		return {schedule: sched, timer: timeout}
 	},
 	scheduleAndSay: function(spec, bot, to, text) {

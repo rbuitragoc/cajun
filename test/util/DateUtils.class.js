@@ -130,7 +130,7 @@ function testScheduleAndShare() {
 	var aDate = new Date()
 	aDate.setSeconds(aDate.getSeconds()+2)
 	var spec = aDate.getCronspec()
-	var scheduleObject = DateUtils.scheduleAndShare(spec, mockBot, "Please remember this is the result of an unit test")
+	var scheduleObject = DateUtils.scheduleAndShare(spec, mockBot, "Please remember this is the result of an unit test", "somechannel")
 	console.log(">> testScheduleAndShare(): aDate: [%s], spec [%s]SCHEDULE, next occurrence: [%s] >>\n", aDate, spec, scheduleObject.schedule.next(1, new Date()))
 }
 

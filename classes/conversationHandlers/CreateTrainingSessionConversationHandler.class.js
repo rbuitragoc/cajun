@@ -80,9 +80,9 @@ CreateTrainingSessionConversationHandler.prototype = {
 				console.log(date);
 				var curDate = new Date();
 				console.log(curDate);
-				if(date < curDate){
+				/*if(date < curDate){
 					this.bot.say(from, "What are you, a time traveler? Come on.");
-				} else{
+				} else*/{
 					this.bot.say(from, text + " sounds good to me.");
 					this.bot.conversationManager.setConversationData(conversation, 'desiredDate', text, function(){});
 					this.bot.conversationManager.changeConversationState(conversation, "time", function(){
