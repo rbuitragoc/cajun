@@ -14,7 +14,10 @@ RegisterToSessionConversationHandler.prototype = {
 			} else {
 				var sessionIdOrName = command[1];
 				this.bot.trainingSessionManager.registerToSession(from, sessionIdOrName, conversation);
-				/*this.bot.schedulingManager.scheduleAttendToSessionReminder(conversation.data, from) */ // FIXME need to extract important information from conversation.data
+				// get the conversation data from the createTraining part!
+				this.bot.schedulingManager.scheduleAttendToSessionReminder(conversation.data, from);
+				this.bot.schedulingManager.scheduleRateAttendedSessionReminder(conversation.data, from);
+				this.bot.conversationManager.endConversation(conversation);
 			}
 		}
 	}
