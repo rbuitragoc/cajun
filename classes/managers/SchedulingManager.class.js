@@ -6,7 +6,7 @@ var SchedulingManager = function(bot) {
 }
 
 SchedulingManager.prototype = {
-	scheduleRegisterToSessionReminder: function(sessionData) {
+	scheduleRegisterToSessionReminder: function(sessionData, regionData) {
 		
 		var registerConfig = this.bot.config.edserv.reminders.register;
 		
@@ -27,7 +27,8 @@ SchedulingManager.prototype = {
 		
 		// call _schedule
 		var text = "Remember to register to the upcoming '"+sessionData.title+"' session, by "+sessionData.presenter+". It'll take place in "+sessionData.location+", on "+sessionData.desiredDate+",  "+sessionData.time+" ("+sessionData.duration+" h). You can talk to "+this.bot.config.botName+" and ask about 'upcoming sessions', or 'help' if you need any more information."
-		var schedObject = DateUtils.scheduleAndShare(cronspec, this.bot, text) 
+		// TODO implement RegionDataManager as per https://trello.com/c/7XBXBYQN
+		var schedObject = DateUtils.scheduleAndShare(cronspec, this.bot, text, regionData.groups[0]);
 		// TODO persist scheduled event (resilience)
 	}, 
 	scheduleAttendToSessionReminder: function(sessionData, requestor) {
@@ -45,10 +46,11 @@ SchedulingManager.prototype = {
 		
 		// call _schedule
 		var text = "Remember, you're registered to '"+sessionData.title+"' session, by "+sessionData.presenter+". We expect to see you in "+sessionData.location+", on "+sessionData.desiredDate+",  "+sessionData.time+"."
-		var schedObject = DateUtils.scheduleAndSay(cronspec, bot, requestor, text)
+		
+		var scheduleObject = DateUtils.scheduleAndSay(cronspec, this.bot, requestor, text);
 		
 		// persist scheduled event (resilience)
-		console.log("TODO: scheduleAttendToSessionReminder with date '%s' as requested by %s", date, requestor)
+		console.log("scheduleAttendToSessionReminder with date '%s' as requested by %s", date, requestor)
 	},
 	scheduleRateAttendedSessionReminder: function(sessionData, requestor) {
 		// take bot.config and read:
@@ -62,8 +64,8 @@ SchedulingManager.prototype = {
 		
 		// use date parameter
 		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time)
-		var before = (rateConfig)? rateConfig.before: false
-		date = (before)? date.subtractHours(rateHours): date.addHours(rateHours)
+		var afterEvent = (rateConfig && rateConfig.afterEvent)? rateConfig.afterEvent: false
+		date = (afterEvent)? date.subtractHours(rateHours): date.addHours(rateHours)
 		// TODO config recurrent reminders, check for nulls to disable
 		
 		// create a cronspec
@@ -71,8 +73,11 @@ SchedulingManager.prototype = {
 		console.log("Calculated cronspec: [%s]", cronspec)
 		
 		// call _schedule
+		var text = "Remember to rate this training you've attended: '" + sessionData.title + "'. Please ask "+this.bot.config.botName+" via DM: 'rate session' and choose this training to complete the evaluation. Thanks!"
+		
+		console.log("scheduleRateAttendedSessionReminder with date '%s' as requested by '%s'", date, requestor)
+		var scheduleObject = DateUtils.scheduleAndSay(cronspec, this.bot, requestor, text)
 		// TODO persist scheduled event
-		console.log("TODO: scheduleRateAttendedSessionReminder with date '%s' as requested by '%s'", date, requestor)
 	},
 	schedule: function(cronspec, requestor) {
 		console.log("Scheduling something for %s", requestor)
