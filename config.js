@@ -35,9 +35,12 @@ module.exports = {
 		reminders: {
 			register: {hours: 24},
 			attend: {hours: 20},
-			rate: {hours: 1, before: false, retry: {times: 3, intervalHours: 24}}
+			rate: {hours: 1, afterEvent: true, retry: {times: 3, intervalHours: 24}}
 		},
-		manager: 'slizarazo'
+		manager: 'slizarazo',
+		regional: {
+			medellin: {groups: ['all-vpc-employees'], manager: 'slizarazo'}
+		}
 	},
 	copaso: {
 		group: 'vpc-copaso', 
