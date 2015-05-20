@@ -19,9 +19,12 @@ function testFormatYYYYMMDD() {
 function testSubtractHours() {
 	var currentDate = new Date('2015-03-17')
 	var day = currentDate.getDate()
+	var hour = currentDate.getHours() + ":" + currentDate.getMinutes()
 	var before = currentDate.subtractHours(24)
 	console.log('testSubtractHours(): comparing day %s with day %s', day-1, before.getDate())
 	assert.equal(day-1, before.getDate(), 'Failed assertion! The date is not the same!')
+	var aMomentBefore = currentDate.subtractHours(0.5);
+	console.log("testSubtractHours(): comparing hours %s, after subtracting 30 minutes looks like: %s. Having now the modified date displaying this: %s", hour, aMomentBefore.getHours() + ":" + aMomentBefore.getMinutes(), currentDate.getHours() + ":" + currentDate.getMinutes())
 	var neg = -36
 	var after = currentDate.subtractHours(neg)
 	console.log("testSubtractHours(): using a negative value (%d), comparing day %s with day %s", neg, day+1, after.getDate())
