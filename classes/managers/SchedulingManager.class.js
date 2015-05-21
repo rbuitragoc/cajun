@@ -65,7 +65,7 @@ SchedulingManager.prototype = {
 		// use date parameter
 		var date = new Date().fromExpressions(sessionData.desiredDate, sessionData.time)
 		var afterEvent = (rateConfig && rateConfig.afterEvent)? rateConfig.afterEvent: false
-		date = (afterEvent)? date.subtractHours(rateHours): date.addHours(rateHours)
+		date = (afterEvent)? date.addHours(rateHours): date.subtractHours(rateHours)
 		// TODO config recurrent reminders, check for nulls to disable
 		
 		// create a cronspec
