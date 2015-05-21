@@ -20,14 +20,20 @@ CommandConversationHandler.prototype = {
 			this._howAmIDoing(from);
 		} else if (/authorize (.+) as presenter$/.exec(text)){
 			this._autorizeAsPresenter(from, text);
-		} else if(text.indexOf("show me upcoming sessions") > -1){
+		} else if(text.indexOf("upcoming sessions") > -1){
 			this._showUpcomingSessions(from);
-		} else if (text.toLowerCase().indexOf("create bnl session") > -1){
+		} else if (text.toLowerCase().indexOf("create training session") > -1){
 			this._createTraining(from);
 		} else if (text.indexOf("rate session") > -1) {
 			this._initRateSession(from)
-		} else if(text.indexOf("copaso") > -1) {
+		} else if (text.indexOf("copaso-url") > -1) {
 			this._copaso()
+		} else if (text.indexOf("test-api") > -1) {
+			this._testApi(from);
+		} else if (text.indexOf("list-im") > -1) {
+			this._listIM(from);
+		} else if (text.indexOf("hadmin") > -1) {
+			this._adminOptions(from);
 		} else {
 			this._wtf(from);
 		}
@@ -148,14 +154,14 @@ CommandConversationHandler.prototype = {
 	},
 	_help: function (who){
 		this.bot.say(who, "These are the commands I will respond to, because I'm a robot believe it or not.");
-		this.bot.say(who, "["+this.bot.config.botName+" give] Gives a player X points. Example: 'bot give 5 points to slash'.");
-		this.bot.say(who, "["+this.bot.config.botName+" about] Gets some information about the collabot.");
+		this.bot.say(who, "["+this.bot.config.botName+" give] Gives a player X points. Example: '"+this.bot.config.botName+" give 5 points to slash [because he is a cool dude]' (Yeah, you can add a reason for that, no need to use square brackets).");
+		this.bot.say(who, "["+this.bot.config.botName+" about] Gets some information about the '"+this.bot.config.botName+"'");
 		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
 		this.bot.say(who, "["+this.bot.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
-		this.bot.say(who, "["+this.bot.config.botName+" create BnL session] Starts a conversation to register a session");
+		this.bot.say(who, "["+this.bot.config.botName+" create training session] Starts a conversation to register a session");
 		this.bot.say(who, "["+this.bot.config.botName+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session")
 		this.bot.say(who, "["+this.bot.config.botName+" rate session] Starts a conversation to rate a session you've attended")
-		this.bot.say(who, "Apart from these I can also tell you who attended to a training session, just ask me! (Tip: if you DM me, no need to call my name)");
+		this.bot.say(who, "Apart from these I can also tell you who attended to a training session, just ask me!");
 	},
 	_createTraining: function(from){
 		this.bot.trainingSessionManager.initCreateTrainingSession(from);
@@ -167,7 +173,19 @@ CommandConversationHandler.prototype = {
 		this.bot.trainingSessionManager.initRateSession(from)
 	},
 	_copaso: function() {
-		this.bot.shareOn("Copaso Template: " + this.bot.config.copaso.template, this.bot.config.copaso.group)
+		this.bot.shareOn(this.bot.config.copaso.group, "Copaso Template: " + this.bot.config.copaso.template)
+	},
+	_testApi: function(who) {
+		this.bot.connector._testApi(who)
+	},
+	_listIM: function(who) {
+		this.bot.connector._listIM(who)
+	},	
+	_adminOptions: function(who) {
+		this.bot.say(who, "These are the hidden admin commands: ");
+		this.bot.say(who, "["+this.bot.config.botName+" copaso-url] Will share the URL to the COPASO template on private group "+this.bot.config.copaso.group)
+		this.bot.say(who, "["+this.bot.config.botName+" test-api] will invoke Slack's 'api.test' call.")
+		this.bot.say(who, "["+this.bot.config.botName+" list-im] will invoke Slack's 'im.list' call.")
 	}
 };
 

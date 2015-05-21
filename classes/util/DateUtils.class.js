@@ -1,3 +1,5 @@
+var later = require('later')
+
 Date.prototype.formatYYYYMMDD = function() {
 	var month = this.getUTCMonth() + 1;
 	var day = this.getUTCDate();
@@ -15,26 +17,57 @@ Date.prototype.getWeek = function() {
 	return Math.ceil((((this - onejan) / 86400000) + onejan.getDay()+1)/7);
 }
 
+Date.prototype.subtractTime = function(timeToSubtract, unit) {
+	var isInteger = timeToSubtract % 1 == 0;
+	if (!unit || isInteger || (unit && unit == 'hour' && isInteger)) {
+		return this.subtractHours(timeToSubtract);
+	} // TODO handle the rest of the cases: months, weeks, days, minutes, seconds, millis
+	
+}
+
 Date.prototype.subtractHours = function(hours) {
 	var subtractMillis = hours * 60 * 60 * 1000
-	this.setMilliseconds(this.getMilliseconds() - subtractMillis)
+	this.setMilliseconds(this.getMilliseconds() - Math.round(subtractMillis))
 	return this
 }
 
-Date.prototype.getCronspec = function() {
-	// Why not using UTC values? The main reason is that those timers are configured to use local time!
-	var cronspec = '' + this.getSeconds()
-								+ ' ' + this.getMinutes()
-								+ ' ' + this.getHours()
-								+ ' ' + this.getDate()
-								+ ' ' + (this.getMonth()+1)
-								+ ' ?'
-	return cronspec
+Date.prototype.addHours = function(hours) {
+	var addMillis = hours * 60 * 60 * 1000;
+	this.setMilliseconds(this.getMilliseconds() + Math.round(addMillis));
+	return this;
+}
+
+Date.prototype.getCronspec = function(interval, repetitions) {
+	if (interval && repetitions) {
+		// Setting the interval is as easy as creating a spec with the form
+		// 0 0 0/24 X X ? 
+		// , where clearly the interval defines the repetitions every 24h (in this example)
+		// To fully implement recurrent reminders to rate training sessions we need: 
+		// 1. Control Repetitions. As this needs to be fired up to $repetitions times,
+		// we have to carry around the count per user/training (?), and probably
+		// want to assert (at the manager level, of course) if the user hasn't actually rated the training.
+		return null	
+	} else {
+		// Why not using UTC values? The main reason is that those timers are configured to use local time!
+		var cronspec = '' + this.getSeconds()
+									+ ' ' + this.getMinutes()
+									+ ' ' + this.getHours()
+									+ ' ' + this.getDate()
+									+ ' ' + (this.getMonth()+1)
+									+ ' ?'
+		return cronspec
+	}
 }
 
 Date.prototype.hasPassed = function(eventDate) {
 	if (!eventDate) eventDate = new Date()
 	return this < eventDate;
+}
+
+Date.prototype.beforeDate = function(anotherDate) {
+	this.setTimeFromExpression('00:00');
+	anotherDate.setTimeFromExpression('00:00');
+	return this < anotherDate; 
 }
 
 Date.prototype.fromExpressions = function(dateExpression, timeExpression) {
@@ -81,5 +114,38 @@ module.exports = {
 		var date = new Date(year+1, 0, 1, 1, 0, 0, 0);
 		date.setDate(0);
 		return date.getWeek();
+	},
+	simpleSchedule: function(spec) {
+		later.date.localTime()
+		var scheduleconfig = later.parse.cron(spec, true)
+		var sched = later.schedule(scheduleconfig),
+				start = new Date()
+				next = sched.next(2, start)
+		console.log('\tSCHEDULED EVENT. Using [%s] as cronspec, and calculating from startdate [%s] Next (2) occurence(s): %s', spec, start, next)
+		return sched
+	},
+	simpleScheduleAndExecute: function(spec, action) {
+		later.date.localTime()
+		var scheduleconfig = later.parse.cron(spec, true)
+		var sched = later.schedule(scheduleconfig)
+		var	timeout = later.setTimeout(action, scheduleconfig)
+		console.log('\tA timeout for an event has been set. Schedule ready [%s], Timeout ready [%s]', sched, timeout)
+		return {schedule: sched, timer: timeout}
+	},
+	scheduleAndShare: function(spec, bot, text, place) {
+		later.date.localTime()
+		var scheduleConfig = later.parse.cron(spec, true)
+		var sched = later.schedule(scheduleConfig)
+		var timeout = later.setTimeout(function() {bot.shareOn(place, text)}, scheduleConfig)
+		console.log('\tA timeout for an event has been set. Schedule ready [%s], and will share the following text (on channel/group %s): %s', sched, place, text)
+		return {schedule: sched, timer: timeout}
+	},
+	scheduleAndSay: function(spec, bot, to, text) {
+		later.date.localTime()
+		var scheduleConfig = later.parse.cron(spec, true)
+		var sched = later.schedule(scheduleConfig)
+		var timeout = later.setTimeout(function() {bot.say(to, text)}, scheduleConfig)
+		console.log('\tA timeout for an event has been set. Schedule ready [%s], and will say to %s the following: %s', sched, to, text)
+		return {schedule: sched, timer: timeout}
 	}
 }

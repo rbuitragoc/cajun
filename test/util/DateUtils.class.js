@@ -1,5 +1,11 @@
 var assert = require('assert');
 var DateUtils = require('../../classes/util/DateUtils.class');
+var Collabot = require('../Collabot.Mock.class')
+
+var mockBot = new Collabot()
+mockBot.config = {
+	channel: "anyChannel"
+}
 
 function testFormatYYYYMMDD() {
 	var year = 2015,
@@ -13,9 +19,24 @@ function testFormatYYYYMMDD() {
 function testSubtractHours() {
 	var currentDate = new Date('2015-03-17')
 	var day = currentDate.getDate()
+	var hour = currentDate.getHours() + ":" + currentDate.getMinutes()
 	var before = currentDate.subtractHours(24)
 	console.log('testSubtractHours(): comparing day %s with day %s', day-1, before.getDate())
 	assert.equal(day-1, before.getDate(), 'Failed assertion! The date is not the same!')
+	var aMomentBefore = currentDate.subtractHours(0.5);
+	console.log("testSubtractHours(): comparing hours %s, after subtracting 30 minutes looks like: %s. Having now the modified date displaying this: %s", hour, aMomentBefore.getHours() + ":" + aMomentBefore.getMinutes(), currentDate.getHours() + ":" + currentDate.getMinutes())
+	var neg = -36
+	var after = currentDate.subtractHours(neg)
+	console.log("testSubtractHours(): using a negative value (%d), comparing day %s with day %s", neg, day+1, after.getDate())
+	assert.equal(day+1, after.getDate(), 'Failed assertion! date is not the same!')
+}
+
+function testAddHours() {
+	var currentDate = new Date('2015-03-17')
+	var day = currentDate.getDate()
+	var after = currentDate.addHours(24)
+	console.log("testAddHours(): comparing day %s with day %s", day+1, after.getDate())
+	assert.equal(day+1, after.getDate(), "Failed assertion! The date is not the same!")
 }
 
 function testGetCronspec() {
@@ -62,6 +83,15 @@ function testHasPassed() {
 	assert(actualDate.hasPassed(), "Date has not yet passed!")
 }
 
+function testBeforeDate() {
+	var expectedDate = new Date(2015, 2, 23)
+	var before = new Date(2015, 2, 23).subtractHours(36)
+	var after = new Date(2015, 2, 23).addHours(36)
+	console.log("testBeforeDate(): testing if expectedDate %s is between %s and %s", expectedDate, before, after)
+	assert(before.beforeDate(expectedDate), 'Space-time has been breached!')
+	assert(expectedDate.beforeDate(after), 'Space-time has been breached!')
+}
+
 function testSetDateFromExpression() {
 	var expectedDate = new Date(2015, 2, 23)
 	var actualDate = new Date()
@@ -88,14 +118,55 @@ function testSetTimeFromExpression() {
 	assert.equal(expectedDate.getMinutes(), actualDate.getMinutes(), "minutes aren't equal")
 }
 
+function testSimpleSchedule() {
+	var aDate = new Date(2015, 2, 20, 13, 30, 0)
+	var spec = aDate.getCronspec()
+	var sched = DateUtils.simpleSchedule(spec)
+	console.log("testSimpleSchedule(): aDate: [%s], spec [%s]SCHEDULE, sched [%s]", aDate, spec, sched.isValid(aDate))
+	assert(sched.isValid(aDate))
+}
 
+function testSimpleScheduleAndExecute() {
+	var aDate = new Date()
+	aDate.setSeconds(aDate.getSeconds()+2)
+	var spec = aDate.getCronspec()
+	var func = function () {
+		console.log("<< EXECUTING! Timestamp now is %s <<", new Date())
+		assert(true)
+	}
+	var scheduleObject = DateUtils.simpleScheduleAndExecute(spec, func)
+	console.log(">> testSimpleScheduleAndExecute(): aDate: [%s], spec [%s]SCHEDULE, next occurrence: [%s] >>", aDate, spec, scheduleObject.schedule.next(1, new Date()))
+}
+
+function testScheduleAndShare() {
+	var aDate = new Date()
+	aDate.setSeconds(aDate.getSeconds()+2)
+	var spec = aDate.getCronspec()
+	var scheduleObject = DateUtils.scheduleAndShare(spec, mockBot, "Please remember this is the result of an unit test", "somechannel")
+	console.log(">> testScheduleAndShare(): aDate: [%s], spec [%s]SCHEDULE, next occurrence: [%s] >>\n", aDate, spec, scheduleObject.schedule.next(1, new Date()))
+}
+
+function testScheduleAndSay() {
+	var aDate = new Date()
+	aDate.setSeconds(aDate.getSeconds()+2)
+	var spec = aDate.getCronspec()
+	var scheduleObject = DateUtils.scheduleAndSay(spec, mockBot, "somebody", "Please remember this is the result of an unit test")
+	console.log(">> testScheduleAndSay(): aDate: [%s], spec [%s]SCHEDULE, next occurrence: [%s] >>\n", aDate, spec, scheduleObject.schedule.next(1, new Date()))
+}
 
 module.exports = {
 	testHasPassed: testHasPassed,
+	testBeforeDate: testBeforeDate,
 	testFormat: testFormatYYYYMMDD,
 	testSubtractHours: testSubtractHours,
+	testAddHours: testAddHours,
 	testGetCronspec: testGetCronspec,
 	testSetDateFromExp: testSetDateFromExpression,
 	testSetTimeFromExp: testSetTimeFromExpression,
+	testDateConst: testDateConstruction,
+	testSchedule: testSimpleSchedule,
+	testSchedAndExec: testSimpleScheduleAndExecute,
+	testSchedAndShare: testScheduleAndShare,
+	testSchedAndSay: testScheduleAndSay,
 	testDateConst: testDateConstruction
 }

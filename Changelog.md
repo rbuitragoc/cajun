@@ -1,3 +1,14 @@
+What's New in v0.8.0
+====================
+- Send reminders to register, to attend and to rate.
+
+* Registration Reminder
+ * Sent once to all members of the community `$edserv.reminders.register.hours` (18) hours before the event.
+* Event reminder
+ * Sent once to all of the event's registered members `edserv.reminders.attend.hours` (8) hours before the event takes place.
+* Rating reminder
+ * Sent once to all members who have not yet rated after `$edserv.reminders.rate.hours` (1) hours 
+ 
 What's New in v0.7.5
 ====================
 - Fixed the conversation for create training session (it was awkwardly waiting for an extra line from the user before starting)
