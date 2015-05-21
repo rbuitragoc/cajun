@@ -4,6 +4,7 @@ var RegisterToSessionConversationHandler = function(bot) {
 
 RegisterToSessionConversationHandler.prototype = {
 	handle: function (from, text, conversation){
+		var bot = this.bot;
 		var handler = this;
 		console.log('Haaaaandling {'+conversation.topic+'} with {'+from+'}, he said "'+text+'". State is {'+conversation.state+'}');
 
@@ -13,11 +14,14 @@ RegisterToSessionConversationHandler.prototype = {
 				handler.bot.say(from, 'Sorry, I  Can\'t understand that!');
 			} else {
 				var sessionIdOrName = command[1];
-				this.bot.trainingSessionManager.registerToSession(from, sessionIdOrName, conversation);
-				// get the conversation data from the createTraining part!
-				this.bot.schedulingManager.scheduleAttendToSessionReminder(conversation.data, from);
-				this.bot.schedulingManager.scheduleRateAttendedSessionReminder(conversation.data, from);
-				this.bot.conversationManager.endConversation(conversation);
+				this.bot.trainingSessionManager.registerToSession(from, sessionIdOrName, conversation, function(selectedSession) {
+					// get the conversation data from the createTraining part!
+					if (selectedSession) {
+						bot.schedulingManager.scheduleAttendToSessionReminder(selectedSession, from);
+						bot.schedulingManager.scheduleRateAttendedSessionReminder(selectedSession, from);
+					}
+					bot.conversationManager.endConversation(conversation);
+				});
 			}
 		}
 	}
