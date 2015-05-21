@@ -1,4 +1,5 @@
 var async = require('async');
+var DateUtils = require('../util/DateUtils.class');
 
 var TrainingSessionManager = function(bot) {
 	this.bot = bot;
@@ -146,13 +147,11 @@ TrainingSessionManager.prototype =  {
 		async.waterfall([
 			function(next) {
 				bot.conversationManager.startConversation(from, "createTrainingSession", "sessionTitle", function() {
-					bot.say(from, "First, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else.");
-				},
+					bot.say(from, "Wanna create a training session? that's awesome! First, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else:");
+				},					
 				function(conversation) {
 					// TODO: Add support to resume conversations
 				})
-			}, function (conversation, next) {
-				bot.conversationManager.setConversationData(conversation, 'presenter', from, function(){});
 			}
 		],
 		function (err) {
@@ -210,7 +209,7 @@ TrainingSessionManager.prototype =  {
 			}
 		)
 	},
-	registerToSession: function(from, sessionIdOrName, conversation) {
+	registerToSession: function(from, sessionIdOrName, conversation, callback) {
 		var bot = this.bot;
 		var selectedSession = null;
 		var noSessions = false;
@@ -230,14 +229,11 @@ TrainingSessionManager.prototype =  {
 		}
 
 		if (selectedSession) {
-			var currentDate = new Date();
-			currentDate.setDate(currentDate.getDate() + 1);
-
 			var desiredDate = new Date(selectedSession.desiredDate);
 			var enrollmentHoursThreshold = bot.config.edserv.thresholds.enrollment;
 			desiredDate.addHours(enrollmentHoursThreshold);
 
-			if (currentDate <= desiredDate) {
+			if (desiredDate.beforeDate(new Date())) {
 				var hasRegistration = false;
 				bot.persistence.getRegisteredUsers(from, selectedSession._id, function(result, err) {
 					if (err) {
@@ -256,11 +252,12 @@ TrainingSessionManager.prototype =  {
 									bot.conversationManager.endConversation(conversation);
 								}
 							});
+							callback(selectedSession);
 						}
 					}
 				});
 			} else {
-				bot.say(from, 'Sorry, that session inscriptions have expired!');
+				bot.say(from, "Sorry, that session inscriptions have expired! It's now " + new Date() + " but the threshold to register  to this session has pased (your last chance was before " + desiredDate + ")");
 			}
 		} else if (noSessions) {
 			bot.conversationManager.endConversation(conversation);
