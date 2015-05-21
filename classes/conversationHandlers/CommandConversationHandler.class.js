@@ -20,7 +20,7 @@ CommandConversationHandler.prototype = {
 			this._howAmIDoing(from);
 		} else if (/authorize (.+) as presenter$/.exec(text)){
 			this._autorizeAsPresenter(from, text);
-		} else if(text.indexOf("show me upcoming sessions") > -1){
+		} else if(text.indexOf("upcoming sessions") > -1){
 			this._showUpcomingSessions(from);
 		} else if (text.toLowerCase().indexOf("create training session") > -1){
 			this._createTraining(from);
