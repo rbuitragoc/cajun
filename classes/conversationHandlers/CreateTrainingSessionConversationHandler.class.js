@@ -1,3 +1,5 @@
+var DateUtils = require('../util/DateUtils.class')
+
 var CreateTrainingSessionConversationHandler = function(bot){
 	this.bot = bot;
 }
@@ -6,10 +8,12 @@ CreateTrainingSessionConversationHandler.prototype = {
 	handle: function(from, text, conversation){
 		var that = this;
 		console.log('Handling {'+conversation.topic+'} with {'+from+'}, he said "'+text+'". State is {'+conversation.state+'}');
-		if (conversation.state == 'sessionTitle'){
+		if (conversation.state == 'sessionTitle') {
 			this.bot.say(from, "Your session's title will be: "+text);
 			this.bot.say(from, "It sounds really interesting, let's keep talking about it!");
 			this.bot.conversationManager.setConversationData(conversation, 'title', text, function(){});
+			// using this chance to set two pieces of data to conversation
+			this.bot.conversationManager.setConversationData(conversation, 'presenter', from, function(){});
 			/*this.bot.conversationManager.changeConversationState(conversation, "sessionType", function(){
 				that.bot.say(from, "Is this a Breakfast & Learn (B&L) or an Internal Training? What type of training session are we creating?");
 			});
@@ -76,17 +80,14 @@ CreateTrainingSessionConversationHandler.prototype = {
 		if (conversation.state == 'desiredDate'){
 			var match = /^\d{4}\/\d{1,2}\/\d{1,2}$/.exec(text);
 			if(match){
-				var date = new Date(match[0]);
-				console.log(date);
-				var curDate = new Date();
-				console.log(curDate);
-				if(date < curDate){
+				var date = new Date(match[0]);				
+				if(!date.beforeDate(new Date())) {
 					this.bot.say(from, "What are you, a time traveler? Come on.");
 				} else {
 					this.bot.say(from, text + " sounds like a good time for '"+conversation.data.title+"'.");
 					this.bot.conversationManager.setConversationData(conversation, 'desiredDate', text, function(){});
 					this.bot.conversationManager.changeConversationState(conversation, "time", function(){
-						that.bot.say(from, "That looks good. At what time will you be giving the B&L session? (e.g. 08:30 or 8:30am)");
+						that.bot.say(from, "That looks good. Let's set an hour for the session (e.g. 08:00 or 14:30)");
 					});	
 				}				
 			} else {
