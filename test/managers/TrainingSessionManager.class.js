@@ -4,7 +4,7 @@ var Collabot = require('../Collabot.Mock.class.js');
 
 function setupMocks(){
 	var mockBot = new Collabot();
-	mockBot.config.trainingSessionManager = 'slizarazo';
+	mockBot.config.edserv = {manager: 'mrmanager'};
 	mockBot.persistence = {
 		getPlayerByName: function(presenter, callback){
 			if (presenter === 'ancisar')
@@ -37,11 +37,11 @@ function testManagerCanAuthPresenters() {
 	// Initialize object of class under test (real class, not mock)
 	var manager = new TrainingSessionManager(mockBot);
 	// Execute operation under test
-	manager.requestAuthorizationAsPresenter('slizarazo', 'slash');
+	manager.requestAuthorizationAsPresenter('mrmanager', 'slash');
 	// Assert results
 	setTimeout(function(){
-		assert(mockBot.said("slash has been authorized as presenter", "slizarazo"), "Message not sent to admin");
-		assert(mockBot.said("slash, you have been authorized by slizarazo as a presenter", "slash"), "Message not sent to presenter");
+		assert(mockBot.said("slash has been authorized as presenter", "mrmanager"), "Message not sent to admin");
+		assert(mockBot.said("slash, you have been authorized by mrmanager as a presenter", "slash"), "Message not sent to presenter");
 	}, 1000);
 }
 
@@ -55,7 +55,7 @@ function testNonManagerCannotAuthPresenters() {
 	manager.requestAuthorizationAsPresenter('rbuitrago', 'slash');
 	// Assert results
 	setTimeout(function(){
-		assert(mockBot.said("Sorry, only slizarazo can authorize people as presenters", "rbuitrago"), "Message not sent to requester");
+		assert(mockBot.said("Sorry, only mrmanager can authorize people as presenters", "rbuitrago"), "Message not sent to requester");
 	}, 1000);
 }
 
@@ -66,10 +66,10 @@ function testPreexistingPresenters() {
 	// Initialize object of class under test (real class, not mock)
 	var manager = new TrainingSessionManager(mockBot);
 	// Execute operation under test
-	manager.requestAuthorizationAsPresenter('slizarazo', 'mrthomas');
+	manager.requestAuthorizationAsPresenter('mrmanager', 'mrthomas');
 	// Assert results
 	setTimeout(function(){
-		assert(mockBot.said("mrthomas is already an authorized presenter.", "slizarazo"), "Message not sent to admin");
+		assert(mockBot.said("mrthomas is already an authorized presenter.", "mrmanager"), "Message not sent to admin");
 	}, 1000);
 }
 
@@ -80,10 +80,10 @@ function testUnexistingPresenters() {
 	// Initialize object of class under test (real class, not mock)
 	var manager = new TrainingSessionManager(mockBot);
 	// Execute operation under test
-	manager.requestAuthorizationAsPresenter('slizarazo', 'ancisar');
+	manager.requestAuthorizationAsPresenter('mrmanager', 'ancisar');
 	// Assert results
 	setTimeout(function(){
-		assert(mockBot.said("I don't know who is ancisar, may be you mistyped it?", "slizarazo"), "Message not sent to admin");
+		assert(mockBot.said("I don't know who is ancisar, may be you mistyped it?", "mrmanager"), "Message not sent to admin");
 	}, 1000);
 }
 

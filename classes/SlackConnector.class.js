@@ -6,13 +6,11 @@ function SlackConnector(config){
 	this.autoReconnect = config.autoReconnect;
 	this.autoMark = config.autoMark;
 	this.config = config;
-    this.slack = null;
-    this.activeUsersArray = [];
-    this.bot = null;
-    this.slackChannel = null;
-
+	this.slack = null;
+	this.activeUsersArray = [];
+	this.bot = null;
+	this.slackChannel = null;
 }
-
 SlackConnector.prototype = {
 	init: function(bot){
 		var that = this;
@@ -96,11 +94,12 @@ SlackConnector.prototype = {
 		this.slack.disconnect();
 		console.log(this.config.botName+" ID ["+this.bot.guid+"] successfully logged out.")
 	},
-	say: function(who, text){
+	say: function(who, text) {
+		var slackOpts = {bot: this.bot, from: who}
 		console.log(typeof who);
-		console.log("Saying: " + text + " to " + who);
+		console.log("Saying '%s' to: ", text, who);
 		var dm = this.slack.getDMByName(who);
-		if (!dm){
+		if (!dm) {
 			console.log('Slack can\'t find DMByName ['+who+']');
 			/* @slash 090215 - Obscure bug, hard to reproduce this situation happening,
 			 * seems to happen when the bot and the person have never talked.
@@ -111,42 +110,65 @@ SlackConnector.prototype = {
 			 * this.slack.dms[who] = new DM(this.slack, this.users[who]);
 			 * dm = this.slack.dms[who];
 			 */
+			this.slack._apiCall('im.open', {user: who}, function(data) {
+				handle_api_response(data, {
+					call: 'im.open',
+					console: JSON.stringify(data),
+					msg: JSON.stringify(data.channel),
+					slack: slackOpts
+				})
+				if (data) {
+					if (data.error) {
+						console.error("Error opening a DM, please tell the user to do that manually on slack, sorry: %s", data.error)
+						return;
+					}
+					dm = this.slack.getDMByID(data.channel.id)
+					if (!dm) {
+						console.error("still cannot do anything to open a DM. Tell the user to do that manually on slack, sorry.")
+						return;
+					} else {
+						dm.send(text)
+					}
+				}
+			});
 			return;
 		}
 		dm.send(text);
 		
 	},
 	share: function(text){
-		console.log("Sharing: " + text);
+		console.log("Sharing '%s'", text);
 		this.slackChannel.send(text);
 	},
-	shareOn: function(text, where) {
-		console.log("Trying to share '%s' on a different channel different than default: %s", text, where)
+	shareOn: function(place, text) {
+		console.log("Trying to share '%s' on a different channel different than default: %s", text, place)
 		var slackChannelOrGroup = null;
 		for (key in this.slack.channels) {
 			console.log("Channel: "+this.slack.channels[key].name);
-			if (/*slack.channels[key].is_member && */this.slack.channels[key].name === where) {
+			if (/*slack.channels[key].is_member && */this.slack.channels[key].name === place) {
 				slackChannelOrGroup = this.slack.channels[key];
 			}
 		}
 		if (slackChannelOrGroup) {
 			if (!slackChannelOrGroup.is_member) {
-				console.warn("Bot is not member of channel ["+where+"], can you manually add it?");
+				console.warn("Bot is not member of channel ["+place+"], can you manually add it?");
 				// Error returned on channels.join: user_is_bot	(This method cannot be called by a bot user)
 			}
 		} else {
 			// try with groups too
 			for (key in this.slack.groups) {
 				console.log("Group: "+this.slack.groups[key].name)
-				if (this.slack.groups[key].name === where) {
+				if (this.slack.groups[key].name === place) {
 					slackChannelOrGroup = this.slack.groups[key]
 				}
 			}
 		}
 		
 		if (slackChannelOrGroup) {
-			console.log("Saying '%s' on %s ", text, where)
+			console.log("Sharing '%s' (on channel/group: %s)", text, place)
 			slackChannelOrGroup.send(text)
+		} else {
+			console.log("Couldn't gain access to channel/group named '%s'. Sharing unsuccesful.", place)
 		}
 	},
 	_registerAllMembers: function (users){
@@ -156,7 +178,49 @@ SlackConnector.prototype = {
 			userNamesArray.push(value.name);
 		});			
 		this.bot.registerPlayers(userNamesArray);
+	},
+	_testApi: function(who) { // TODO - use this way to extend slack client
+		var slackOpts = {bot: this.bot, from: who};
+		this.slack._apiCall('api.test', {foo: 'bar'}, function(data) {
+			return handle_api_response(data, {
+				call: 'api.test',
+				console: JSON.stringify({returned: data.args.foo}),
+				msg: JSON.stringify({returned: data.args.foo}),
+				slack: slackOpts
+			})
+		});
+	},
+	_listIM: function(who) {
+		var slackOpts = {bot: this.bot, from: who}
+		this.slack._apiCall('im.list', {}, function(data) {
+			return handle_api_response(data, {
+				call: 'im.list',
+				console: JSON.stringify(data.ims),
+				msg: JSON.stringify(data.ims[0]),
+				slack: slackOpts
+			})
+		});
 	}
+}
+
+var handle_api_response = function(data, options) {
+	if (data) {
+		var apiCall = options.call;
+		var consoleMessage = options.console;
+		var slackMessage = options.msg;
+		var bot = options.slack.bot;
+		var who = options.slack.from;
+		if (data.error) {
+			console.error("%s came back with an error: %s", apiCall, data.error)
+			bot.say(who, apiCall+" came back with an error: "+data.error);
+			return false;
+		} else {
+			console.log("%s API call came back with OK=%s; also got the following payload: %s", apiCall, data.ok, consoleMessage)
+			bot.say(who, apiCall+" API call came back with OK="+data.ok+"; also got some payload: "+slackMessage)
+			return true;
+		}
+	}
+	return false;
 }
 
 module.exports = SlackConnector;

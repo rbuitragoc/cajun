@@ -28,8 +28,20 @@ module.exports = {
 			// 'http://localhost:3000/stop'
 	},
 	maxCollabPoints : 10,
-	trainingSessionManager: 'slizarazo',
-	enrollmentDaysThreshold : 1,
+	edserv: {
+		thresholds: {
+			enrollment: 12
+		},
+		reminders: {
+			register: {hours: 18},
+			attend: {hours: 8},
+			rate: {hours: 1, afterEvent: true, retry: {times: 3, intervalHours: 24}}
+		},
+		manager: 'slizarazo',
+		regional: {
+			medellin: {groups: ['all-vpc-employees'], manager: 'slizarazo'}
+		}
+	},
 	copaso: {
 		group: 'vpc-copaso', 
 		template: 'https://docs.google.com/spreadsheets/d/15BmXmYVE0Yc7704VgV_N8vGypr4vFWoOiX-rfHN0MDg'
