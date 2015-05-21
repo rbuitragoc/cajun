@@ -64,6 +64,12 @@ Date.prototype.hasPassed = function(eventDate) {
 	return this < eventDate;
 }
 
+Date.prototype.beforeDate = function(anotherDate) {
+	this.setTimeFromExpression('00:00');
+	anotherDate.setTimeFromExpression('00:00');
+	return this < anotherDate; 
+}
+
 Date.prototype.fromExpressions = function(dateExpression, timeExpression) {
 	this.setDateFromExpression(dateExpression)
 	this.setTimeFromExpression(timeExpression)

@@ -83,6 +83,15 @@ function testHasPassed() {
 	assert(actualDate.hasPassed(), "Date has not yet passed!")
 }
 
+function testBeforeDate() {
+	var expectedDate = new Date(2015, 2, 23)
+	var before = new Date(2015, 2, 23).subtractHours(36)
+	var after = new Date(2015, 2, 23).addHours(36)
+	console.log("testBeforeDate(): testing if expectedDate %s is between %s and %s", expectedDate, before, after)
+	assert(before.beforeDate(expectedDate), 'Space-time has been breached!')
+	assert(expectedDate.beforeDate(after), 'Space-time has been breached!')
+}
+
 function testSetDateFromExpression() {
 	var expectedDate = new Date(2015, 2, 23)
 	var actualDate = new Date()
@@ -147,6 +156,7 @@ function testScheduleAndSay() {
 
 module.exports = {
 	testHasPassed: testHasPassed,
+	testBeforeDate: testBeforeDate,
 	testFormat: testFormatYYYYMMDD,
 	testSubtractHours: testSubtractHours,
 	testAddHours: testAddHours,

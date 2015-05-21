@@ -4,6 +4,7 @@ var handlers = require('./conversationHandlers')
 console.log("[Starting (old) tests]")
 /* DateUtils.class#testFormatYYYYMMDD */
 util.dateUtils.testHasPassed();
+util.dateUtils.testBeforeDate();
 util.dateUtils.testFormat();
 util.dateUtils.testSubtractHours()
 util.dateUtils.testAddHours()
