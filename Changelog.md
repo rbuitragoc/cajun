@@ -1,4 +1,4 @@
-What's New in v0.8.1
+What's New in v0.8.2
 ====================
 - Fixed: registration threshold is being applied inversely
 
