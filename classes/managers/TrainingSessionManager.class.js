@@ -233,7 +233,7 @@ TrainingSessionManager.prototype =  {
 			var enrollmentHoursThreshold = bot.config.edserv.thresholds.enrollment;
 			desiredDate.subtractHours(enrollmentHoursThreshold);
 
-			if (desiredDate < new Date()) {
+			if (new Date() < desiredDate) {
 				var hasRegistration = false;
 				bot.persistence.getRegisteredUsers(from, selectedSession._id, function(result, err) {
 					if (err) {
