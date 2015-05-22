@@ -1,6 +1,6 @@
 ![Codeship Status for vpgambit/collabot](https://codeship.com/projects/87838d20-936b-0132-849a-5668b62cd35b/status?branch=dev)
 
-Collabot v. 0.8.1
+Collabot v. 0.8.2
 =================
 A fun slack bot to incentive collaboration between developers.
 
