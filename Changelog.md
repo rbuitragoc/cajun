@@ -1,3 +1,7 @@
+What's New in v0.8.1
+====================
+- Fixed: registration threshold is being applied inversely
+
 What's New in v0.8.0
 ====================
 - Send reminders to register, to attend and to rate.
