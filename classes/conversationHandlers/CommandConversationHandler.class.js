@@ -1,5 +1,10 @@
+var StringUtils = require('../util/StringUtils.class')
+
 var CommandConversationHandler = function(bot){
 	this.bot = bot;
+	this.showAttendantsRegexes = [
+      /(attendants|people|person|((that|who).+(went|attended))).+(session|class|training)/
+	]
 };
 
 CommandConversationHandler.prototype = {
@@ -34,6 +39,8 @@ CommandConversationHandler.prototype = {
 			this._listIM(from);
 		} else if (text.indexOf("hadmin") > -1) {
 			this._adminOptions(from);
+		} else if (StringUtils.isMatch(this.showAttendantsRegexes, text)) {
+			this._showAttendants(from);
 		} else {
 			this._wtf(from);
 		}
@@ -186,6 +193,15 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "["+this.bot.config.botName+" copaso-url] Will share the URL to the COPASO template on private group "+this.bot.config.copaso.group)
 		this.bot.say(who, "["+this.bot.config.botName+" test-api] will invoke Slack's 'api.test' call.")
 		this.bot.say(who, "["+this.bot.config.botName+" list-im] will invoke Slack's 'im.list' call.")
+	},
+	_showAttendants: function(who) {
+		var bot = this.bot;
+		bot.conversationManager.startConversation(who, "showAttendants", "waitingForTrainingSession", function(conversation){
+			bot.trainingSessionManager.startShowAttendantsConversation(conversation, who);
+		},
+		function(conversation){
+			// TODO: Add support to resume conversations
+		});
 	}
 };
 

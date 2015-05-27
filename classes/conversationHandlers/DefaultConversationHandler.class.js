@@ -1,10 +1,5 @@
-var StringUtils = require('../util/StringUtils.class')
-
 var DefaultConversationHandler = function(bot){
 	this.bot = bot;
-	this.showAttendantsRegexes = [
-      /(attendants|people|person|((that|who).+(went|attended))).+(session|class|training)/
-	]
 }
 
 DefaultConversationHandler.prototype = {
@@ -17,14 +12,7 @@ DefaultConversationHandler.prototype = {
 			function(conversation){
 				// TODO: Add support to resume conversations
 			});
-		} else if (StringUtils.isMatch(this.showAttendantsRegexes, text)) {
-			this.bot.conversationManager.startConversation(from, "showAttendants", "waitingForTrainingSession", function(conversation){
-				handler.bot.trainingSessionManager.startShowAttendantsConversation(conversation, from);
-			},
-			function(conversation){
-				// TODO: Add support to resume conversations
-			});
-		}
+		} 
 	}
 }
 
