@@ -112,6 +112,7 @@ TrainingSessionManager.prototype =  {
 	showAttendantsTo: function(conversation, requestor, training) {
 		var bot = this.bot;
 		var manager = this;
+		var message = "You can try with another training, perhaps? Ask me again, in that case";
 		console.log("Getting attendees for session");
 		console.log(training);
 		async.waterfall([
@@ -122,13 +123,14 @@ TrainingSessionManager.prototype =  {
 			},
 			function(training, attendantsList, next) {
 				if (!attendantsList || attendantsList.length == 0) {
-					bot.say(requestor, "Nobody has registered for \""+training.title+"\"");
+					bot.say(requestor, "Nobody has registered for \""+training.title+"\". "+message);
 				} else {
 					bot.say(requestor, attendantsList.length+" people registered for \""+training.title+"\":");
 					for (var i = 0; i < attendantsList.length; i++) {
 						var attendant = attendantsList[i];
 						bot.say(requestor, "- "+attendant.user);
 					}
+					bot.say(message);
 				}
 				manager._endConversation(conversation);
 			}
