@@ -61,39 +61,39 @@ TrainingSessionManager.prototype =  {
 	_endConversation: function(conversation){
 		this.bot.conversationManager.endConversation(conversation);
 	},
-	startShowAttendantsConversation: function(conversation, from){
+	startShowAttendantsConversation: function(conversation, from) {
 		var bot = this.bot;
 		var manager = this;
 		async.waterfall([
 			function(next){
-				if (from == manager.trainingSessionManager){
+				if (from == manager.trainingSessionManager) {
 					next(false, {});
 				} else {
-					bot.persistence.getAuthorizedPresenter(from, function(presenterObject, err){
+					bot.persistence.getAuthorizedPresenter(from, function(presenterObject, err) {
 						next(err, presenterObject);
 					});
 				}
 			},
-			function(presenterObject, next){
-				if (presenterObject){
+			function(presenterObject, next) {
+				if (presenterObject) {
 					next(false);
 				} else {
-					bot.say(from, "Only "+manager.trainingSessionManager+" or an authorized presenter can check the list, sorry!");
+					bot.say(from, "Only the EdServ manager or an authorized presenter can check the list, sorry!");
 					manager._endConversation(conversation)
 				}
 			},
-			function(next){
-				bot.persistence.getTrainings(function(trainings, err){
+			function(next) {
+				bot.persistence.getTrainings(function(trainings, err) {
 					next(err, trainings);
 				});
 			},
-			function (trainings, next){
-				if (!trainings || trainings.length == 0){
+			function (trainings, next) {
+				if (!trainings || trainings.length == 0) {
 					bot.say(from, "Hmmm... I know of no training sessions");
 					manager._endConversation(conversation);
 				} else {
 					bot.say(from, "From which session do you wish to list the attendees?");
-					for (var i = 0; i < trainings.length; i++){
+					for (var i = 0; i < trainings.length; i++) {
 						var training = trainings[i];
 						bot.say(from, (i+1)+" - \""+training.title+"\" by "+training.presenter);
 						bot.conversationManager.setConversationData(conversation, 'trainingSessions.k'+(i+1), training, function(){});
@@ -101,40 +101,42 @@ TrainingSessionManager.prototype =  {
 				}
 			}
 		],
-		function (error){
-			if (error){
+		function (error) {
+			if (error) {
 				bot.say(from, "Heck, something happened! : "+err);
 				console.log(error);
 				console.log(error.stack);
  			}
 		});
 	},
-	showAttendantsTo: function(conversation, requestor, training){
+	showAttendantsTo: function(conversation, requestor, training) {
 		var bot = this.bot;
 		var manager = this;
+		var message = "You can try with another training, perhaps? Ask me again, in that case";
 		console.log("Getting attendees for session");
 		console.log(training);
 		async.waterfall([
-			function(next){
-				bot.persistence.getAttendants(training._id, function(attendantsList, err){
+			function(next) {
+				bot.persistence.getAttendants(training._id, function(attendantsList, err) {
 					next(err, training, attendantsList);
 				});
 			},
-			function(training, attendantsList, next){
-				if (!attendantsList || attendantsList.length == 0){
-					bot.say(requestor, "Nobody has registered for \""+training.title+"\"");
+			function(training, attendantsList, next) {
+				if (!attendantsList || attendantsList.length == 0) {
+					bot.say(requestor, "Nobody has registered for \""+training.title+"\". "+message);
 				} else {
 					bot.say(requestor, attendantsList.length+" people registered for \""+training.title+"\":");
-					for (var i = 0; i < attendantsList.length; i++){
+					for (var i = 0; i < attendantsList.length; i++) {
 						var attendant = attendantsList[i];
 						bot.say(requestor, "- "+attendant.user);
 					}
+					bot.say(requestor, message);
 				}
 				manager._endConversation(conversation);
 			}
 		],
-		function (error){
-			if (error){
+		function (error) {
+			if (error) {
 				bot.say(requestor, "Sorry, I couldn't complete your command: "+err);
 				console.log(error);
 				console.log(error.stack);
