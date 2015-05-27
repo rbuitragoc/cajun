@@ -78,7 +78,7 @@ TrainingSessionManager.prototype =  {
 				if (presenterObject) {
 					next(false);
 				} else {
-					bot.say(from, "Only "+manager.trainingSessionManager+" or an authorized presenter can check the list, sorry!");
+					bot.say(from, "Only the EdServ manager or an authorized presenter can check the list, sorry!");
 					manager._endConversation(conversation)
 				}
 			},
