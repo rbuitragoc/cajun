@@ -1,3 +1,7 @@
+What's New in v0.8.3
+====================
+- Added "show attendants" in the help command list, adjusted the behaviors and messages
+
 What's New in v0.8.2
 ====================
 - Fixed: registration threshold is being applied inversely
