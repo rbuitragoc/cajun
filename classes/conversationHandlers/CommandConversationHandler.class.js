@@ -160,14 +160,16 @@ CommandConversationHandler.prototype = {
 		this.bot.trainingSessionManager.requestAuthorizationAsPresenter(from, presenter);
 	},
 	_help: function (who){
+		var name = this.bot.config.botName;
 		this.bot.say(who, "These are the commands I will respond to, because I'm a robot believe it or not.");
-		this.bot.say(who, "["+this.bot.config.botName+" give] Gives a player X points. Example: '"+this.bot.config.botName+" give 5 points to slash [because he is a cool dude]' (Yeah, you can add a reason for that, no need to use square brackets).");
-		this.bot.say(who, "["+this.bot.config.botName+" about] Gets some information about the '"+this.bot.config.botName+"'");
-		this.bot.say(who, "["+this.bot.config.botName+" how am i] Tells you your overall, daily, weekly and last week scores.");
-		this.bot.say(who, "["+this.bot.config.botName+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
-		this.bot.say(who, "["+this.bot.config.botName+" create training session] Starts a conversation to register a session");
-		this.bot.say(who, "["+this.bot.config.botName+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session")
-		this.bot.say(who, "["+this.bot.config.botName+" rate session] Starts a conversation to rate a session you've attended")
+		this.bot.say(who, "["+name+" give] Gives a player X points. Example: '"+name+" give 5 points to slash [because he is a cool dude]' (Yeah, you can add a reason for that, no need to use square brackets).");
+		this.bot.say(who, "["+name+" about] Gets some information about the '"+name+"'");
+		this.bot.say(who, "["+name+" how am i] Tells you your overall, daily, weekly and last week scores.");
+		this.bot.say(who, "["+name+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
+		this.bot.say(who, "["+name+" create training session] Starts a conversation to register a session");
+		this.bot.say(who, "["+name+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session")
+		this.bot.say(who, "["+name+" who attended a training?] Starts a conversation to check the people who enrolled via bot to a training session. Only available for the presenter and the EdServ manager.");
+		this.bot.say(who, "["+name+" rate session] Starts a conversation to rate a session you've attended")
 		this.bot.say(who, "Apart from these I can also tell you who attended to a training session, just ask me!");
 	},
 	_createTraining: function(from){
