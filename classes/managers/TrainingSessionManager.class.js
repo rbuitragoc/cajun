@@ -130,7 +130,7 @@ TrainingSessionManager.prototype =  {
 						var attendant = attendantsList[i];
 						bot.say(requestor, "- "+attendant.user);
 					}
-					bot.say(message);
+					bot.say(requestor, message);
 				}
 				manager._endConversation(conversation);
 			}
