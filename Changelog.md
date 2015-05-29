@@ -1,3 +1,7 @@
+What's New in v0.8.4
+====================
+- FIXED: When giving points, the messages should appear in the channel where the action occurs, not in #general
+
 What's New in v0.8.3
 ====================
 - Added "show attendants" in the help command list, adjusted the behaviors and messages

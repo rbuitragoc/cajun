@@ -3,6 +3,7 @@ var CommandConversationHandler = require('./../../../../classes/conversationHand
 module.exports = {
 	bot: {
 		share: jasmine.createSpy('share'),
+		shareOn: jasmine.createSpy('shareOn'),
 		collaborationManager: {
 			givePoints: jasmine.createSpy('givePoints')
 		},

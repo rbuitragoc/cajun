@@ -77,15 +77,15 @@ Collabot.prototype = {
 	channelJoined: function(channel, who){
 		
 	},
-	message: function(from, text){
+	message: function(from, text, channel){
 		try {
 			if (!text)
 				return;
 			var wasMentioned = mentionCheck(this.config.botName, text)
 			if (wasMentioned) {
-				this.commandConversationHandler.handle(from, text);
+				this.commandConversationHandler.handle(from, text, channel);
 			} else {
-				this.defaultConversationHandler.handle(from, text);
+				this.defaultConversationHandler.handle(from, text, channel);
 			}
 			var bot = this;
 			this.conversationManager.getCurrentConversations(from, function(error, conversations){
@@ -118,7 +118,9 @@ Collabot.prototype = {
 		this.connector.share(text);
 	},
 	shareOn: function(place, text) {
-		this.connector.shareOn(place, text);
+		if (place)
+			this.connector.shareOn(place, text);
+		console.log("[Sharing on other channel/group] '%s'",text)
 	},
 	registerPlayers: function(players){
 		console.log("Registering players...");

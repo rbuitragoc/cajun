@@ -4,18 +4,21 @@ var CollaborationManager = function(){
 var async = require('async');
 var DateUtils = require('./util/DateUtils.class');
 
-CollaborationManager.prototype =  {
-	givePoints: function(updateScoreRequest, bot){
+CollaborationManager.prototype = {
+	givePoints: function(updateScoreRequest, bot) {
+		
+var place = updateScoreRequest.channel;
+		
 		async.waterfall([
-			function(next){
-				bot.persistence.getPlayerByName(updateScoreRequest.fromPlayerName, function(player, err){
-					if (err){
-						bot.share("I couldn't give the points: "+err);
-					} else if (!player){
-						bot.persistence.insertNewPlayer(updateScoreRequest.fromPlayerName, function(player, err){
-							if(!player || err){
-								bot.share("I couldn't give the points: "+err);
-								console.log(err.stack);
+			function(next) {
+				bot.persistence.getPlayerByName(updateScoreRequest.fromPlayerName, function(player, err) {
+					if (err) {
+						bot.shareOn(place, "I couldn't give the points: "+err);
+					} else if (!player) {
+						bot.persistence.insertNewPlayer(updateScoreRequest.fromPlayerName, function(player, err) {
+							if (!player || err) {
+								bot.shareOn(place, "I couldn't give the points: "+err);
+								console.err(err.stack);
 							} else {
 								next(false, player);
 							}
@@ -25,94 +28,100 @@ CollaborationManager.prototype =  {
 					}
 				});
 			},
-			function(player, next){
-				bot.persistence.getDailyGrantedPoints(updateScoreRequest.fromPlayerName, function(dailyGrantedPoints, err){
-					if (err){
-						bot.share("I couldn't get Daily granted points: "+err);
-					}
-					else if (dailyGrantedPoints && updateScoreRequest.maxCollabPoints < (dailyGrantedPoints.collabPtsCount + updateScoreRequest.collabPoints)) {
-						bot.share("You don't have enough points!");
-					} 
-					else {
+			function(player, next) {
+				bot.persistence.getDailyGrantedPoints(updateScoreRequest.fromPlayerName, function(dailyGrantedPoints, err) {
+					if (err) {
+						bot.shareOn(place, "I couldn't get Daily granted points: "+err);
+					} else if (dailyGrantedPoints && updateScoreRequest.maxCollabPoints < (dailyGrantedPoints.collabPtsCount + updateScoreRequest.collabPoints)) {
+						var msg = "You don't have enough points!";
+						bot.shareOn(place, msg);
+					} else {
 						next(false, dailyGrantedPoints);
 					}
 				});
 			},
-            function(dailyGrantedPoints, next){
-				bot.persistence.updateDailyGrantedPoints(updateScoreRequest, dailyGrantedPoints, function(player, err){
-					if (err){
-						bot.share("I couldn't set daily granted points: "+err);
+			function(dailyGrantedPoints, next) {
+				bot.persistence.updateDailyGrantedPoints(updateScoreRequest, dailyGrantedPoints, function(player, err) {
+					if (err) {
+						var msg = "I couldn't set daily granted points: "+err
+						bot.shareOn(place, msg);
 					} else {
 						next();
 					}
 				});
 			},
-			function(next){
-				bot.persistence.getPlayerByName(updateScoreRequest.toPlayerName, function(player, err){
-					if (err){
-						bot.share("I couldn't give the points: "+err);
-					} else if (!player){
-						bot.share("Who's that?");
+			function(next) {
+				bot.persistence.getPlayerByName(updateScoreRequest.toPlayerName, function(player, err) {
+					if (err) {
+						var msg = "I couldn't give the points: "+err;
+						bot.shareOn(place, msg);
+						console.error(msg)
+					} else if (!player) {
+						bot.shareOn(place, "Who's that?");
 					} else {
 						next();
 					}
 				});
 			},
-			function(next){
-				bot.persistence.updatePlayerScore(updateScoreRequest, function(player, err){
-					if (err){
-						bot.share("I couldn't give the points: "+err);
+			function(next) {
+				bot.persistence.updatePlayerScore(updateScoreRequest, function(player, err ){
+					if (err) {
+						var msg = "I couldn't give the points: "+err;
+						bot.shareOn(place, msg);
 					} else {
 						next();
 					}
-         		});
-             },
-             function(next) {
+				});
+			},
+			function(next) {
 				bot.persistence.updateDailyScore(updateScoreRequest, function(player, err) {
 					if (err) {
-						bot.share("Unable to grant the points: " + err)
+						var msg = "I couldn't give the points: "+err;
+						bot.shareOn(place, msg);
 					} else {
 						next()
 					}
 				})
-             }, 
-			 function(next) {
+			}, 
+ 			function(next) {
 				bot.persistence.updateChannelScore(updateScoreRequest, function(player, err) {
 					if (err) {
-						bot.share("Unable to grant the points: " + err)
+						var msg = "I couldn't give the points: "+err;
+						bot.shareOn(place, msg);
 					} else {
 						next()
 					}
 				})
-             },
-             function(next){
- 				bot.persistence.saveHistoricalGrant(updateScoreRequest, function(player, err){
- 					if (err){
- 						bot.share("Error Saving Historical Grant: "+err);
- 					} else {
- 						next();
- 					}
-          		});
-              },
-			function(next){
-				bot.share("@"+updateScoreRequest.toPlayerName+", you have been given "+updateScoreRequest.collabPoints+" points by @"+updateScoreRequest.fromPlayerName);
+			},
+			function(next) {
+				bot.persistence.saveHistoricalGrant(updateScoreRequest, function(player, err) {
+					if (err) {
+						var msg = "Error Saving Historical Grant: "+err;
+						bot.shareOn(place, msg);
+					} else {
+						next();
+					}
+				});
+			},
+			function(next) {
+				bot.shareOn(place, "@"+updateScoreRequest.toPlayerName+", you have been given "+updateScoreRequest.collabPoints+" points by @"+updateScoreRequest.fromPlayerName);
 			}
 		],
-        function (error){
+		function (error){
 			if (error) {
 				console.log("General error.");
 				console.log(error);
 				console.log(error.stack);
-				bot.share("I couldn't give the points: "+error);
-
+				var msg = "I couldn't give the points: "+err;
+				bot.shareOn(place, msg);
 			}
 		});
 	},
-	topTen: function(period, channel, bot){
+	topTen: function(period, channel, bot, postToChannel){
 		var shareStr = "Calculating top 10..." + new Date();
 		shareStr += period ? ". Period: " + period: "";
 		shareStr += channel ? ". Channel: " + channel: "";
-		bot.share(shareStr);
+		bot.shareOn(postToChannel, shareStr);
 
 		console.log("period:" + period);
 		console.log("channel:" + channel);
@@ -123,7 +132,7 @@ CollaborationManager.prototype =  {
 				var string = "#" + (i+1) + " - " + result[i].totalCollabPoints + " CP - " + result[i]._id + "\n";
 				top += string;
 			}
-			bot.share(top);
+			bot.shareOn(postToChannel, top);
 		});
 		
 	},

@@ -63,13 +63,36 @@ SlackConnector.prototype = {
 				var user = slack.getUserByID(message.user);
 				bot.registerPlayer(user.name);	
 			}
-		    var user = slack.getUserByID(message.user);
-		    var text = message.text;
+			var user = slack.getUserByID(message.user);
 			if (!user){
 				console.log("Error: user ["+message.user+"] not found.")
 				return;
 			}
-			bot.message(user.name, text);
+			var text = message.text;
+			var raw_cgdm_obj = slack.getChannelGroupOrDMByID(message.channel);
+			if (!raw_cgdm_obj) {
+				console.error("Error: channel/group/DM with id [%s] does not exist", message.channel);
+			} 
+			// TODO I think we can use this channel object to repopulate our local cache! (not just  the names..)
+			var cgdm_obj = {
+				name: raw_cgdm_obj.name,
+				is_group: raw_cgdm_obj.is_group,
+				created: raw_cgdm_obj.created,
+				creator: raw_cgdm_obj.creator,
+				is_archived: raw_cgdm_obj.is_archived,
+				has_pins: raw_cgdm_obj.has_pins,
+				is_open: raw_cgdm_obj.is_open,
+				last_read: raw_cgdm_obj.last_read,
+				latest: raw_cgdm_obj.latest,
+				unread_count: raw_cgdm_obj.unread_count,
+				unread_count_display: raw_cgdm_obj.unread_count_display,
+				members: raw_cgdm_obj.members,
+				topic: raw_cgdm_obj.topic,
+				purpose: raw_cgdm_obj.purpose
+			}
+			// console.log("Got the channel object! %s", JSON.stringify(cgdm_obj));
+			// perform the actual message post to the source location!
+			bot.message(user.name, text, cgdm_obj.name);
 		});
 
 		slack.on('team_join', function(data){
@@ -110,6 +133,7 @@ SlackConnector.prototype = {
 			 * this.slack.dms[who] = new DM(this.slack, this.users[who]);
 			 * dm = this.slack.dms[who];
 			 */
+			// Below is the fix!
 			this.slack._apiCall('im.open', {user: who}, function(data) {
 				handle_api_response(data, {
 					call: 'im.open',
@@ -200,6 +224,34 @@ SlackConnector.prototype = {
 				slack: slackOpts
 			})
 		});
+	},
+	_searchTextPlace: function(query, who) {
+		var slackOpts = {bot: this.bot, from: who}
+		this.slack._apiCall('search.messages', {query: query}, function(data) {
+			var success = handle_api_response(data, {
+				call: 'search.messages',
+				console: JSON.stringify(data.messages),
+				msg: null,
+				slack: slackOpts
+			});
+			if (success) {
+				console.log("Successful invocation. Checking for matches...")
+				if (data.messages && data.messages.total && data.messages.total > 1) {
+					console.log("Got %s messages!", data.messages.total)
+					var place = data.messages.matches.channel
+					if (channel) {
+						console.log("Got the channel! %s", channel.name)
+						return channel.name;
+					} else {
+						console.error("The query [%s] returned no channel/group data. Returning null.", query)
+					}
+				} else {
+					console.error("The query [%s] returned no messages, or no matches. Returning null.", query)	
+				}
+			} else {
+				console.error("The query [%s] returned no data. Returning null.", query)
+			}
+		})
 	}
 }
 
@@ -216,7 +268,8 @@ var handle_api_response = function(data, options) {
 			return false;
 		} else {
 			console.log("%s API call came back with OK=%s; also got the following payload: %s", apiCall, data.ok, consoleMessage)
-			bot.say(who, apiCall+" API call came back with OK="+data.ok+"; also got some payload: "+slackMessage)
+			if (slackMessage)
+				bot.say(who, apiCall+" API call came back with OK="+data.ok+"; also got some payload: "+slackMessage)
 			return true;
 		}
 	}

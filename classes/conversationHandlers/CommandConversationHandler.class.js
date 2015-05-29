@@ -8,23 +8,23 @@ var CommandConversationHandler = function(bot){
 };
 
 CommandConversationHandler.prototype = {
-	handle: function (from, text){
+	handle: function (from, text, channel){
 		if (text.indexOf("give") > -1){
-			this._give(from, text);
+			this._give(from, text, channel);
 		} else if (text.indexOf("about") > -1){
-			this._about(from);
+			this._about(from, channel);
 		} else if (text.indexOf("help") > -1){
 			this._help(from);
 		} else if (text.indexOf("joke") > -1){
-			this._joke();
+			this._joke(channel);
 		} else	if (text.indexOf("creator") > -1){
-			this._creator();
+			this._creator(channel);
 		} else	if (text.indexOf("top") > -1){
-			this._top(text);
+			this._top(text, channel);
 		} else if (text.toLowerCase().indexOf("how am i") > -1){
 			this._howAmIDoing(from);
 		} else if (/authorize (.+) as presenter$/.exec(text)){
-			this._autorizeAsPresenter(from, text);
+			this._autorizeAsPresenter(from, text, channel);
 		} else if(text.indexOf("upcoming sessions") > -1){
 			this._showUpcomingSessions(from);
 		} else if (text.toLowerCase().indexOf("create training session") > -1){
@@ -45,7 +45,10 @@ CommandConversationHandler.prototype = {
 			this._wtf(from);
 		}
 	},
-	_give: function (from, text){
+	_give: function (from, text, channel) {
+		if (channel) {
+			console.log("Someone's trying to assign points on channel %s", channel)
+		}
 		var commandRegex = /give +(\d+) +point(s?) +to +(<@u[^ ]+>|[^ ]+)( +[\s\S]+)?/i,
 			slackUserReferenceRegex = /<@(U[^\|]+)\|?(.*)>/i,
 			slackUsrRef,
@@ -74,7 +77,7 @@ CommandConversationHandler.prototype = {
 					return;
 				} else {
 					if (slackUser.is_bot) {
-						this.bot.share(botPointsMsg);
+						this.bot.shareOn(channel, botPointsMsg);
 						return;
 					}
 					target = slackUser.name;
@@ -84,30 +87,31 @@ CommandConversationHandler.prototype = {
 		// Check if a given player is trying to assign points to a <BOT>
 		var slackUser = this.bot.connector.findUserByName(target);
 		if (slackUser && slackUser.is_bot) {
-			this.bot.share(botPointsMsg);
+			this.bot.shareOn(channel, botPointsMsg);
 			return;
 		}
 		if ((points == '1' && singular != '') ||
 			(points > 1 && singular != 's') || !(singular == 's' || singular == '')) {
-			this.bot.share("Sorry, I didn't understand one point? multiple points?");
+			this.bot.shareOn(channel, "Sorry, I didn't understand one point? multiple points?");
+			
 			return;
 		}
-		if (from == target){
-				this.bot.share("Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
-				return;
+		if (from == target) {
+			this.bot.shareOn(channel, "Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
+			return;
 		}
 		var updateScoreRequest = {
 			fromPlayerName: from,
 			toPlayerName: target,
 			collabPoints: parseInt(points),
-			channel: this.bot.connector.slackChannel.name,
+			channel: channel,
 			maxCollabPoints: this.bot.config.maxCollabPoints
 		}
 		console.log("updateScoreRequest:");
 		console.log(updateScoreRequest)
 		this.bot.collaborationManager.givePoints(updateScoreRequest, this.bot);
 	},
-	_top: function(text){
+	_top: function(text, postToChannel){
 		var filters = /top( day| week| month| year)*(.+)*$/.exec(text);
 		var period = null;
 		var channel = null;
@@ -129,32 +133,32 @@ CommandConversationHandler.prototype = {
 		}
 		
 			
-		this.bot.collaborationManager.topTen(period, channel, this.bot);
+		this.bot.collaborationManager.topTen(period, channel, this.bot, postToChannel);
 	},
 	_howAmIDoing: function (from){
 		this.bot.collaborationManager.tellStatusTo(from, this.bot);
 	},
-	_about: function (){
-		this.bot.share("ID ["+this.bot.guid+"] - I am "+this.bot.config.botName+" version "+this.bot.version+". I'm running on "+this.bot.config.environment+" using the "+this.bot.connector.name+" interactivity connector and the "+this.bot.persistence.name+" persistance connector.");
+	_about: function (from, channel){
+		this.bot.shareOn(channel, "ID ["+this.bot.guid+"] - I am "+this.bot.config.botName+" version "+this.bot.version+". I'm running on "+this.bot.config.environment+" using the "+this.bot.connector.name+" interactivity connector and the "+this.bot.persistence.name+" persistance connector.");
 	},
-	_joke: function(){
-		this.bot.share("This is no time for jokes, my friend.");
+	_joke: function(channel){
+		this.bot.shareOn(channel, "This is no time for jokes, my friend.");
 	},
-	_creator: function(){
-		this.bot.share("I am being created by VP Gambit dev team.");
+	_creator: function(channel){
+		this.bot.shareOn(channel, "I am being created by VP Gambit dev team.");
 	},
-	_wtf: function(who){
-		this.bot.share("Perhaps you need to rephrase... ");
+	_wtf: function(who, channel){
+		this.bot.shareOn(channel, "Perhaps you need to rephrase... ");
 	},
-	_autorizeAsPresenter: function (from, text){
+	_autorizeAsPresenter: function (from, text, channel){
 		var command = /authorize (.+) as presenter$/.exec(text);
 		if (!command || !command.length || !command.length == 2){
-			this.bot.share("Sorry, I didn't understand that..");
+			this.bot.shareOn(channel, "Sorry, I didn't understand that..");
 			return;
 		}
 		var presenter = command[1];
 		if (!presenter){
-			this.bot.share("Sorry, I didn't understand that..");
+			this.bot.shareOn(channel, "Sorry, I didn't understand that..");
 			return;
 		}
 		this.bot.trainingSessionManager.requestAuthorizationAsPresenter(from, presenter);
