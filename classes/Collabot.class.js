@@ -20,6 +20,7 @@ module.exports = Collabot;
 var CollaborationManager = require('./CollaborationManager.class');
 var ConversationManager = require('./managers/ConversationManager.class');
 var TrainingSessionManager = require('./managers/TrainingSessionManager.class');
+var ReportManager = require('./managers/ReportManager.class')
 var SchedulingManager = require('./managers/SchedulingManager.class')
 
 // Conversation Handlers
@@ -47,6 +48,7 @@ Collabot.prototype = {
 			this.collaborationManager = new CollaborationManager();
 			this.conversationManager = new ConversationManager(this);
 			this.trainingSessionManager = new TrainingSessionManager(this);
+			this.reportManager = new ReportManager(this)
 			this.schedulingManager = new SchedulingManager(this)
 			this.commandConversationHandler = new CommandConversationHandler(this);
 			this.defaultConversationHandler = new DefaultConversationHandler(this);
@@ -68,6 +70,7 @@ Collabot.prototype = {
 			this.persistence = null;
 			this.collaborationManager = null;
 			this.conversationManager = null;
+			this.reportManager = null
 			this.schedulingManager = null
 			callback("stopped");
 		} else {
