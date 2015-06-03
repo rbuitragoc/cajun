@@ -81,7 +81,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 			var match = /^\d{4}\/\d{1,2}\/\d{1,2}$/.exec(text);
 			if(match){
 				var date = new Date(match[0]);				
-				if(!date.beforeDate(new Date())) {
+				if(date.beforeDate(new Date())) {
 					this.bot.say(from, "What are you, a time traveler? Come on.");
 				} else {
 					this.bot.say(from, text + " sounds like a good time for '"+conversation.data.title+"'.");
