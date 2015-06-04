@@ -7,6 +7,9 @@ module.exports = {
 		collaborationManager: {
 			givePoints: jasmine.createSpy('givePoints')
 		},
+		reportManager: {
+			prepareForReport: jasmine.createSpy('prepareForReport')
+		},
 		connector: {
 			slackChannel: {
 				name: 'any'

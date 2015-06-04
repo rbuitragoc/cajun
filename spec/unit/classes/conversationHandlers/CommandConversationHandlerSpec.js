@@ -63,13 +63,14 @@ describe("A command conversation", function() {
         });
 	});
 	describe("A request a report conversation", function() {
-		beforeEach( function(){
+		var bot, command;
+		beforeEach( function() {
 			bot = CommandConversationHandlerMocks.bot
 			command = new CommandConversationHandler(bot)
-			it("Refuse to request a report", function() {
-				command.handle('juan_perez', 'report', channel)
-				
-			})
-		});
+		})
+		it("Refuse to request a report", function() {
+			command.handle('juan_perez', 'report', channel)
+			expect(bot.reportManager.prepareForReport).toHaveBeenCalledWith('juan_perez')			
+		})
 	})
 });
