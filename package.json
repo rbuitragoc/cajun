@@ -5,7 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
-    "test": "node test/all.js; node_modules/jasmine/bin/jasmine.js"
+    "test": "node test/all.js; node_modules/jasmine/bin/jasmine.js",
+    "curl-start" : "curl -X POST http://localhost:3000/start",
+    "curl-stop" : "curl -X POST http://localhost:3000/stop"
   },
   "dependencies": {
     "async": "~0.9.0",
