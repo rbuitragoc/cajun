@@ -336,6 +336,15 @@ MongoConnector.prototype = {
 	},
 	insertSessionRating: function(sessionRatingData, callback) {
 		this.db.collection('sessionRatings_BNL').insert(sessionRatingData, function(err, result) {MongoConnector.defaultHandler(err, result, callback)})
+	},
+	getSessionRatingsByTitle: function(sessionTitle, callback) {
+		this.db.collection('sessionRatings_BNL').find({sessionTitle: sessionTitle}).toArray( function(err, result) {
+			if (err) {
+				callback(err)
+			} else {
+				callback(null, result)
+			}
+		})
 	}
 }
 

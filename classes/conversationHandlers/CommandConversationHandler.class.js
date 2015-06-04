@@ -213,9 +213,7 @@ CommandConversationHandler.prototype = {
 		});
 	},
 	_prepareReport: function(who, text) {
-		var bot = this.bot;
-		console.log("Starting conversation to generate report! (TODO) ")
-		bot.say(who, "Will generate report of session, work in progress (TODO). Be patient.")
+		this.bot.reportManager.prepareForReport(who)
 	}
 };
 
