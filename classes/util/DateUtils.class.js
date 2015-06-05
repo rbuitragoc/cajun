@@ -147,5 +147,8 @@ module.exports = {
 		var timeout = later.setTimeout(function() {bot.say(to, text)}, scheduleConfig)
 		console.log('\tA timeout for an event has been set. Schedule ready [%s], and will say to %s the following: %s', sched, to, text)
 		return {schedule: sched, timer: timeout}
+	},
+	hasPassedTimestamp : function(date) {
+		return date < (new Date().getTime());
 	}
 }

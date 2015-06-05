@@ -157,15 +157,37 @@ Collabot.prototype = {
     });   
   },
   loadReminders : function () {
-    var reminders = this.persistence.getReminders(
-          function (result, err) {
-            console.log(result, err);
-          }
-        );
+    var db = this.persistence,
+        bot = this;
 
-    for(var ndx in reminders){
-      if (reminders.requestor.dm) DateUtils.scheduleAndSay(reminders.cronspec, this, reminders.requestor, reminders.text);
-      if (reminders.requestor.channel) DateUtils.scheduleAndShare(reminders.cronspec, this, reminders.requestor, reminders.text);
-    };
+    var reminders = db.getReminders(
+      function (err, result) {
+        console.log('result:', result, 'err:', err);
+
+        for(var ndx in result){
+          var reminder = result[parseInt(ndx)];
+          var expired = DateUtils.cronExpired(reminder.date);
+              // delete the reminder if expired
+          if (expired) {
+            // deleting from array
+            result.splice(result.indexOf(reminder), 1);
+            // deleting from db
+            db.deleteReminder(reminder._id, function (err, result) {
+              if (typeof err !== 'undefined') {
+                console.log(err, result)
+              };
+                
+              if (typeof result !== 'undefined') {
+                console.log(result);
+              };
+            });
+          }
+          // Load the reminders
+          if (typeof reminder.dm !== 'undefined') DateUtils.scheduleAndSay(reminder.cronspec, bot, reminder.dm, reminder.text);
+          if (typeof reminder.channel !== 'undefined') DateUtils.scheduleAndShare(reminder.cronspec, bot, reminder.channel, reminder.text);
+        };
+
+      }
+    );
   }
 }

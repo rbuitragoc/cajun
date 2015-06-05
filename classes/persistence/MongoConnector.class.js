@@ -351,7 +351,7 @@ MongoConnector.prototype = {
         if (err) {
           console.log(err);
           } else {
-            callback(result);
+            callback(err, result);
           }
         }
     );
