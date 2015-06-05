@@ -21,7 +21,7 @@ SlackConnector.prototype = {
 			var channelName = that.config.channel;
 			var slackChannel = null;
 			for (key in slack.channels) {
-				// console.log("Channel: "+slack.channels[key].name);
+				console.log("Channel: "+slack.channels[key].name);
 				if (/*slack.channels[key].is_member && */slack.channels[key].name === channelName) {
 					slackChannel = slack.channels[key];
 				}
@@ -34,7 +34,7 @@ SlackConnector.prototype = {
 			} else { 
 				// try with groups too
 				for (key in slack.groups) {
-					// console.log("Group: "+slack.groups[key].name)
+					console.log("Group: "+slack.groups[key].name)
 					if (slack.groups[key].name === channelName) {
 						slackChannel = slack.groups[key]
 					}

@@ -125,8 +125,8 @@ Collabot.prototype = {
     console.log("[Sharing on other channel/group] '%s'",text)
   },
   registerPlayers: function(players){
-    // console.log("Registering players...");
-    // console.log(players);
+    console.log("Registering players...");
+    console.log(players);
     var that = this;  
     async.each(players, 
       function(player){that.registerPlayer(player);},
@@ -135,7 +135,7 @@ Collabot.prototype = {
       });   
   },
   registerPlayer: function(player){
-    // console.log("Attempting to register player: " + player);   
+    console.log("Attempting to register player: " + player);   
     var that = this;
     that.persistence.getPlayerByName(player, function(user, err){
       if(err){
@@ -152,7 +152,7 @@ Collabot.prototype = {
           }
         });
       } else {
-        // console.log(user.name + " already exists!");
+        console.log(user.name + " already exists!");
       }
     });   
   },
@@ -166,7 +166,7 @@ Collabot.prototype = {
 
         for(var ndx in result){
           var reminder = result[parseInt(ndx)];
-          var expired = DateUtils.cronExpired(reminder.date);
+          var expired = DateUtils.hasPassedTimestamp(reminder.date);
               // delete the reminder if expired
           if (expired) {
             // deleting from array
