@@ -46,8 +46,7 @@
     "email": "rbuitrago@velocitypartners.net"
   },
   "devDependencies": {
-    "jasmine": "^2.2.1",
-    "node-monkey": "~0.2.15"
+    "jasmine": "^2.2.1"
   }
 }
 
