@@ -1,4 +1,4 @@
-var later = require('later')
+var later = require('later');
 
 Date.prototype.formatYYYYMMDD = function() {
 	var month = this.getUTCMonth() + 1;
@@ -149,6 +149,9 @@ module.exports = {
 		return {schedule: sched, timer: timeout}
 	},
 	hasPassedTimestamp : function(date) {
+		if (typeof(date) !== 'number'){
+			throw new Error("Date must be an number");
+		}
 		return date < (new Date().getTime());
 	}
 }
