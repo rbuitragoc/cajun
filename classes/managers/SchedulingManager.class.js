@@ -30,6 +30,12 @@ SchedulingManager.prototype = {
 		// TODO implement RegionDataManager as per https://trello.com/c/7XBXBYQN
 		var schedObject = DateUtils.scheduleAndShare(cronspec, this.bot, text, regionData.groups[0]);
 		// TODO persist scheduled event (resilience)
+		
+		var callback = function (err, result) {
+			console.log(result, err);
+		};
+		// Save reminder in db.reminders
+		var reminderSaving = this.bot.persistence.insertReminder({date : date.getTime(), cronspec : cronspec, channel : this.bot.config.channel, text : text}, callback);
 	}, 
 	scheduleAttendToSessionReminder: function(sessionData, requestor) {
 		
@@ -51,6 +57,14 @@ SchedulingManager.prototype = {
 		
 		// persist scheduled event (resilience)
 		console.log("scheduleAttendToSessionReminder with date '%s' as requested by %s", date, requestor)
+
+
+		// Save reminder in db.reminders
+		var callback = function (err, result) {
+			console.log(result, err);
+		};
+		
+		var reminderSaving = this.bot.persistence.insertReminder({date : date.getTime(), cronspec : cronspec, dm : requestor, text : text}, callback);
 	},
 	scheduleRateAttendedSessionReminder: function(sessionData, requestor) {
 		// take bot.config and read:
@@ -78,6 +92,13 @@ SchedulingManager.prototype = {
 		console.log("scheduleRateAttendedSessionReminder with date '%s' as requested by '%s'", date, requestor)
 		var scheduleObject = DateUtils.scheduleAndSay(cronspec, this.bot, requestor, text)
 		// TODO persist scheduled event
+ 
+		// Save reminder in db.reminders
+		var callback = function (err, result) {
+			console.log(result, err);
+		};
+		
+		var reminderSaving = this.bot.persistence.insertReminder({date : date.getTime(), date : date.getTime(), cronspec : cronspec, dm : requestor, text : text}, callback);
 	},
 	schedule: function(cronspec, requestor) {
 		console.log("Scheduling something for %s", requestor)
