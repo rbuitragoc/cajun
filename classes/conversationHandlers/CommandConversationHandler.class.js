@@ -213,7 +213,14 @@ CommandConversationHandler.prototype = {
 		});
 	},
 	_prepareReport: function(who, text) {
-		this.bot.reportManager.prepareForReport(who)
+		var bot = this.bot
+		console.log("Starting conversation to generate report! ")
+		bot.conversationManager.startConversation(who, "report", "fetchingTrainingSessions",
+			function(conversation) {
+				bot.reportManager.prepareForReport(conversation, who)
+			}, function(conversation) {
+			 // TODO: Add support to resume conversations
+		})
 	}
 };
 
