@@ -4,8 +4,8 @@
   "description": "A collaboration-enabled interactive modular bot system",
   "main": "app.js",
   "scripts": {
-    "start-debug" : "node-debug app.js;",
     "start": "node app.js",
+    "start-debug" : "node-debug app.js",
     "test": "node test/all.js; node_modules/jasmine/bin/jasmine.js",
     "curl-start" : "curl -X POST http://localhost:3000/start",
     "curl-stop" : "curl -X POST http://localhost:3000/stop"
@@ -49,4 +49,3 @@
     "jasmine": "^2.2.1"
   }
 }
-
