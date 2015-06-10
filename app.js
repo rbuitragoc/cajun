@@ -1,7 +1,6 @@
 var Collabot = require("./classes/Collabot.class");
 var config = require("./config");
 var collabot = null;
-var nomo = require('node-monkey').start();
 
 var express = require('express');
 
@@ -21,6 +20,8 @@ app.get('/config.js', function(req, res) {
     res.write("var appUrls = {start: '"+config.appUrls.start+"', stop: '"+config.appUrls.stop+"'};");
     res.end();
 });
+
+// TODO add the GET operation for the file
 
 app.post('/start', function (req, res) {
 	if(collabot == null) {

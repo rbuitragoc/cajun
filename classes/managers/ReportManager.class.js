@@ -63,13 +63,12 @@ ReportManager.prototype = {
 	},
 	generateReport: function(from, selectedSession, conversation, callback) {
 		var bot = this.bot
-		console.log("Fetching ratings for session %s: ", JSON.stringify(selectedSession))
-		this.bot.persistence.getSessionRatingsByTitle(selectedSession.title, function(err, results) {
+		console.log("Fetching ratings for session '%s'", selectedSession.title)
+		this.bot.persistence.getSessionRatingsById(selectedSession._id, function(err, results) {
 			if (err) {
 				callback(err, null)
 			} else {
 				console.log(JSON.stringify(results))
-				bot.conversationManager.endConversation(conversation)
 				callback(null, results);
 			}
 		})

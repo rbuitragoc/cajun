@@ -1,3 +1,6 @@
+var csv = require('csv')
+var fs = require('fs')
+
 var ReportConversationHandler = function(bot) {
 	this.bot = bot
 }
@@ -30,12 +33,31 @@ ReportConversationHandler.prototype = {
 						bot.conversationManager.endConversation(conversation)
 					} else {
 						if (result) {
-							// FIXME need to CSV the result!
+							console.log("Got the raw report result from DB! \n[%s]", JSON.stringify(result))
+							csv.transform(result, function(data) {
+								// XXX escape commas for csv: this should go to StringUtils sometime soon?
+								var escapedComments = (data.comments.indexOf(',')!=-1)? '"'+data.comments+'"':data.comments
+								var escapedMethodology = (data.ratings.methodology.indexOf(',')!=-1)? '"'+data.ratings.methodology+'"':data.ratings.methodology
+								
+								var csvLine = data.sessionTitle + ',' + data.ratingDate + ',' + data.ratingOffice + ',' + data.ratings.overall + ',' + data.ratings.understanding + ',' + data.ratings.content + ',' + data.ratings.relevance + ',' + data.ratings.performance + ',' + escapedMethodology + ',' + data.recommended + ',' + escapedComments + ','
+								csvLine = (data.user)? csvLine + data.user + '\n': csvLine + '\n'
+								return csvLine
+							}).pipe(csv.stringify(function(err, output) {
+								output = "title,rating date,office,overall rating,understanding rating,content rating,relevance rating,performance rating,methodology rating,recommended,comments,user\n" + output
+								console.log("READY TO SEE THE CSV? \n%s", output)
+								var fileName = 'report-'+selectedSession.presenter + Date.now()+'.csv'
+								var file = fs.writeFile(fileName, output, function(err) {
+									if (err) console.error(err)
+									else console.log("Written file %s successfully. Ch-ch ch-ch ch-ch-check it out!", fileName)
+									bot.say(from, 'Got your CSV report file ready, and I promise I will post a link for you to download soon. Ask somebody to retrieve this file ('+fileName+') from the bot server for you, in the meantime.')
+									bot.conversationManager.endConversation(conversation)
+								})
 							// TODO  PRINT THE FILE LOCATION? POST THE LINK?
-							console.log("Got the raw report result from DB! \n[%s]", result)
+							}))
+						} else {
+							console.log("No report result? Go figure! Nothing to do here, I'm finishing conversation now.")
+							bot.conversationManager.endConversation(conversation)
 						}
-						console.log("No report result? Go figure! Nothing to do here, I'm finishing conversation now.")
-						bot.conversationManager.endConversation(conversation)
 					}
 				})
 			} else {

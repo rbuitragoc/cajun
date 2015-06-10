@@ -313,40 +313,40 @@ MongoConnector.prototype = {
 		    }
 	    );
 	},
-	insertRegisteredUsers: function(user, sessionId, callback){
-		this.db.collection('registeredUsers').insert({
-			user : user,
-			sessionId : sessionId,
-			date : new Date(),
-			notified : true
-		}, function(err, result) {
-			MongoConnector.defaultHandler(err, result, callback);
-		});
-	},
-	getRegisteredUsers: function(user, sessionId, callback){
-		this.db.collection('registeredUsers').find({user : user, sessionId : sessionId}).toArray(
-			function (err, result) {
-				if (err) {
-					console.log(err);
-			    } else {
-			    	callback(result);
-			    }
-		    }
-		);
-	},
-	insertSessionRating: function(sessionRatingData, callback) {
-		this.db.collection('sessionRatings_BNL').insert(sessionRatingData, function(err, result) {MongoConnector.defaultHandler(err, result, callback)})
-	},
-	getSessionRatingsByTitle: function(sessionTitle, callback) {
-		this.db.collection('sessionRatings_BNL').find({sessionTitle: sessionTitle}).toArray( function(err, result) {
+  insertRegisteredUsers: function(user, sessionId, callback){
+    this.db.collection('registeredUsers').insert({
+      user : user,
+      sessionId : sessionId,
+      date : new Date(),
+      notified : true
+    }, function(err, result) {
+      MongoConnector.defaultHandler(err, result, callback);
+    });
+  },
+  getRegisteredUsers: function(user, sessionId, callback){
+    this.db.collection('registeredUsers').find({user : user, sessionId : sessionId}).toArray(
+      function (err, result) {
+        if (err) {
+          console.log(err);
+          } else {
+            callback(result);
+          }
+        }
+    );
+  },
+  insertSessionRating: function(sessionRatingData, callback) {
+    this.db.collection('sessionRatings_BNL').insert(sessionRatingData, function(err, result) {MongoConnector.defaultHandler(err, result, callback)})
+  },
+	getSessionRatingsById: function(sessionId, callback) {
+		this.db.collection('sessionRatings_BNL').find({sessionId: sessionId}).toArray( function(err, result) {
 			if (err) {
-				callback(err)
+				callback(err, null)
 			} else {
 				callback(null, result)
 			}
 		})
 	}, 
-	getRatedTrainingSessionsIds: function(callback) {
+  getRatedTrainingSessionsIds: function(callback) {
 		var selector = {
 			distinct: "sessionRatings_BNL",
 			key: "sessionId"
@@ -365,7 +365,7 @@ MongoConnector.prototype = {
 		var ids = new Array()
 		for (var i = 0; i < commandResults.values.length; i++) {
 			var item = commandResults.values[i].toString()
-			console.log("Trying to create an objectId from %s, which should be 24 chars long. It's actually %d chars long. Just to be sure, this is an object of type %s. Trying to srite it out as String: %s and then as a JSON: %s", item, item.length, typeof item, item.toString(), JSON.stringify(item))
+			console.log("Trying to create an objectId from %s, which should be 24 chars long. It's actually %d chars long. Just to be sure, this is an object of type %s. Trying to write it out as String: %s and then as a JSON: %s", item, item.length, typeof item, item.toString(), JSON.stringify(item))
 			var sessionObjectId = objectId.createFromHexString(item)
 			ids.push(sessionObjectId)
 		}
@@ -377,7 +377,33 @@ MongoConnector.prototype = {
 				callback(null, ratedTrainings)
 			}
 		})
-	}
+	},
+  // Reminders 
+  insertReminder: function(reminder, callback){
+    this.db.collection('reminders')
+      .insert(reminder, function(err, result) {
+        MongoConnector.defaultHandler(err, result, callback)
+      }
+    );    
+  },
+  getReminders: function (callback) {
+    this.db.collection('reminders').find().toArray(
+      function (err, result) {
+        if (err) {
+          console.log(err);
+          } else {
+            callback(err, result);
+          }
+        }
+    );
+  },
+  deleteReminder: function (id, callback) {
+    this.db.collection('reminders').remove({_id : id}, 
+      function(err, result) {
+        MongoConnector.defaultHandler(err,result,callback);
+      }
+    );
+  } 
 }
 
 MongoConnector.defaultHandler = function (err, result, callback) {
