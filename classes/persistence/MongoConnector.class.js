@@ -345,6 +345,38 @@ MongoConnector.prototype = {
 				callback(null, result)
 			}
 		})
+	}, 
+	getRatedTrainingSessionsIds: function(callback) {
+		var selector = {
+			distinct: "sessionRatings_BNL",
+			key: "sessionId"
+		}
+		this.db.command(selector, function(err, result) {
+			if (err) {
+				console.error("Error executing a DB command: "+err)
+				callback(err, null)
+			} else {
+				callback(null, result)
+			}
+		})
+	},
+	getRatedTrainingSessions: function(commandResults, callback) {
+		var objectId = MongoSkin.ObjectID
+		var ids = new Array()
+		for (var i = 0; i < commandResults.values.length; i++) {
+			var item = commandResults.values[i].toString()
+			console.log("Trying to create an objectId from %s, which should be 24 chars long. It's actually %d chars long. Just to be sure, this is an object of type %s. Trying to srite it out as String: %s and then as a JSON: %s", item, item.length, typeof item, item.toString(), JSON.stringify(item))
+			var sessionObjectId = objectId.createFromHexString(item)
+			ids.push(sessionObjectId)
+		}
+		this.db.collection("trainings").find({_id: {'$in':ids}}).toArray(function(err, ratedTrainings) {
+			if (err) {
+				callback(err, null)
+			} else {
+				console.log("Got rated trainings! %s", JSON.stringify(ratedTrainings))
+				callback(null, ratedTrainings)
+			}
+		})
 	}
 }
 
