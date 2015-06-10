@@ -59,7 +59,7 @@ Collabot.prototype = {
 				createTrainingSession: new CreateTrainingSessionConversationHandler(this),
 				registerToSession: new RegisterToSessionConversationHandler(this),
 				rateSession: new RateSessionConversationHandler(this),
-				report: new ReportConversationHandler(this),
+				report: new ReportConversationHandler(this)
 			}
 			this.guid = guid();
 			callback("started");
