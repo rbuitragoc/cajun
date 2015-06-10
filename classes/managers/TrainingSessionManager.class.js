@@ -145,8 +145,24 @@ TrainingSessionManager.prototype =  {
 	},
 	initCreateTrainingSession: function(from) {
 		var bot = this.bot;
+		var manager = this;
+		var edsrvManager = bot.config.edserv.manager;
+
 		
 		async.waterfall([
+			function(next) {
+				bot.persistence.getAuthorizedPresenter(from, function(presenterObject, err) {
+					if (err) {
+						bot.say(from, "I couldn't find authorize: " + from + " as presenter, This happened: " + err);
+						console.log(err);
+					} else if (presenterObject || (edsrvManager == from)) {
+						console.log('presenter:', from, 'manager:', edsrvManager);
+						next();
+					} else {
+						bot.say(from, "I couldn't find " + from + " as authorized presenter, contact your regional manager to do that");
+					}
+				});
+			},
 			function(next) {
 				bot.conversationManager.startConversation(from, "createTrainingSession", "sessionTitle", function() {
 					bot.say(from, "Wanna create a training session? that's awesome! First, what's this session going to be called? Type in the title for the session as you want it to appear for everyone else:");
