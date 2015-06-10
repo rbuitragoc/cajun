@@ -1,7 +1,6 @@
 var Collabot = require("./classes/Collabot.class");
 var config = require("./config");
 var collabot = null;
-var nomo = require('node-monkey').start();
 
 var express = require('express');
 

@@ -313,30 +313,56 @@ MongoConnector.prototype = {
 		    }
 	    );
 	},
-	insertRegisteredUsers: function(user, sessionId, callback){
-		this.db.collection('registeredUsers').insert({
-			user : user,
-			sessionId : sessionId,
-			date : new Date(),
-			notified : true
-		}, function(err, result) {
-			MongoConnector.defaultHandler(err, result, callback);
-		});
-	},
-	getRegisteredUsers: function(user, sessionId, callback){
-		this.db.collection('registeredUsers').find({user : user, sessionId : sessionId}).toArray(
-			function (err, result) {
-				if (err) {
-					console.log(err);
-			    } else {
-			    	callback(result);
-			    }
-		    }
-		);
-	},
-	insertSessionRating: function(sessionRatingData, callback) {
-		this.db.collection('sessionRatings_BNL').insert(sessionRatingData, function(err, result) {MongoConnector.defaultHandler(err, result, callback)})
-	}
+  insertRegisteredUsers: function(user, sessionId, callback){
+    this.db.collection('registeredUsers').insert({
+      user : user,
+      sessionId : sessionId,
+      date : new Date(),
+      notified : true
+    }, function(err, result) {
+      MongoConnector.defaultHandler(err, result, callback);
+    });
+  },
+  getRegisteredUsers: function(user, sessionId, callback){
+    this.db.collection('registeredUsers').find({user : user, sessionId : sessionId}).toArray(
+      function (err, result) {
+        if (err) {
+          console.log(err);
+          } else {
+            callback(result);
+          }
+        }
+    );
+  },
+  insertSessionRating: function(sessionRatingData, callback) {
+    this.db.collection('sessionRatings_BNL').insert(sessionRatingData, function(err, result) {MongoConnector.defaultHandler(err, result, callback)})
+  },
+  // Reminders 
+  insertReminder: function(reminder, callback){
+    this.db.collection('reminders')
+      .insert(reminder, function(err, result) {
+        MongoConnector.defaultHandler(err, result, callback)
+      }
+    );    
+  },
+  getReminders: function (callback) {
+    this.db.collection('reminders').find().toArray(
+      function (err, result) {
+        if (err) {
+          console.log(err);
+          } else {
+            callback(err, result);
+          }
+        }
+    );
+  },
+  deleteReminder: function (id, callback) {
+    this.db.collection('reminders').remove({_id : id}, 
+      function(err, result) {
+        MongoConnector.defaultHandler(err,result,callback);
+      }
+    );
+  } 
 }
 
 MongoConnector.defaultHandler = function (err, result, callback) {

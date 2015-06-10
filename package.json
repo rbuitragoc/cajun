@@ -5,6 +5,7 @@
   "main": "app.js",
   "scripts": {
     "start": "node app.js",
+    "start-debug" : "node-debug app.js;",
     "test": "node test/all.js; node_modules/jasmine/bin/jasmine.js",
     "curl-start" : "curl -X POST http://localhost:3000/start",
     "curl-stop" : "curl -X POST http://localhost:3000/stop"
@@ -45,7 +46,6 @@
     "email": "rbuitrago@velocitypartners.net"
   },
   "devDependencies": {
-    "jasmine": "^2.2.1",
-    "node-monkey": "~0.2.15"
+    "jasmine": "^2.2.1"
   }
 }
