@@ -145,7 +145,6 @@ TrainingSessionManager.prototype =  {
 	},
 	initCreateTrainingSession: function(from) {
 		var bot = this.bot;
-		var manager = this;
 		var edsrvManager = bot.config.edserv.manager;
 
 		
