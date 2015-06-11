@@ -9,6 +9,7 @@ module.exports = {
 	version: "0.8.4",
 	environment: process.env.ENVIRONMENT,
 	// environment: "rick's lap",
+	traingChannel : 'gambit-test',
 	channel: process.env.CHANNEL,
 	botName: process.env.BOTNAME,
 	// token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr', // Good ol' Collabot
