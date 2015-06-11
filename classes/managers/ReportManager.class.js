@@ -6,11 +6,26 @@ var ReportManager = function(bot) {
 }
 
 ReportManager.prototype = {
-	prepareForReport: function (conversation, who) {
+	prepareForReport: function (who) {
 		console.log("Entering prepareForReport()")
 		var bot = this.bot
+		var trainingSessionManager = bot.config.edserv.manager
 		async.waterfall([
 			function (next) {
+				console.log("Checking the role of the requestor (%s)...", who)
+				if (who != trainingSessionManager) {
+					bot.say(who, "Sorry. Only the HR manager can request this report.")
+					return
+				} else {
+					console.log("Starting conversation to generate report! ")
+					bot.conversationManager.startConversation(who, "report", "fetchingTrainingSessions",
+						function(conversation) {
+							next(conversation)
+						}, function(conversation) {
+						 // TODO: Add support to resume conversations
+					})
+				}
+			}, function(conversation, next) {
 				console.log("Got as far as it should: asking for getRatedTrainingSessions()")
 				bot.persistence.getRatedTrainingSessionsIds(function(err, result) {
 					if (err) { 
