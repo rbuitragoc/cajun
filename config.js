@@ -2,14 +2,13 @@ var IRCConnector = require("./classes/IRCConnector.class");
 var SlackConnector = require("./classes/SlackConnector.class");
 var JSONConnector = require("./classes/persistence/JSONConnector.class");
 var MongoConnector = require("./classes/persistence/MongoConnector.class");
-
+var regional = JSON.parse(process.env.BOT_REGIONAL);
 
 // Slack API config karmabot for tests
 module.exports = {
 	version: "0.8.4",
 	environment: process.env.ENVIRONMENT,
 	// environment: "rick's lap",
-	traingChannel : 'gambit-test',
 	channel: process.env.CHANNEL,
 	botName: process.env.BOTNAME,
 	// token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr', // Good ol' Collabot
@@ -39,9 +38,7 @@ module.exports = {
 			rate: {hours: 1, afterEvent: true, retry: {times: 3, intervalHours: 24}}
 		},
 		manager: 'slizarazo',
-		regional: {
-			medellin: {groups: ['all-vpc-employees'], manager: 'slizarazo'}
-		}
+		regional: regional
 	},
 	copaso: {
 		group: 'vpc-copaso', 
