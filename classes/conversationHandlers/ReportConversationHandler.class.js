@@ -49,7 +49,7 @@ ReportConversationHandler.prototype = {
 								var file = fs.writeFile(fileName, output, function(err) {
 									if (err) console.error(err)
 									else console.log("Written file %s successfully. Ch-ch ch-ch ch-ch-check it out!", fileName)
-									bot.say(from, 'Got your CSV report file ready, and I promise I will post a link for you to download soon. Ask somebody to retrieve this file ('+fileName+') from the bot server for you, in the meantime.')
+									bot.say(from, 'Got your CSV report. Make sure you select comma as field separator, and also treat quoted fields as text. Download it here: '+process.env.APPURL+'edserv/ratedtrainings/'+fileName)
 									bot.conversationManager.endConversation(conversation)
 								})
 							// TODO  PRINT THE FILE LOCATION? POST THE LINK?
