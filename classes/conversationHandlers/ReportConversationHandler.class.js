@@ -45,7 +45,7 @@ ReportConversationHandler.prototype = {
 							}).pipe(csv.stringify(function(err, output) {
 								output = "title,rating date,office,overall rating,understanding rating,content rating,relevance rating,performance rating,methodology rating,recommended,comments,user\n" + output
 								console.log("READY TO SEE THE CSV? \n%s", output)
-								var fileName = 'report-'+selectedSession.presenter + Date.now()+'.csv'
+								var fileName = 'report-'+selectedSession.presenter + '-'+ Date.now()+'.csv'
 								var file = fs.writeFile(fileName, output, function(err) {
 									if (err) console.error(err)
 									else console.log("Written file %s successfully. Ch-ch ch-ch ch-ch-check it out!", fileName)
