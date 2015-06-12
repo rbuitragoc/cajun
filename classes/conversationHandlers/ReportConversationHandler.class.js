@@ -1,5 +1,6 @@
 var csv = require('csv')
 var fs = require('fs')
+var StringUtils = require('../util/StringUtils.class')
 
 var ReportConversationHandler = function(bot) {
 	this.bot = bot
@@ -35,9 +36,8 @@ ReportConversationHandler.prototype = {
 						if (result) {
 							console.log("Got the raw report result from DB! \n[%s]", JSON.stringify(result))
 							csv.transform(result, function(data) {
-								// XXX escape commas for csv: this should go to StringUtils sometime soon?
-								var escapedComments = (data.comments.indexOf(',')!=-1)? '"'+data.comments+'"':data.comments
-								var escapedMethodology = (data.ratings.methodology.indexOf(',')!=-1)? '"'+data.ratings.methodology+'"':data.ratings.methodology
+								var escapedComments = StringUtils.quoteCsv(data.comments)
+								var escapedMethodology = StringUtils.quoteCsv(data.ratings.methodology)
 								
 								var csvLine = data.sessionTitle + ',' + data.ratingDate + ',' + data.ratingOffice + ',' + data.ratings.overall + ',' + data.ratings.understanding + ',' + data.ratings.content + ',' + data.ratings.relevance + ',' + data.ratings.performance + ',' + escapedMethodology + ',' + data.recommended + ',' + escapedComments + ','
 								csvLine = (data.user)? csvLine + data.user + '\n': csvLine + '\n'
@@ -52,7 +52,6 @@ ReportConversationHandler.prototype = {
 									bot.say(from, 'Got your CSV report. Make sure you select comma as field separator, and also treat quoted fields as text. Download it here: '+process.env.APPURL+'edserv/ratedtrainings/'+fileName)
 									bot.conversationManager.endConversation(conversation)
 								})
-							// TODO  PRINT THE FILE LOCATION? POST THE LINK?
 							}))
 						} else {
 							console.log("No report result? Go figure! Nothing to do here, I'm finishing conversation now.")
