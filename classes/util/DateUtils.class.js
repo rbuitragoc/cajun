@@ -1,4 +1,4 @@
-var later = require('later')
+var later = require('later');
 
 Date.prototype.formatYYYYMMDD = function() {
 	var month = this.getUTCMonth() + 1;
@@ -147,5 +147,21 @@ module.exports = {
 		var timeout = later.setTimeout(function() {bot.say(to, text)}, scheduleConfig)
 		console.log('\tA timeout for an event has been set. Schedule ready [%s], and will say to %s the following: %s', sched, to, text)
 		return {schedule: sched, timer: timeout}
+	},
+	/**
+	 * Method to check if the param date has passed
+	 * @param  {[number]}  date [a timestap date]
+	 * @return {Boolean}      [true if is lower than current time]
+	 */
+	hasPassedTimestamp : function(date) {
+		if (typeof date === 'undefined'){
+			throw new Error("missing param");
+		};
+
+		if (typeof date !== 'number'){
+			throw new Error("Date must be an number");
+		};
+
+		return date < (new Date().getTime());
 	}
 }

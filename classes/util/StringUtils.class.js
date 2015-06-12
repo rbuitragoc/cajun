@@ -10,5 +10,8 @@ module.exports = {
 	},
 	isNumber: function(text) {
 		return /^\d+$/.exec(text);
+	},
+	quoteCsv: function(text) {
+		return (text.indexOf(',')!=-1)? '"'+text+'"':text
 	}
 }
