@@ -9,8 +9,19 @@ ReportManager.prototype = {
 	prepareForReport: function (conversation, who) {
 		console.log("Entering prepareForReport()")
 		var bot = this.bot
+		var botName = bot.config.botName
+		var hrManager = bot.config.edserv.manager
 		async.waterfall([
 			function (next) {
+				console.log("Checking the HR manager role ...")
+				if (who != hrManager) {
+					bot.say(who, "You can't fetch the rating report unless you're registered with "+ botName + " as HR manager for this location")
+					bot.conversationManager.endConversation(conversation)
+					return
+				} else {
+					next()
+				}
+			},function (next) {
 				console.log("Got as far as it should: asking for getRatedTrainingSessions()")
 				bot.persistence.getRatedTrainingSessionsIds(function(err, result) {
 					if (err) { 
