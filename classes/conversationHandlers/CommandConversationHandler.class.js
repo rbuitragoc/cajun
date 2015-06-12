@@ -41,7 +41,7 @@ CommandConversationHandler.prototype = {
 			this._adminOptions(from);
 		} else if (StringUtils.isMatch(this.showAttendantsRegexes, text)) {
 			this._showAttendants(from);
-		} else if(text.indexOf("report") > -1) {
+		} else if(text.indexOf("report session") > -1) {
 			this._prepareReport(from, text)
 		} else {
 			this._wtf(from);
