@@ -20,7 +20,8 @@ module.exports = Collabot;
 var CollaborationManager = require('./CollaborationManager.class');
 var ConversationManager = require('./managers/ConversationManager.class');
 var TrainingSessionManager = require('./managers/TrainingSessionManager.class');
-var SchedulingManager = require('./managers/SchedulingManager.class');
+var ReportManager = require('./managers/ReportManager.class')
+var SchedulingManager = require('./managers/SchedulingManager.class')
 var DateUtils = require('./util/DateUtils.class')
 
 // Conversation Handlers
@@ -31,6 +32,7 @@ var ListAttendantsConversationHandler = require('./conversationHandlers/ListAtte
 var CreateTrainingSessionConversationHandler = require('./conversationHandlers/CreateTrainingSessionConversationHandler.class');
 var RegisterToSessionConversationHandler = require('./conversationHandlers/RegisterToSessionConversationHandler.class')
 var RateSessionConversationHandler = require('./conversationHandlers/RateSessionConversationHandler.class')
+var ReportConversationHandler = require('./conversationHandlers/ReportConversationHandler.class')
 
 // Utility Classes
 var mentionCheck = require('./util/ChatUtils.class');
@@ -48,6 +50,7 @@ Collabot.prototype = {
       this.collaborationManager = new CollaborationManager();
       this.conversationManager = new ConversationManager(this);
       this.trainingSessionManager = new TrainingSessionManager(this);
+			this.reportManager = new ReportManager(this)
       this.schedulingManager = new SchedulingManager(this)
       this.commandConversationHandler = new CommandConversationHandler(this);
       this.defaultConversationHandler = new DefaultConversationHandler(this);
@@ -56,7 +59,8 @@ Collabot.prototype = {
         showAttendants: new ListAttendantsConversationHandler(this),
         createTrainingSession: new CreateTrainingSessionConversationHandler(this),
         registerToSession: new RegisterToSessionConversationHandler(this),
-        rateSession: new RateSessionConversationHandler(this)
+        rateSession: new RateSessionConversationHandler(this),
+				report: new ReportConversationHandler(this)
       }
       this.guid = guid();
       this.loadReminders();
@@ -70,6 +74,7 @@ Collabot.prototype = {
       this.persistence = null;
       this.collaborationManager = null;
       this.conversationManager = null;
+			this.reportManager = null
       this.schedulingManager = null
       callback("stopped");
     } else {

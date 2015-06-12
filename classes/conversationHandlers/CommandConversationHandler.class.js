@@ -41,6 +41,8 @@ CommandConversationHandler.prototype = {
 			this._adminOptions(from);
 		} else if (StringUtils.isMatch(this.showAttendantsRegexes, text)) {
 			this._showAttendants(from);
+		} else if(text.indexOf("report session") > -1) {
+			this._prepareReport(from, text)
 		} else {
 			this._wtf(from);
 		}
@@ -174,6 +176,7 @@ CommandConversationHandler.prototype = {
 		this.bot.say(who, "["+name+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session")
 		this.bot.say(who, "["+name+" who attended a training?] Starts a conversation to check the people who enrolled via bot to a training session. Only available for the presenter and the EdServ manager.");
 		this.bot.say(who, "["+name+" rate session] Starts a conversation to rate a session you've attended")
+		this.bot.say(who, "["+name+" report session] Starts a conversation to generate a report with the rating of a particular session. It's only available to HR manager")
 		this.bot.say(who, "Apart from these I can also tell you who attended to a training session, just ask me!");
 	},
 	_createTraining: function(from){
@@ -208,6 +211,16 @@ CommandConversationHandler.prototype = {
 		function(conversation){
 			// TODO: Add support to resume conversations
 		});
+	},
+	_prepareReport: function(who, text) {
+		var bot = this.bot
+		console.log("Starting conversation to generate report! ")
+		bot.conversationManager.startConversation(who, "report", "fetchingTrainingSessions",
+			function(conversation) {
+				bot.reportManager.prepareForReport(conversation, who)
+			}, function(conversation) {
+			 // TODO: Add support to resume conversations
+		})
 	}
 };
 
