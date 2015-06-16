@@ -300,7 +300,7 @@ TrainingSessionManager.prototype =  {
 				bot.say(requestor, "First thing's first, thanks for taking the time to anonymously rate a Breakfast & Learn. This is really important to us! Now, let's begin with selecting a session to rate. Which from the following sessions you've attended do you wish to rate?")
 			},
 			function (conversation, next) {
- 				bot.persistence.getTrainingSessions(function(result, err) {
+ 				bot.persistence.getTrainings(function(result, err) {
  					next(err, conversation, result);
  				});
  			}, 

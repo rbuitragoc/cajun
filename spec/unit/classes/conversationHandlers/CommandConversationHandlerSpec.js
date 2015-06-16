@@ -62,4 +62,16 @@ describe("A command conversation", function() {
             expect(bot.shareOn).toHaveBeenCalledWith(channel, "Great to get some love from you, jhon_doe. But, as a robot, I'm based on rules, and rules say I cannot get or give points. Thanks anyway!");
         });
 	});
+	/*describe("A request a report conversation", function() {
+		var bot, command;
+		beforeEach( function() {
+			bot = CommandConversationHandlerMocks.bot
+			command = new CommandConversationHandler(bot)
+		})
+		it("Refuse to request a report", function() {
+			command.handle('juan_perez', 'report', channel)
+			expect(bot.conversationManager.startConversation).toHaveBeenCalledWith('juan_perez', 'report', 'fetchingTrainingSessions', function (conversation) {}, function (conversation) {})
+			expect(bot.reportManager.prepareForReport).toHaveBeenCalledWith(conversation,'juan_perez')			
+		})
+	})*/
 });

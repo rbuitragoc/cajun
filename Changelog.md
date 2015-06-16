@@ -1,3 +1,11 @@
+What's New in v0.9.0
+====================
+- Scheduled jobs for notifications are persistent (bot dies overnight)
+- As an HR user I can see the results of the rating process for each session
+- FIXED: When creating a training, you cannot specify a date in the future
+- Disabled node-monkey and enabled node-debug
+
+
 What's New in v0.8.4
 ====================
 - FIXED: When giving points, the messages should appear in the channel where the action occurs, not in #general

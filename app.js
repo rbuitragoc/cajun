@@ -1,3 +1,4 @@
+var fs = require('fs')
 var Collabot = require("./classes/Collabot.class");
 var config = require("./config");
 var collabot = null;
@@ -20,6 +21,43 @@ app.get('/config.js', function(req, res) {
     res.write("var appUrls = {start: '"+config.appUrls.start+"', stop: '"+config.appUrls.stop+"'};");
     res.end();
 });
+
+app.get('/edserv/ratedtrainings/:reportfilename', function(req, res){
+	var fileName = req.params.reportfilename
+	console.log("Trying to retrieve file %s ...", fileName)
+	// This version uses fs and then send(Buffer) ...
+	/*var file = fs.readFile(fileName, function(err, data) {
+		if (err) {
+			console.error(err)
+			res.status(500).send("Can't read file!")
+		} else {
+			if (data) { 
+				console.log("Read the file %s! Here the contents: \n%s", fileName, data)
+				res.status(200).send(new Buffer(data))
+			} else {
+				console.error("File %s not found", fileName)
+				res.status(404).send("File not found")
+			}
+		}
+	})*/
+	// Although I preferred newer express sendFile api which elegantly wraps fs :)
+	var options = {
+		root: './',
+		dotfiles: 'deny',
+		headers: {
+			'x-timestamp': Date.now(),
+			'x-sent': true
+		}
+	}
+	res.sendFile(fileName, options, function (err) {
+		if (err) {
+			console.error("Can't open this file %s: %s", fileName, err)
+			res.status(err.status).end()
+		} else {
+			console.log("Sent file %s!", fileName)
+		}
+	})
+})
 
 app.post('/start', function (req, res) {
 	if(collabot == null) {
