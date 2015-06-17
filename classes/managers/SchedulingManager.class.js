@@ -27,7 +27,7 @@ SchedulingManager.prototype = {
 		
 		// call _schedule
 		var text = "Remember to register to the upcoming '"+sessionData.title+"' session, by "+sessionData.presenter+". It'll take place in "+sessionData.location+", on "+sessionData.desiredDate+",  "+sessionData.time+" ("+sessionData.duration+" h). You can talk to "+this.bot.config.botName+" and ask about 'upcoming sessions', or 'help' if you need any more information."
-		var textPresenter = "Remember you're registered as presenter to the upcoming '"+sessionData.title+"' It'll take place in "+sessionData.location+", on "+sessionData.desiredDate+",  "+sessionData.time+" ("+sessionData.duration+" h). You can talk to "+this.bot.config.botName+" and ask about 'upcoming sessions', or 'help' if you need any more information."
+		var textPresenter = "Remember you're registered as presenter to the upcoming '"+sessionData.title+"' It'll take place in "+sessionData.location+", on "+sessionData.desiredDate+",  "+sessionData.time+" ("+sessionData.duration+")";
 		
 		// TODO implement RegionDataManager as per https://trello.com/c/7XBXBYQN
 		
