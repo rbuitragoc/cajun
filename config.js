@@ -30,7 +30,7 @@ module.exports = {
 	maxCollabPoints : 10,
 	edserv: {
 		thresholds: {
-			enrollment: 12
+			enrollment: 1
 		},
 		reminders: {
 			register: {hours: 18},
