@@ -7,6 +7,9 @@ var CreateTrainingSessionConversationHandler = function(bot){
 CreateTrainingSessionConversationHandler.prototype = {
 	handle: function(from, text, conversation){
 		var that = this;
+		var region = this.bot.region || 'medellin';
+		var traningChannel = this.bot.config.edserv.regional[region].channels.traning;
+
 		console.log('Handling {'+conversation.topic+'} with {'+from+'}, he said "'+text+'". State is {'+conversation.state+'}');
 		if (conversation.state == 'sessionTitle') {
 			this.bot.say(from, "Your session's title will be: "+text);
@@ -99,7 +102,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 				this.bot.say(from, text + " sounds good to me.");
 				this.bot.conversationManager.setConversationData(conversation, 'time', text, function(){});
 				this.bot.conversationManager.changeConversationState(conversation, "save", function(){
-					that.bot.say(from, "Now that we have all the data required, we can launch the training. If you agree, we'll handle the notifications to all interested, and follow up on them to rate the training after they attended to it. Should we save and finish the creation of the training session? (YES/NO)");
+					that.bot.say(from, "Now that we have all the data required, we can launch the training. If you agree, we'll handle the notifications to all interested, and follow up on them to rate the training after they attended to it. Should we save and finish the creation of the training session? (YES/NO/CANCEL)");
 				});				
 			} else {
 				this.bot.say(from, "What's that? I asked for this format (HH:MM), come on.");
@@ -112,16 +115,23 @@ CreateTrainingSessionConversationHandler.prototype = {
 					if (err){
 						that.bot.say(from, "I couldn't save the training session: "+err);
 					} else {
-						that.bot.share("@channel The training session: \""+res[0].title+"\" was created.");
-						that.bot.share("The training session: \"" + res[0].title + "\" has been created.");
-						that.bot.share("It will take place at the " + res[0].location + " office.");
-						that.bot.share("@" + res[0].presenter + " will be presenting it on " + res[0].desiredDate + " at " + res[0].time + "." );
-						that.bot.share("You can enroll to this training session by asking '"+that.bot.config.botName+", show me upcoming sessions'");
+						// share on treaning channel
+						that.bot.shareOn(traningChannel, "@channel The training session: \""+res[0].title+"\" was created.");
+						that.bot.shareOn(traningChannel, "The training session: \"" + res[0].title + "\" has been created.");
+						that.bot.shareOn(traningChannel, "It will take place at the " + res[0].location + " office.");
+						that.bot.shareOn(traningChannel, "@" + res[0].presenter + " will be presenting it on " + res[0].desiredDate + " at " + res[0].time + "." );
+						that.bot.shareOn(traningChannel, "You can enroll to this training session by asking '"+that.bot.config.botName+", show me upcoming sessions'");
+
+						// send teaser on default channel
+						that.bot.share('hey people, amazing things happening on #' + traningChannel + ' take a look');
 					}
 				});
 				// TODO implment RegionManager as per https://trello.com/c/7XBXBYQN
 				this.bot.schedulingManager.scheduleRegisterToSessionReminder(conversation.data, this.bot.config.edserv.regional.medellin) 
 				// ALSO TODO: while we don't have a way to check attendance yet, we must assume all registered actually attended the session and are therefore allowed to rate it
+				this.bot.conversationManager.endConversation(conversation);
+			} else if(text.indexOf("CANCEL")>-1){
+				this.bot.say(from, "Well... I don't understand the humans but... have a nice day");
 				this.bot.conversationManager.endConversation(conversation);
 			} else {
 				this.bot.say(from, "Ok... Let me know when you decide to go for it. Keep in mind I'll hold waiting for a 'YES'.");
