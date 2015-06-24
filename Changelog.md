@@ -1,3 +1,9 @@
+What's New in v0.9.3
+====================
+- registration threshold is now 1 h
+- a reminder for a forgetful presenter is also created (notification to present te session!)
+
+
 What's New in v0.9.0
 ====================
 - Scheduled jobs for notifications are persistent (bot dies overnight)
