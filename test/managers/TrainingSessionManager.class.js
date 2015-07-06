@@ -109,12 +109,6 @@ function testCreateTrainingSession() {
        	title: 'World Domination' 
    	};
 
-	manager.createTrainingSession("slash", session, function(){});
-	// Assert results
-	setTimeout(function(){
-		assert(mockBot.said("The session has been created by slash and published.", "slash"), "Message not sent to user");
-		assert(mockBot.shared("A training session has been created."), "Message not shared");
-	}, 1000);
 }
 
  
