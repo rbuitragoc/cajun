@@ -181,8 +181,7 @@ TrainingSessionManager.prototype =  {
 	createTrainingSession: function(creator, session, callback) {
 		var bot = this.bot;
 		bot.persistence.insertTrainingSession(session, callback);
-		bot.say(creator, "The session has been created by "+creator+" and published.");
-		bot.share("A training session has been created.");
+		bot.say(creator, "The session '"+session.title+"' has been created by you and published.");
 	},
 	initRegisterToSession: function(from) {
 		var bot = this.bot;

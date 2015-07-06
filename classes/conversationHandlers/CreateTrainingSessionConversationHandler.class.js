@@ -8,7 +8,7 @@ CreateTrainingSessionConversationHandler.prototype = {
 	handle: function(from, text, conversation){
 		var that = this;
 		var region = this.bot.region || 'medellin';
-		var traningChannel = this.bot.config.edserv.regional[region].channels.traning;
+		var trainingChannel = this.bot.config.edserv.regional[region].channels.training;
 
 		console.log('Handling {'+conversation.topic+'} with {'+from+'}, he said "'+text+'". State is {'+conversation.state+'}');
 		if (conversation.state == 'sessionTitle') {
@@ -115,15 +115,10 @@ CreateTrainingSessionConversationHandler.prototype = {
 					if (err){
 						that.bot.say(from, "I couldn't save the training session: "+err);
 					} else {
-						// share on treaning channel
-						that.bot.shareOn(traningChannel, "@channel The training session: \""+res[0].title+"\" was created.");
-						that.bot.shareOn(traningChannel, "The training session: \"" + res[0].title + "\" has been created.");
-						that.bot.shareOn(traningChannel, "It will take place at the " + res[0].location + " office.");
-						that.bot.shareOn(traningChannel, "@" + res[0].presenter + " will be presenting it on " + res[0].desiredDate + " at " + res[0].time + "." );
-						that.bot.shareOn(traningChannel, "You can enroll to this training session by asking '"+that.bot.config.botName+", show me upcoming sessions'");
-
-						// send teaser on default channel
-						that.bot.share('hey people, amazing things happening on #' + traningChannel + ' take a look');
+						that.bot.share("A new training session has been created: \""+res[0].title+"\". You're all invited to check latest training updates on channel #" + trainingChannel);
+						that.bot.shareOn(trainingChannel, "A new training session has been created: "+res[0].title+ ". It will take place at the " + res[0].location + " office.");
+						that.bot.shareOn(trainingChannel, "@" + res[0].presenter + " will be presenting it on " + res[0].desiredDate + " at " + res[0].time + "." );
+						that.bot.shareOn(trainingChannel, "You can enroll to this training session by asking '"+that.bot.config.botName+", show me upcoming sessions'");
 					}
 				});
 				// TODO implment RegionManager as per https://trello.com/c/7XBXBYQN
