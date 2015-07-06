@@ -1,3 +1,7 @@
+What's New in v0.9.4
+====================
+- when a new training is created, a small "teaser" message is sent to default channel, while details are posted to training channel (city-specific)
+
 What's New in v0.9.3
 ====================
 - registration threshold is now 1 h
