@@ -115,15 +115,10 @@ CreateTrainingSessionConversationHandler.prototype = {
 					if (err){
 						that.bot.say(from, "I couldn't save the training session: "+err);
 					} else {
-						// share on treaning channel
-						that.bot.shareOn(traningChannel, "@channel The training session: \""+res[0].title+"\" was created.");
-						that.bot.shareOn(traningChannel, "The training session: \"" + res[0].title + "\" has been created.");
-						that.bot.shareOn(traningChannel, "It will take place at the " + res[0].location + " office.");
+						that.bot.share("A new training session has been created: \""+res[0].title+"\". You're all invited to check latest training updates on channel #" + traningChannel);
+						that.bot.shareOn(traningChannel, "A new training session has been created: "+res[0].title+ ". It will take place at the " + res[0].location + " office.");
 						that.bot.shareOn(traningChannel, "@" + res[0].presenter + " will be presenting it on " + res[0].desiredDate + " at " + res[0].time + "." );
 						that.bot.shareOn(traningChannel, "You can enroll to this training session by asking '"+that.bot.config.botName+", show me upcoming sessions'");
-
-						// send teaser on default channel
-						that.bot.share('hey people, amazing things happening on #' + traningChannel + ' take a look');
 					}
 				});
 				// TODO implment RegionManager as per https://trello.com/c/7XBXBYQN
