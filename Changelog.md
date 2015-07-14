@@ -1,3 +1,7 @@
+What's New in v0.9.5
+====================
+- Fixed: commands that post to channels go crazy when issued from DM
+
 What's New in v0.9.4
 ====================
 - when a new training is created, a small "teaser" message is sent to default channel, while details are posted to training channel (city-specific)
