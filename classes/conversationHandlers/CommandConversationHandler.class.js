@@ -89,17 +89,17 @@ CommandConversationHandler.prototype = {
 		// Check if a given player is trying to assign points to a <BOT>
 		var slackUser = this.bot.connector.findUserByName(target);
 		if (slackUser && slackUser.is_bot) {
-			this.bot.shareOn(channel, botPointsMsg);
+			this.bot.smartSay(channel, botPointsMsg);
 			return;
 		}
 		if ((points == '1' && singular != '') ||
 			(points > 1 && singular != 's') || !(singular == 's' || singular == '')) {
-			this.bot.shareOn(channel, "Sorry, I didn't understand one point? multiple points?");
+			this.bot.smartSay(channel, "Sorry, I didn't understand one point? multiple points?");
 			
 			return;
 		}
 		if (from == target) {
-			this.bot.shareOn(channel, "Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
+			this.bot.smartSay(channel, "Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
 			return;
 		}
 		var updateScoreRequest = {

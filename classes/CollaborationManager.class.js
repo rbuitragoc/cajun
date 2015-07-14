@@ -13,11 +13,11 @@ var place = updateScoreRequest.channel;
 			function(next) {
 				bot.persistence.getPlayerByName(updateScoreRequest.fromPlayerName, function(player, err) {
 					if (err) {
-						bot.shareOn(place, "I couldn't give the points: "+err);
+						bot.smartSay(place, "I couldn't give the points: "+err);
 					} else if (!player) {
 						bot.persistence.insertNewPlayer(updateScoreRequest.fromPlayerName, function(player, err) {
 							if (!player || err) {
-								bot.shareOn(place, "I couldn't give the points: "+err);
+								bot.smartSay(place, "I couldn't give the points: "+err);
 								console.err(err.stack);
 							} else {
 								next(false, player);
@@ -31,10 +31,10 @@ var place = updateScoreRequest.channel;
 			function(player, next) {
 				bot.persistence.getDailyGrantedPoints(updateScoreRequest.fromPlayerName, function(dailyGrantedPoints, err) {
 					if (err) {
-						bot.shareOn(place, "I couldn't get Daily granted points: "+err);
+						bot.smartSay(place, "I couldn't get Daily granted points: "+err);
 					} else if (dailyGrantedPoints && updateScoreRequest.maxCollabPoints < (dailyGrantedPoints.collabPtsCount + updateScoreRequest.collabPoints)) {
 						var msg = "You don't have enough points!";
-						bot.shareOn(place, msg);
+						bot.smartSay(place, msg);
 					} else {
 						next(false, dailyGrantedPoints);
 					}
@@ -44,7 +44,7 @@ var place = updateScoreRequest.channel;
 				bot.persistence.updateDailyGrantedPoints(updateScoreRequest, dailyGrantedPoints, function(player, err) {
 					if (err) {
 						var msg = "I couldn't set daily granted points: "+err
-						bot.shareOn(place, msg);
+						bot.smartSay(place, msg);
 					} else {
 						next();
 					}
@@ -54,10 +54,10 @@ var place = updateScoreRequest.channel;
 				bot.persistence.getPlayerByName(updateScoreRequest.toPlayerName, function(player, err) {
 					if (err) {
 						var msg = "I couldn't give the points: "+err;
-						bot.shareOn(place, msg);
+						bot.smartSay(place, msg);
 						console.error(msg)
 					} else if (!player) {
-						bot.shareOn(place, "Who's that?");
+						bot.smartSay(place, "Who's that?");
 					} else {
 						next();
 					}
@@ -67,7 +67,7 @@ var place = updateScoreRequest.channel;
 				bot.persistence.updatePlayerScore(updateScoreRequest, function(player, err ){
 					if (err) {
 						var msg = "I couldn't give the points: "+err;
-						bot.shareOn(place, msg);
+						bot.smartSay(place, msg);
 					} else {
 						next();
 					}
@@ -77,7 +77,7 @@ var place = updateScoreRequest.channel;
 				bot.persistence.updateDailyScore(updateScoreRequest, function(player, err) {
 					if (err) {
 						var msg = "I couldn't give the points: "+err;
-						bot.shareOn(place, msg);
+						bot.smartSay(place, msg);
 					} else {
 						next()
 					}
@@ -87,7 +87,7 @@ var place = updateScoreRequest.channel;
 				bot.persistence.updateChannelScore(updateScoreRequest, function(player, err) {
 					if (err) {
 						var msg = "I couldn't give the points: "+err;
-						bot.shareOn(place, msg);
+						bot.smartSay(place, msg);
 					} else {
 						next()
 					}
@@ -97,14 +97,14 @@ var place = updateScoreRequest.channel;
 				bot.persistence.saveHistoricalGrant(updateScoreRequest, function(player, err) {
 					if (err) {
 						var msg = "Error Saving Historical Grant: "+err;
-						bot.shareOn(place, msg);
+						bot.smartSay(place, msg);
 					} else {
 						next();
 					}
 				});
 			},
 			function(next) {
-				bot.shareOn(place, "@"+updateScoreRequest.toPlayerName+", you have been given "+updateScoreRequest.collabPoints+" points by @"+updateScoreRequest.fromPlayerName);
+				bot.smartSay(place, "@"+updateScoreRequest.toPlayerName+", you have been given "+updateScoreRequest.collabPoints+" points by @"+updateScoreRequest.fromPlayerName);
 			}
 		],
 		function (error){
@@ -113,7 +113,7 @@ var place = updateScoreRequest.channel;
 				console.log(error);
 				console.log(error.stack);
 				var msg = "I couldn't give the points: "+err;
-				bot.shareOn(place, msg);
+				bot.smartSay(place, msg);
 			}
 		});
 	},
