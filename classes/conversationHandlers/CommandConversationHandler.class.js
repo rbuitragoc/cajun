@@ -140,8 +140,20 @@ CommandConversationHandler.prototype = {
 	_howAmIDoing: function (from){
 		this.bot.collaborationManager.tellStatusTo(from, this.bot);
 	},
-	_about: function (from, channel){
-		this.bot.shareOn(channel, "ID ["+this.bot.guid+"] - I am "+this.bot.config.botName+" version "+this.bot.version+". I'm running on "+this.bot.config.environment+" using the "+this.bot.connector.name+" interactivity connector and the "+this.bot.persistence.name+" persistance connector.");
+	_about: function (from, to){
+		var message = this.bot.about()
+		var userObject = this.bot.connector.findUserByName(to)
+		if (userObject) {
+			console.log("Got the wonderful user %s", userObject.id)
+
+			if (userObject.id.indexOf('U') == 0) {
+				console.log("destination is an user, will try to 'say' instead of share")
+				this.bot.say(to, message)
+			} 
+		} else {
+			console.log("Cannot identify the kind of destination for named destination '%s'. Will try 'shareOn', hoping for the best!", to)
+			this.bot.shareOn(to, message)
+		}
 	},
 	_joke: function(channel){
 		this.bot.shareOn(channel, "This is no time for jokes, my friend.");
