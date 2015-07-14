@@ -129,6 +129,20 @@ Collabot.prototype = {
       this.connector.shareOn(place, text);
     console.log("[Sharing on other channel/group] '%s'",text)
   },
+	smartSay: function(to, message) {
+		var userObject = this.connector.findUserByName(to)
+		if (userObject) {
+			console.log("[SmartSay] to whom? Got the wonderful user %s", userObject.id)
+
+			if (userObject.id.indexOf('U') == 0) {
+				console.log("[SmartSay] destination is an user, will try to 'say' instead of share")
+				this.say(to, message)
+			} 
+		} else {
+			console.log("Cannot identify the kind of destination for named destination '%s'. Will try 'shareOn', hoping for the best!", to)
+			this.shareOn(to, message)
+		}
+	},	
   registerPlayers: function(players){
     console.log("Registering players...");
     console.log(players);
