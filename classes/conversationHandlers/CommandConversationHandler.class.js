@@ -142,18 +142,7 @@ CommandConversationHandler.prototype = {
 	},
 	_about: function (from, to){
 		var message = this.bot.about()
-		var userObject = this.bot.connector.findUserByName(to)
-		if (userObject) {
-			console.log("Got the wonderful user %s", userObject.id)
-
-			if (userObject.id.indexOf('U') == 0) {
-				console.log("destination is an user, will try to 'say' instead of share")
-				this.bot.say(to, message)
-			} 
-		} else {
-			console.log("Cannot identify the kind of destination for named destination '%s'. Will try 'shareOn', hoping for the best!", to)
-			this.bot.shareOn(to, message)
-		}
+		this.bot.smartSay(to, message)
 	},
 	_joke: function(channel){
 		this.bot.shareOn(channel, "This is no time for jokes, my friend.");
