@@ -194,5 +194,8 @@ Collabot.prototype = {
 
       }
     );
-  }
+  },
+	about: function() {
+		return "ID ["+this.guid+"] - I am "+this.config.botName+" version "+this.version+". I'm running on "+this.config.environment+" using the "+this.connector.name+" interactivity connector and the "+this.persistence.name+" persistance connector."
+	}
 }
