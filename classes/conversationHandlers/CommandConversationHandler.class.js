@@ -144,8 +144,8 @@ CommandConversationHandler.prototype = {
 		var message = this.bot.about()
 		this.bot.smartSay(to, message)
 	},
-	_joke: function(channel){
-		this.bot.shareOn(channel, "This is no time for jokes, my friend.");
+	_joke: function(to){
+		this.bot.smartSay(to, "This is no time for jokes, my friend.");
 	},
 	_creator: function(channel){
 		this.bot.shareOn(channel, "I am being created by VP Gambit dev team.");
