@@ -44,7 +44,7 @@ CommandConversationHandler.prototype = {
 		} else if(text.indexOf("report session") > -1) {
 			this._prepareReport(from, text)
 		} else {
-			this._wtf(from);
+			this._wtf(from, text);
 		}
 	},
 	_give: function (from, text, channel) {
@@ -147,11 +147,11 @@ CommandConversationHandler.prototype = {
 	_joke: function(to){
 		this.bot.smartSay(to, "This is no time for jokes, my friend.");
 	},
-	_creator: function(channel){
-		this.bot.shareOn(channel, "I am being created by VP Gambit dev team.");
+	_creator: function(to){
+		this.bot.smartSay(to, "I am being created by VP Gambit dev team.");
 	},
-	_wtf: function(who, channel){
-		this.bot.shareOn(channel, "Perhaps you need to rephrase... ");
+	_wtf: function(to, text){
+		this.bot.smartSay(to, "Perhaps you need to rephrase; I couldn't understand: '"+text+"'");
 	},
 	_autorizeAsPresenter: function (from, text, channel){
 		var command = /authorize (.+) as presenter$/.exec(text);

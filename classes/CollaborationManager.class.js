@@ -121,7 +121,7 @@ var place = updateScoreRequest.channel;
 		var shareStr = "Calculating top 10..." + new Date();
 		shareStr += period ? ". Period: " + period: "";
 		shareStr += channel ? ". Channel: " + channel: "";
-		bot.shareOn(postToChannel, shareStr);
+		bot.smartSay(postToChannel, shareStr);
 
 		console.log("period:" + period);
 		console.log("channel:" + channel);
@@ -132,7 +132,7 @@ var place = updateScoreRequest.channel;
 				var string = "#" + (i+1) + " - " + result[i].totalCollabPoints + " CP - " + result[i]._id + "\n";
 				top += string;
 			}
-			bot.shareOn(postToChannel, top);
+			bot.smartSay(postToChannel, top);
 		});
 		
 	},
