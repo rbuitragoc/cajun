@@ -6,7 +6,7 @@ var regional = JSON.parse(process.env.BOT_REGIONAL);
 
 // Slack API config karmabot for tests
 module.exports = {
-	version: "0.9.4",
+	version: "0.9.5",
 	environment: process.env.ENVIRONMENT,
 	// environment: "rick's lap",
 	channel: process.env.CHANNEL,
