@@ -24,7 +24,7 @@ Collabot works over Slack API integration. It's configured by default on one cha
 
 Sample Environment Variables (*nix shell example)
 =================================================
-```shell
+``` bash
 # Gambit!
 export ENVIRONMENT="Gambit dev's Lap"
 export APPURL="http://localhost:3000/"
