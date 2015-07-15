@@ -4,6 +4,7 @@ module.exports = {
 	bot: {
 		share: jasmine.createSpy('share'),
 		shareOn: jasmine.createSpy('shareOn'),
+		smartSay: jasmine.createSpy('smartSay'),
 		collaborationManager: {
 			givePoints: jasmine.createSpy('givePoints')
 		},

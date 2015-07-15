@@ -39,12 +39,12 @@ describe("A command conversation", function() {
 
 		it("shows an error on 1 point but plural", function() {
 			command.handle('jhon_doe', 'give 1 points to somebody', channel);
-			expect(bot.shareOn).toHaveBeenCalledWith(channel, "Sorry, I didn't understand one point? multiple points?");
+			expect(bot.smartSay).toHaveBeenCalledWith(channel, "Sorry, I didn't understand one point? multiple points?");
 		});
 
 		it("shows an error on 10 points but singular", function() {
 			command.handle('jhon_doe', 'give 10 point to somebody', channel);
-			expect(bot.shareOn).toHaveBeenCalledWith(channel, "Sorry, I didn't understand one point? multiple points?");
+			expect(bot.smartSay).toHaveBeenCalledWith(channel, "Sorry, I didn't understand one point? multiple points?");
 		});
 
 		/*it("shows an error on points isn't integer", function() {
@@ -54,12 +54,12 @@ describe("A command conversation", function() {
 
 		it("shows an error self assigning points", function() {
 			command.handle('jhon_doe', 'give 1 point to jhon_doe', channel);
-			expect(bot.shareOn).toHaveBeenCalledWith(channel, "Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
+			expect(bot.smartSay).toHaveBeenCalledWith(channel, "Really? are you trying to assign points to yourself? I cannot let you do that, buddy");
 		});
 
         it("shows an error assigning points to bots", function() {
             command.handle('jhon_doe', 'give 1 point to collabot', channel);
-            expect(bot.shareOn).toHaveBeenCalledWith(channel, "Great to get some love from you, jhon_doe. But, as a robot, I'm based on rules, and rules say I cannot get or give points. Thanks anyway!");
+            expect(bot.smartSay).toHaveBeenCalledWith(channel, "Great to get some love from you, jhon_doe. But, as a robot, I'm based on rules, and rules say I cannot get or give points. Thanks anyway!");
         });
 	});
 	/*describe("A request a report conversation", function() {
