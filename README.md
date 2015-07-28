@@ -1,34 +1,35 @@
 
-Rickbot v. 0.2.0
+Cajunbot v. 0.2.0
 =================
-A fun, general purpose slack bot that brings everyone together.
+A simple slack bot that goes beyond slackbot.
 
+What it can do
+==============
+```
+[testbot give] Gives a player X points. Example: 'testbot give 5 points to slash [because he is a cool dude]' (Yeah, you can add a reason for that, no need to use square brackets).
+
+[testbot about] Gets some information about the 'testbot'
+
+[testbot how am i] Tells you your overall, daily, weekly and last week scores.
+
+[testbot top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.
+```
 
 Running it
 ==========
 
-- Set the mongoDB variables located at config.js in your ~/.bashrc file.
-- Make sure you specify appropriate values to environment variables required. The mechanism to specify environment variables depends on the OS or shell you're using, so please read the related documentation if you're not sure about how to do it. See below a sample set of variables for reference.
+- Set the mongoDB variables located at config.js in your ~/.bashrc file (Make sure you specify appropriate values to environment variables required. The mechanism to specify environment variables depends on the OS or shell you're using, so please read the related documentation if you're not sure about how to do it. See below a sample set of variables for reference)
 - Type `npm install` and then `npm test` to finally issue `npm start`. 
-- Then do a GET to the URL specified in the APPSTART environment variable - that will log the bot into Slack. 
-
-
-Other tasks
-===========
-
-Collabot works over Slack API integration. It's configured by default on one channel, but it can be set to join multiple channels:
-
-* Any user can add the bot to any channel 
-* The admins can set the channels the bot is in via the bot integration panel
+- Then open your browser at the URL specified in the CAJUN_APP_URL environment variable - that will log the bot into Slack. 
 
 Sample Environment Variables (*nix shell example)
 =================================================
 ``` bash
-# Gambit!
-export ENVIRONMENT="Gambit dev's Lap"
-export APPURL="http://localhost:3000/"
-export MDBURL="mongodb://localhost:27017/collabot"
-export CHANNEL="gambit-test"
-export BOTNAME="alpha-bot"
-export BOT_TOKEN="xoxb-4181420889-GK8qfKC5tnr2RerqcGfsg55P"
+# Cajun!
+export CAJUN_APP_HOST_NAME="Scarr"
+export CAJUN_APP_URL="http://localhost:3000/"
+export CAJUN_APP_MONGODB_URL="mongodb://localhost:27017/cajundb"
+export CAJUN_SLACK_DEFAULT_CHANNEL="bots-test"
+export CAJUN_SLACK_BOT_NAME="testbot"
+export CAJUN_SLACK_BOT_TOKEN="xoxb-3462251399-cQMjLNLJ7W6pa6dChsgEg1Y0"
 ```
