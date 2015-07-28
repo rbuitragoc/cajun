@@ -1,5 +1,5 @@
 {
-  "name": "rickbot",
+  "name": "cajunbot",
   "version": "0.2.0",
   "description": "A collaboration-enabled interactive modular bot system",
   "main": "app.js",
@@ -26,22 +26,22 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://bitbucket.org/vpgambit/collabot"
+    "url": "https://bitbucket.org/rbuitragoc/cajun"
   },
   "author": {
     "name": "Rick Buitrago"
   },
   "contributors": [
-    "Rick Buitrago <rbuitrago@velocitypartners.net>",
-    "Alex Cano <acano@velocitypartners.net>",
-    "Johnny Gamba <jgamba@velocitypartners.net>",
-    "Santiago Zapata <szapata@velocitypartners.net>",
-    "Gustavo Guevara <gguevara@velocitypartners.net>",
-    "Ronald Manrique <rmanrique@velocitypartners.net>",
-    "Jaime Giraldo <jgiraldo@velocitypartners.net>"
+    "deekattax <rbuitragoc@gmail.com>",
+		"slash",
+		"mrThomas",
+		"sposmen",
+		"geektimus",
+		"dniskav",
+		"johnnyg"
   ],
   "bugs": {
-    "email": "rbuitrago@velocitypartners.net"
+    "email": "rbuitragoc@gmail.com"
   },
   "devDependencies": {
     "jasmine": "^2.2.1"
