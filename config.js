@@ -3,28 +3,20 @@ var SlackConnector = require("./classes/SlackConnector.class");
 var JSONConnector = require("./classes/persistence/JSONConnector.class");
 var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
-// Slack API config karmabot for tests
 module.exports = {
 	version: "0.2.0",
-	environment: process.env.ENVIRONMENT,
-	// environment: "rick's lap",
-	channel: process.env.CHANNEL,
-	botName: process.env.BOTNAME,
-	// token: 'xoxb-3558335570-MXw76pJPGbNLLyLi1KYWK8qr', // Good ol' Collabot
-	token: process.env.BOT_TOKEN, //'xoxb-3749826050-mKrPHbMYqRDa0mb47lhf3sfr', // Rick's tal-bot 
+	environment: process.env.CAJUN_APP_HOST_NAME,
+	channel: process.env.CAJUN_SLACK_DEFAULT_CHANNEL,
+	botName: process.env.CAJUN_SLACK_BOT_NAME,
+	token: process.env.CAJUN_SLACK_BOT_TOKEN, 
 	autoReconnect: true,
 	autoMark: true,
 	connector: SlackConnector,
 	persistence: MongoConnector,
-	// dbURL: 'mongodb://'+process.env.MDBUSERNAME+':'+process.env.MDBPWD+'@'+process.env.MDBHOST+':'+process.env.MDBPORT+'/'+process.env.MDBDB,
-	dbURL: process.env.MDBURL,// 'mongodb://localhost:27017/collabot',
+	dbURL: process.env.CAJUN_APP_MONGODB_URL,
 	appUrls: {
-		start: process.env.APPURL+'start', 
-			// 'http://salty-inlet-8617.herokuapp.com/start',
-			// 'http://localhost:3000/start',
-		stop: process.env.APPURL+'stop'
-			// 'http://salty-inlet-8617.herokuapp.com/stop'
-			// 'http://localhost:3000/stop'
+		start: process.env.CAJUN_APP_URL+'start', 
+		stop: process.env.CAJUN_APP_URL+'stop'
 	},
 	maxCollabPoints : 10
 };
