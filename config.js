@@ -2,11 +2,10 @@ var IRCConnector = require("./classes/IRCConnector.class");
 var SlackConnector = require("./classes/SlackConnector.class");
 var JSONConnector = require("./classes/persistence/JSONConnector.class");
 var MongoConnector = require("./classes/persistence/MongoConnector.class");
-var regional = JSON.parse(process.env.BOT_REGIONAL);
 
 // Slack API config karmabot for tests
 module.exports = {
-	version: "0.9.5",
+	version: "0.2.0",
 	environment: process.env.ENVIRONMENT,
 	// environment: "rick's lap",
 	channel: process.env.CHANNEL,
@@ -27,23 +26,7 @@ module.exports = {
 			// 'http://salty-inlet-8617.herokuapp.com/stop'
 			// 'http://localhost:3000/stop'
 	},
-	maxCollabPoints : 10,
-	edserv: {
-		thresholds: {
-			enrollment: 1
-		},
-		reminders: {
-			register: {hours: 18},
-			attend: {hours: 8},
-			rate: {hours: 1, afterEvent: true, retry: {times: 3, intervalHours: 24}}
-		},
-		manager: 'slizarazo',
-		regional: regional
-	},
-	copaso: {
-		group: 'vpc-copaso', 
-		template: 'https://docs.google.com/spreadsheets/d/15BmXmYVE0Yc7704VgV_N8vGypr4vFWoOiX-rfHN0MDg'
-	}
+	maxCollabPoints : 10
 };
 
 // Slack API config prod

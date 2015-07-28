@@ -1,8 +1,7 @@
-![Codeship Status for vpgambit/collabot](https://codeship.com/projects/87838d20-936b-0132-849a-5668b62cd35b/status?branch=dev)
 
-Collabot v. 0.9.5
+Rickbot v. 0.2.0
 =================
-A fun slack bot to incentive collaboration between developers.
+A fun, general purpose slack bot that brings everyone together.
 
 
 Running it
@@ -32,5 +31,4 @@ export MDBURL="mongodb://localhost:27017/collabot"
 export CHANNEL="gambit-test"
 export BOTNAME="alpha-bot"
 export BOT_TOKEN="xoxb-4181420889-GK8qfKC5tnr2RerqcGfsg55P"
-export BOT_REGIONAL='{"medellin": {"groups": ["gambit-disposable-01"], "manager": "slizarazo", "channels" : {"training" : "gambit-disposable-02"}}}'
 ```

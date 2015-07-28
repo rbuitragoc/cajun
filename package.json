@@ -1,6 +1,6 @@
 {
-  "name": "collabot",
-  "version": "0.9.5",
+  "name": "rickbot",
+  "version": "0.2.0",
   "description": "A collaboration-enabled interactive modular bot system",
   "main": "app.js",
   "scripts": {
@@ -29,12 +29,10 @@
     "url": "https://bitbucket.org/vpgambit/collabot"
   },
   "author": {
-    "name": "Velocity Partners",
-    "url": "http://velocitypartners.net"
+    "name": "Rick Buitrago"
   },
   "contributors": [
     "Rick Buitrago <rbuitrago@velocitypartners.net>",
-    "Daniel Silva <dsilva@velocitypartners.net>",
     "Alex Cano <acano@velocitypartners.net>",
     "Johnny Gamba <jgamba@velocitypartners.net>",
     "Santiago Zapata <szapata@velocitypartners.net>",
@@ -43,7 +41,6 @@
     "Jaime Giraldo <jgiraldo@velocitypartners.net>"
   ],
   "bugs": {
-    "url": "https://trello.com/b/28HTGPrb/gambit-bugs",
     "email": "rbuitrago@velocitypartners.net"
   },
   "devDependencies": {
