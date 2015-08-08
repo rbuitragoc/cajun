@@ -204,10 +204,10 @@ var place = updateScoreRequest.channel;
  				});
  			},
  			function(next) {
- 				bot.say(playerName, "You have been given "+status.totalCollabPts+" CollabPoints so far.");
- 				bot.say(playerName, "Today, you have won "+status.dailyScore+" CollabPoints.");
- 				bot.say(playerName, "This week you have been given a total of "+status.weeklyScore+" CollabPoints.");
- 				bot.say(playerName, "Last week you were given a total of "+status.lastWeekScore+" CollabPoints.");
+ 				bot.say(playerName, "You have been given "+status.totalCollabPts+" points so far.");
+ 				bot.say(playerName, "Today, you have been given "+status.dailyScore+" points.");
+ 				bot.say(playerName, "This week you have been given a total of "+status.weeklyScore+" points.");
+ 				bot.say(playerName, "Last week you were given a total of "+status.lastWeekScore+" points.");
  			}
  		],
         function (error){
