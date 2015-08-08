@@ -23,26 +23,12 @@ CommandConversationHandler.prototype = {
 			this._top(text, channel);
 		} else if (text.toLowerCase().indexOf("how am i") > -1){
 			this._howAmIDoing(from);
-		} else if (/authorize (.+) as presenter$/.exec(text)){
-			this._autorizeAsPresenter(from, text, channel);
-		} else if(text.indexOf("upcoming sessions") > -1){
-			this._showUpcomingSessions(from);
-		} else if (text.toLowerCase().indexOf("create training session") > -1){
-			this._createTraining(from);
-		} else if (text.indexOf("rate session") > -1) {
-			this._initRateSession(from)
-		} else if (text.indexOf("copaso-url") > -1) {
-			this._copaso()
 		} else if (text.indexOf("test-api") > -1) {
 			this._testApi(from);
 		} else if (text.indexOf("list-im") > -1) {
 			this._listIM(from);
 		} else if (text.indexOf("hadmin") > -1) {
 			this._adminOptions(from);
-		} else if (StringUtils.isMatch(this.showAttendantsRegexes, text)) {
-			this._showAttendants(from);
-		} else if(text.indexOf("report session") > -1) {
-			this._prepareReport(from, text)
 		} else {
 			this._wtf(from, text);
 		}
@@ -145,52 +131,21 @@ CommandConversationHandler.prototype = {
 		this.bot.smartSay(to, message)
 	},
 	_joke: function(to){
-		this.bot.smartSay(to, "This is no time for jokes, my friend.");
+		this.bot.smartSay(to, "Let's make a bot look smart. Let's teach it some jokes.");
 	},
 	_creator: function(to){
-		this.bot.smartSay(to, "I am being created by VP Gambit dev team.");
+		this.bot.smartSay(to, "I am being created by deekattax.");
 	},
 	_wtf: function(to, text){
 		this.bot.smartSay(to, "Perhaps you need to rephrase; I couldn't understand: '"+text+"'");
 	},
-	_autorizeAsPresenter: function (from, text, channel){
-		var command = /authorize (.+) as presenter$/.exec(text);
-		if (!command || !command.length || !command.length == 2){
-			this.bot.shareOn(channel, "Sorry, I didn't understand that..");
-			return;
-		}
-		var presenter = command[1];
-		if (!presenter){
-			this.bot.shareOn(channel, "Sorry, I didn't understand that..");
-			return;
-		}
-		this.bot.trainingSessionManager.requestAuthorizationAsPresenter(from, presenter);
-	},
 	_help: function (who){
 		var name = this.bot.config.botName;
-		this.bot.say(who, "These are the commands I will respond to, because I'm a robot believe it or not.");
+		this.bot.say(who, "Here's what I can do for you at the moment:");
 		this.bot.say(who, "["+name+" give] Gives a player X points. Example: '"+name+" give 5 points to slash [because he is a cool dude]' (Yeah, you can add a reason for that, no need to use square brackets).");
 		this.bot.say(who, "["+name+" about] Gets some information about the '"+name+"'");
 		this.bot.say(who, "["+name+" how am i] Tells you your overall, daily, weekly and last week scores.");
 		this.bot.say(who, "["+name+" top [day|week|month|year] [channel_name]] Tells you the top ten collaborators by period and channel name. Period and Channel are optional.");
-		this.bot.say(who, "["+name+" create training session] Starts a conversation to register a session");
-		this.bot.say(who, "["+name+" show me upcoming sessions] Starts a conversation to enroll you in an upcoming session")
-		this.bot.say(who, "["+name+" who attended a training?] Starts a conversation to check the people who enrolled via bot to a training session. Only available for the presenter and the EdServ manager.");
-		this.bot.say(who, "["+name+" rate session] Starts a conversation to rate a session you've attended")
-		this.bot.say(who, "["+name+" report session] Starts a conversation to generate a report with the rating of a particular session. It's only available to HR manager")
-		this.bot.say(who, "Apart from these I can also tell you who attended to a training session, just ask me!");
-	},
-	_createTraining: function(from){
-		this.bot.trainingSessionManager.initCreateTrainingSession(from);
-	},
-	_showUpcomingSessions: function(from) {
-		this.bot.trainingSessionManager.initRegisterToSession(from);
-	},
-	_initRateSession: function(from) {
-		this.bot.trainingSessionManager.initRateSession(from)
-	},
-	_copaso: function() {
-		this.bot.shareOn(this.bot.config.copaso.group, "Copaso Template: " + this.bot.config.copaso.template)
 	},
 	_testApi: function(who) {
 		this.bot.connector._testApi(who)
@@ -200,18 +155,8 @@ CommandConversationHandler.prototype = {
 	},	
 	_adminOptions: function(who) {
 		this.bot.say(who, "These are the hidden admin commands: ");
-		this.bot.say(who, "["+this.bot.config.botName+" copaso-url] Will share the URL to the COPASO template on private group "+this.bot.config.copaso.group)
 		this.bot.say(who, "["+this.bot.config.botName+" test-api] will invoke Slack's 'api.test' call.")
 		this.bot.say(who, "["+this.bot.config.botName+" list-im] will invoke Slack's 'im.list' call.")
-	},
-	_showAttendants: function(who) {
-		var bot = this.bot;
-		bot.conversationManager.startConversation(who, "showAttendants", "waitingForTrainingSession", function(conversation){
-			bot.trainingSessionManager.startShowAttendantsConversation(conversation, who);
-		},
-		function(conversation){
-			// TODO: Add support to resume conversations
-		});
 	},
 	_prepareReport: function(who, text) {
 		var bot = this.bot
