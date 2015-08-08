@@ -5,6 +5,7 @@ var MongoConnector = require("./classes/persistence/MongoConnector.class");
 
 module.exports = {
 	version: "0.2.0",
+	// debug: true,
 	environment: process.env.CAJUN_APP_HOST_NAME,
 	channel: process.env.CAJUN_SLACK_DEFAULT_CHANNEL,
 	botName: process.env.CAJUN_SLACK_BOT_NAME,

@@ -8,12 +8,14 @@ var express = require('express');
 var app = express();
 
 var startBot = function(res) {
-	console.log("Starting Cajunbot...");
-	cajunbot = new Cajunbot(config);		
-	cajunbot.start(function(status) {
-		if (res) res.send(status);
-		console.log("Status: %s", status)
-	});
+	if (res || config.debug) {
+		console.log("Starting Cajunbot...");
+		cajunbot = new Cajunbot(config);		
+		cajunbot.start(function(status) {
+			if (res) res.send(status);
+			console.log("Status: %s", status)
+		});
+	}
 }
 
 app.set('views', './views');
