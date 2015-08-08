@@ -7,6 +7,15 @@ var express = require('express');
 
 var app = express();
 
+var startBot = function(res) {
+	console.log("Starting Cajunbot...");
+	cajunbot = new Cajunbot(config);		
+	cajunbot.start(function(status) {
+		if (res) res.send(status);
+		console.log("Status: %s", status)
+	});
+}
+
 app.set('views', './views');
 app.set('view engine', 'jade');
 
@@ -61,11 +70,7 @@ app.get('/edserv/ratedtrainings/:reportfilename', function(req, res){
 
 app.post('/start', function (req, res) {
 	if(cajunbot == null) {
-		console.log("Starting Cajunbot...");
-		cajunbot = new Cajunbot(config);		
-		cajunbot.start(function(status){
-			res.send(status);
-		});
+		startBot(res)
 	} else {
 		res.send("already started");
 	}
@@ -82,4 +87,4 @@ app.post('/stop', function (req, res) {
 	}
 });
 app.use(express.static(__dirname + '/public'));
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3000, startBot());
