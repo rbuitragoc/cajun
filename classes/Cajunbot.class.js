@@ -133,36 +133,38 @@ Cajunbot.prototype = {
 			this.shareOn(to, message)
 		}
 	},	
-  registerPlayers: function(players){
-    console.log("Registering players...");
-    console.log(players);
-    var that = this;  
+  registerPlayers: function(players, welcomeFunction) {
+    console.log("These are all the slack users reported by Slack API for the team: [%s]. \nAttempting to check whether there's new slack users...", players)
+    var that = this
     async.each(players, 
-      function(player){that.registerPlayer(player);},
-      function(err){
-        console.error(err);
-      });   
+      function(player, callback) {
+				that.registerPlayer(player, callback)
+			}, function(err) {
+        if (err) console.error(err)
+				console.log("... done checking users registry! All set!\n")
+				welcomeFunction()
+      }
+		);
+		
   },
-  registerPlayer: function(player){
-    console.log("Attempting to register player: " + player);   
+  registerPlayer: function(player, callback) {
     var that = this;
-    that.persistence.getPlayerByName(player, function(user, err){
-      if(err){
+    that.persistence.getPlayerByName(player, function(user, err) {
+      if (err) {
         console.log("Error getting player");
         console.error(err);
-      } else if(!user){
-        console.log("New Player: " + player);       
-        that.persistence.insertNewPlayer(player, function(inserted, err){
-          if(err){
+      } else if (!user) {
+        that.persistence.insertNewPlayer(player, function(inserted, err) {
+          if (err) {
             console.log(err.stack);
           } else {
-            console.log("Player inserted: ");
-            console.log(inserted);
+            // new user
           }
         });
       } else {
-        console.log(user.name + " already exists!");
+        // existing user
       }
+			callback()
     });   
   },
   loadReminders : function () {
