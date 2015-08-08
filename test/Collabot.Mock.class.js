@@ -1,7 +1,7 @@
 var CollaborationManagerMock = require('./CollaborationManager.Mock.class')
 var SlackConnectorMock = require('./SlackConnector.Mock.class')
 
-function Collabot(){
+function Cajunbot(){
 	this.version = '666';
 	this.config = {};
 	this.reverseSayMap = {};
@@ -11,9 +11,9 @@ function Collabot(){
 	this.collaborationManager = new CollaborationManagerMock();
 }
 
-module.exports = Collabot;
+module.exports = Cajunbot;
 
-Collabot.prototype = {
+Cajunbot.prototype = {
 	start: function(callback){
 		
 	},

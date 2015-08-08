@@ -1,7 +1,7 @@
 var fs = require('fs')
-var Collabot = require("./classes/Collabot.class");
+var Cajunbot = require("./classes/Cajunbot.class");
 var config = require("./config");
-var collabot = null;
+var cajunbot = null;
 
 var express = require('express');
 
@@ -60,10 +60,10 @@ app.get('/edserv/ratedtrainings/:reportfilename', function(req, res){
 })
 
 app.post('/start', function (req, res) {
-	if(collabot == null) {
-		console.log("Starting Collabot...");
-		collabot = new Collabot(config);		
-		collabot.start(function(status){
+	if(cajunbot == null) {
+		console.log("Starting Cajunbot...");
+		cajunbot = new Cajunbot(config);		
+		cajunbot.start(function(status){
 			res.send(status);
 		});
 	} else {
@@ -71,12 +71,12 @@ app.post('/start', function (req, res) {
 	}
 });
 app.post('/stop', function (req, res) {
-	if(collabot){
-		console.log("Stopping Collabot...");
-		collabot.stop(function(status){
+	if(cajunbot){
+		console.log("Stopping Cajunbot...");
+		cajunbot.stop(function(status){
 			res.send(status);
 		});		
-		collabot = null;
+		cajunbot = null;
 	} else {		
 		res.send("already stopped");
 	}

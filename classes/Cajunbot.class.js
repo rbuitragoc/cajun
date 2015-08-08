@@ -1,4 +1,4 @@
-function Collabot(config){
+function Cajunbot(config){
   this.version = config.version;
   this.config = config;
   this.connector = new config.connector(config);
@@ -14,7 +14,7 @@ function guid() {
   return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
-module.exports = Collabot;
+module.exports = Cajunbot;
 
 // Managers 
 var CollaborationManager = require('./CollaborationManager.class');
@@ -35,7 +35,7 @@ var mentionCheck = require('./util/ChatUtils.class');
 // External Libs
 var async = require('async');
 
-Collabot.prototype = {
+Cajunbot.prototype = {
   start: function(callback){
     if(this.guid){
       callback("running");

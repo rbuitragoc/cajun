@@ -58,7 +58,7 @@ describe("A command conversation", function() {
 		});
 
         it("shows an error assigning points to bots", function() {
-            command.handle('jhon_doe', 'give 1 point to collabot', channel);
+            command.handle('jhon_doe', 'give 1 point to bot', channel);
             expect(bot.smartSay).toHaveBeenCalledWith(channel, "Great to get some love from you, jhon_doe. But, as a robot, I'm based on rules, and rules say I cannot get or give points. Thanks anyway!");
         });
 	});

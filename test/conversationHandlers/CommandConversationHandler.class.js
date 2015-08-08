@@ -1,9 +1,9 @@
 var assert = require('assert');
 var CommandConversationHandler = require('../../classes/conversationHandlers/CommandConversationHandler.class');
-var Collabot = require('../Collabot.Mock.class');
+var Cajunbot = require('../Cajunbot.Mock.class');
 
 var mocks = (function setupMocks(){
-	var mockBot = new Collabot();
+	var mockBot = new Cajunbot();
 	mockBot.config = {
 		maxCollabPoints: undefined
 	}

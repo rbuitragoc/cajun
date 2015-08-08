@@ -1,8 +1,8 @@
 var assert = require('assert');
 var DateUtils = require('../../classes/util/DateUtils.class');
-var Collabot = require('../Collabot.Mock.class')
+var Cajunbot = require('../Cajunbot.Mock.class')
 
-var mockBot = new Collabot()
+var mockBot = new Cajunbot()
 mockBot.config = {
 	channel: "anyChannel"
 }

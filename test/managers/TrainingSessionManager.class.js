@@ -1,9 +1,9 @@
 var assert = require('assert');
 var TrainingSessionManager = require('../../classes/managers/TrainingSessionManager.class');
-var Collabot = require('../Collabot.Mock.class.js');
+var Cajunbot = require('../Cajunbot.Mock.class.js');
 
 function setupMocks(){
-	var mockBot = new Collabot();
+	var mockBot = new Cajunbot();
 	mockBot.config.edserv = {manager: 'mrmanager'};
 	mockBot.persistence = {
 		getPlayerByName: function(presenter, callback){

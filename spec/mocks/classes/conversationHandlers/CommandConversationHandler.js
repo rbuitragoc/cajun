@@ -19,7 +19,7 @@ module.exports = {
 				name: 'any'
 			},
 			findUserById: function (userId) {
-				if (userId && userId.indexOf('collabot') >-1) {
+				if (userId && userId.indexOf('bot') >-1) {
 					return { name: userId, "is_bot": true }
 				}
 				return {name: 'jhon_doe'};

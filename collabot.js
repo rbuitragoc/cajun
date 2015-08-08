@@ -1,4 +1,4 @@
-var Collabot = require("./classes/Collabot.class");
+var Cajunbot = require("./classes/Cajunbot.class");
 var config = require("./config");
-var collabot = new Collabot(config);
-collabot.start(); 
+var cajunbot = new Cajunbot(config);
+cajunbot.start(); 
