@@ -15,7 +15,6 @@ SlackConnector.prototype = {
 	init: function(bot){
 		var that = this;
 		this.bot = bot;
-		console.log("Initializing with SlackConnector...");
 		var slack = new Slack(this.token, this.autoReconnect, this.autoMark);
 		slack.on('open', function() {
 			var channelName = that.config.channel;
@@ -23,7 +22,6 @@ SlackConnector.prototype = {
 			for (key in slack.channels) {
 				if (/*slack.channels[key].is_member && */slack.channels[key].name === channelName) {
 					slackChannel = slack.channels[key];
-					console.log("Default channel found! %s", slackChannel.name)
 				}
 			}
 			if (slackChannel) {

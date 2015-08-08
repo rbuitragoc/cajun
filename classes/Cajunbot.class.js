@@ -37,7 +37,7 @@ var async = require('async');
 
 Cajunbot.prototype = {
   start: function(callback){
-    if(this.guid){
+    if (this.guid) {
       callback("running");
     } else {
       this.persistence.init();
@@ -173,7 +173,7 @@ Cajunbot.prototype = {
 
     var reminders = db.getReminders(
       function (err, result) {
-        console.log('result:', result, 'err:', err);
+        //console.log('result:', result, 'err:', err);
 
         for(var ndx in result){
           var reminder = result[parseInt(ndx)];
