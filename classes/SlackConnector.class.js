@@ -21,9 +21,9 @@ SlackConnector.prototype = {
 			var channelName = that.config.channel;
 			var slackChannel = null;
 			for (key in slack.channels) {
-				console.log("Channel: "+slack.channels[key].name);
 				if (/*slack.channels[key].is_member && */slack.channels[key].name === channelName) {
 					slackChannel = slack.channels[key];
+					console.log("Default channel found! %s", slackChannel.name)
 				}
 			}
 			if (slackChannel) {
@@ -33,8 +33,8 @@ SlackConnector.prototype = {
 				}
 			} else { 
 				// try with groups too
+				console.log("Default channel was not found in channels list. Trying out private groups...")
 				for (key in slack.groups) {
-					console.log("Group: "+slack.groups[key].name)
 					if (slack.groups[key].name === channelName) {
 						slackChannel = slack.groups[key]
 					}
@@ -44,17 +44,16 @@ SlackConnector.prototype = {
 			if (!slackChannel) {
 				console.error("Error: Channel or group ["+channelName+"] not found or inaccessible")
 				return
-				
 			} 
 			
 			that.slackChannel = slackChannel;
-			that._registerAllMembers(slack.users);
-			console.log('Welcome to Slack. You are @%s of %s', slack.self.name, slack.team.name);
-			console.log('You are in: %s', channelName);
-			
+			var welcomeFunction = function() {
+				console.log('== Welcome to Slack, bot! You are @%s of team "%s". Your default channel is #%s ==\n', slack.self.name, slack.team.name, channelName)
+			}
+			that._registerAllMembers(slack.users, welcomeFunction);
 		});
 
-		slack.on('message', function(message){
+		slack.on('message', function(message) {
 			if (message.type != 'message'){
 				console.log("Ignoring non-message message ["+message.text+"]");				
 				return;
@@ -195,13 +194,13 @@ SlackConnector.prototype = {
 			console.log("Couldn't gain access to channel/group named '%s'. Sharing unsuccesful.", place)
 		}
 	},
-	_registerAllMembers: function (users){
+	_registerAllMembers: function (users, welcomeFunction) {
 		var userNamesArray = [];
-		Object.keys(users).forEach(function(key){
+		Object.keys(users).forEach(function(key) {
 			var value = users[key];
 			userNamesArray.push(value.name);
 		});			
-		this.bot.registerPlayers(userNamesArray);
+		this.bot.registerPlayers(userNamesArray, welcomeFunction);
 	},
 	_testApi: function(who) { // TODO - use this way to extend slack client
 		var slackOpts = {bot: this.bot, from: who};
