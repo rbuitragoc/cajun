@@ -217,7 +217,7 @@ SlackConnector.prototype = {
 			return handle_api_response(data, {
 				call: 'im.list',
 				console: JSON.stringify(data.ims),
-				msg: JSON.stringify(data.ims[0]),
+				msg: JSON.stringify(data.ims[data.ims.length-1]),
 				slack: slackOpts
 			})
 		});
